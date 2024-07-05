@@ -10,4 +10,10 @@ public class MainController {
 	public String index() {
 		return "index";
 	}
+	
+	@GetMapping("/main")
+	public String main() {
+		return "index";
+	}
+	
 }
