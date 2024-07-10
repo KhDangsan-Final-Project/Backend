@@ -1,13 +1,13 @@
-package com.backend;
+package com.ms2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendApplication {
+public class Ms2Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+		SpringApplication.run(Ms2Application.class, args);
 	}
 
 }
