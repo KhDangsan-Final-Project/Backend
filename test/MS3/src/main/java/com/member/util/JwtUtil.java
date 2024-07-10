@@ -11,12 +11,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtUtil {
-    private static final String SECRET_KEY = "your_secret_key";
+    private static final String SECRET_KEY = "Bsm9gYcM2uHVJ4QaXRPyKw";
 
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
+                .setIssuedAt(new Date(0))
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();

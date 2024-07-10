@@ -9,20 +9,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.member.dto.UserDTO;
 import com.member.service.UserService;
+import com.member.util.JwtUtil;
 
 import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class MainController {
 	private UserService service;
+	private JwtUtil jwtUtil;
 	
 	
-	public MainController(UserService service) {
+	public MainController(UserService service, JwtUtil jwtUtil) {
 		this.service = service;
+		this.jwtUtil = jwtUtil;
 	}
 
 	@PostMapping("/ms3/login")
 	public Map<String, Object> login (@RequestBody Map<String, String> param, HttpSession session) {
+		String id = param.get("id");
+		String password = param.get("password");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		UserDTO user = service.findUserById(id);
 		
 		return null;
 	}
