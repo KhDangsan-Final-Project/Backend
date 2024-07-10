@@ -15,13 +15,14 @@
     </resultMap>
 
     <!-- 회원가입 -->
-    <insert id="insertUser" parameterType="com.ms3.dto.UserDTO">
-        insert into user(id, grant_no, password, email, name, nickname, profile)
-        values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'), #{email}, #{name}, #{nickname}, #{profile})
-    </insert>
+    <insert id="insertUser" parameterType="user">
+	    insert into users(id, grant_no, password, email, name, nickname, profile)
+	    values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'), #{email}, #{name}, #{nickname}, #{profile})
+	</insert>
+
     
     <!-- 로그인 -->
     <select id="selectUser" resultMap="user" parameterType="map">
-        select * from user where id = #{id} and password = STANDARD_HASH(#{password}, 'SHA512')
+        select * from users where id = #{id} and password = STANDARD_HASH(#{password}, 'SHA512')
     </select>
 </mapper>
