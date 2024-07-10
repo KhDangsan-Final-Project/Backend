@@ -8,10 +8,10 @@
         <version>3.2.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.ms1</groupId>
-    <artifactId>MS1</artifactId>
+    <groupId>com.ms3</groupId>
+    <artifactId>MS3</artifactId>
     <version>0.0.1</version>
-    <name>MS1</name>
+    <name>MS3</name>
     <description>Demo project for Spring Boot</description>
     <url/>
     <licenses>
@@ -79,6 +79,20 @@
             <version>3.0.3</version>
             <scope>test</scope>
         </dependency>
+        <!-- 의존성 추가-->
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -103,4 +117,3 @@
     </build>
 
 </project>
-
