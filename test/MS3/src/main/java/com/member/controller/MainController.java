@@ -23,7 +23,7 @@ public class MainController {
 		this.service = service;
 		this.jwtUtil = jwtUtil;
 	}
-
+	// test
 	@PostMapping("/ms3/login")
 	public Map<String, Object> login (@RequestBody Map<String, String> param, HttpSession session) {
 		String id = param.get("id");
