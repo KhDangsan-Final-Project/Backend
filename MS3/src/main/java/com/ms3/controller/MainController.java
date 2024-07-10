@@ -22,7 +22,7 @@ public class MainController {
         this.jwtUtil = jwtUtil;
     }
     
-    @PostMapping("/ms3/login")
+    @PostMapping("/ms3/user/select")
     public Map<String, Object> login(@RequestBody Map<String, String> param) {
         String id = param.get("id");
         String password = param.get("password");
@@ -31,7 +31,7 @@ public class MainController {
         
         UserDTO user = service.selectUser(id, password);
         if (user != null) {
-            String token = jwtUtil.generateToken(user.getId(), user.getName(), user.getNickname(), user.getEmail(), user.getGrantNo(), user.getProfile());
+            String token = jwtUtil.generateToken(user.getId(), user.getNickname(), user.getGrantNo(), user.getProfile());
             map.put("msg", "로그인 성공");
             map.put("result", true);
             map.put("token", token);

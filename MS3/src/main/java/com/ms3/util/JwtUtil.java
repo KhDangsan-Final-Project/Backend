@@ -14,11 +14,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtUtil {
     private static final String SECRET_KEY = "g2d2b2PpL1tFs3uHd9qF8h2vF3sR6wU4g7zH9k2mQ1pF3x2zJ1oL";
 
-    public String generateToken(String id, String name, String nickname, String email, int grantNo, String profile) {
+    public String generateToken(String id,String nickname, int grantNo, String profile) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("name", name);
         claims.put("nickname", nickname);
-        claims.put("email", email);
         claims.put("grantNo", grantNo);
         claims.put("profile", profile);
 
@@ -42,16 +40,8 @@ public class JwtUtil {
         return extractClaims(token).getSubject();
     }
 
-    public String extractName(String token) {
-        return extractClaims(token).get("name", String.class);
-    }
-
     public String extractNickname(String token) {
         return extractClaims(token).get("nickname", String.class);
-    }
-
-    public String extractEmail(String token) {
-        return extractClaims(token).get("email", String.class);
     }
 
     public Integer extractGrantNo(String token) {
