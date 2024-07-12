@@ -26,4 +26,10 @@ public class UserService {
         map.put("password", password);
         return mapper.selectUser(map);
     }
+
+	public UserDTO getUserById(String id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id",id);
+		return mapper.selectUserById(map);
+	}
 }

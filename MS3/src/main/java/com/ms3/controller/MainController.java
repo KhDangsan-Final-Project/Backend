@@ -3,8 +3,13 @@ package com.ms3.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms3.dto.UserDTO;
@@ -13,6 +18,7 @@ import com.ms3.util.JwtUtil;
 
 
 @RestController
+@RequestMapping("/ms3/user")
 public class MainController {
     
     private final UserService service;
@@ -21,6 +27,12 @@ public class MainController {
     public MainController(UserService service, JwtUtil jwtUtil) {
         this.service = service;
         this.jwtUtil = jwtUtil;
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String id){
+    	UserDTO user = service.getUserById(id);
+    	return ResponseEntity.ok(user);
     }
     
     @PostMapping("/ms3/user/select")
@@ -66,4 +78,24 @@ public class MainController {
         }
         return map;
     }
+    
+    //토큰에 있는 아이디 , 닉 , 프로필 , 랭크번호
+    @GetMapping("/ms3/user/info")
+    public ResponseEntity<Map<String, Object>> getInfo(@RequestParam String token) {
+    	boolean flag = true;
+    	Map<String, Object> map = new HashMap<>();
+    	try {
+    		String id = jwtUtil.extractId(token);
+    		String nickname = jwtUtil.extractNickname(token);
+    		String profile = jwtUtil.extractProfile(token);
+    		int grantNo = jwtUtil.extractGrantNo(token);
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    		flag = false;
+    	}
+    	map.put("flag", flag);
+    	return ResponseEntity.ok(map);
+    }
+    
+    
 }

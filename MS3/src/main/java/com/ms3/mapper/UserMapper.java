@@ -10,4 +10,5 @@ import com.ms3.dto.UserDTO;
 public interface UserMapper {
     int insertUser(UserDTO dto);
     UserDTO selectUser(Map<String, Object> map);
+	UserDTO selectUserById(Map<String, Object> map);
 }
