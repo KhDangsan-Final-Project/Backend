@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>사용자 목록</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>아디</th>
+                <th>이름</th>
+                <th>닉네임</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}">아이디</td>
+                <td th:text="${user.name}">이름</td>
+                <td th:text="${user.nickname}">닉네임</td>
+                <td th:text="${user.email}">이메일</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
