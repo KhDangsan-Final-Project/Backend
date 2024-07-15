@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms3.dto.UserDTO;
@@ -12,6 +13,7 @@ import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
 
 @RestController
+@RequestMapping("/ms3")
 public class MainController {
     
     private final UserService service;
@@ -22,7 +24,7 @@ public class MainController {
         this.jwtUtil = jwtUtil;
     }
     
-    @PostMapping("/ms3/user/select")
+    @PostMapping("/user/select")
     public Map<String, Object> login(@RequestBody Map<String, String> param) {
         String id = param.get("id");
         String password = param.get("password");
@@ -43,7 +45,7 @@ public class MainController {
         return map;
     }
     
-    @PostMapping("/ms3/user/insert")
+    @PostMapping("/user/insert")
     public Map<String, Object> insertUser(@RequestBody Map<String, String> param) {
         UserDTO dto = new UserDTO();
         dto.setId(param.get("id"));
