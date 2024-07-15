@@ -8,10 +8,10 @@
         <version>3.2.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.ms3</groupId>
-    <artifactId>MS3</artifactId>
+    <groupId>com.ms2</groupId>
+    <artifactId>MS2</artifactId>
     <version>0.0.1</version>
-    <name>MS3</name>
+    <name>MS2</name>
     <description>Demo project for Spring Boot</description>
     <url/>
     <licenses>
