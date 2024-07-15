@@ -10,8 +10,5 @@ import com.ms3.dto.UserDTO;
 public interface UserMapper {
     int insertUser(UserDTO dto);
     UserDTO selectUser(Map<String, Object> map);
-<<<<<<< HEAD
-	UserDTO selectUserById(Map<String, Object> map);
-=======
->>>>>>> branch 'main' of https://github.com/KhDangsan-Final-Project/Backend.git
+
 }

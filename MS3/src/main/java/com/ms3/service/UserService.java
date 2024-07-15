@@ -26,13 +26,5 @@ public class UserService {
         map.put("password", password);
         return mapper.selectUser(map);
     }
-<<<<<<< HEAD
 
-	public UserDTO getUserById(String id) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("id",id);
-		return mapper.selectUserById(map);
-	}
-=======
->>>>>>> branch 'main' of https://github.com/KhDangsan-Final-Project/Backend.git
 }
