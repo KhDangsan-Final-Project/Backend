@@ -13,8 +13,7 @@ public class SecurityConfig {
         http.csrf().disable()
             .authorizeHttpRequests((authorizeRequests) -> 
                 authorizeRequests
-                    .requestMatchers("/ms3/user/insert", "/ms3/user/select").permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
             )
             .formLogin().disable();
         return http.build();

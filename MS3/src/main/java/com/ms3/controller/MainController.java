@@ -65,4 +65,16 @@ public class MainController {
         }
         return map;
     }
+    
+    @PostMapping("/ms3/user/idcheck")
+    public Map<String, Object> idcheck(@RequestBody Map<String, String> payload) {
+    	String id = payload.get("id");
+        int count = service.idcheck(id);
+        Map<String, Object> map = new HashMap<String, Object>();
+ 
+        count = service.idcheck(id);
+        map.put("count", count);
+ 
+        return map;
+    }
 }

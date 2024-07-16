@@ -25,4 +25,8 @@
     <select id="selectUser" resultMap="user" parameterType="map">
         select * from users where id = #{id} and password = STANDARD_HASH(#{password}, 'SHA512')
     </select>
+    
+    <select id="idcheck" resultType="int" parameterType="map">
+    	select count(*) from users where id = #{id}
+    </select>
 </mapper>
