@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
+body{
+width: 600px;
+height: 400px;
+border: 1px solid black;
+}
+.chatRoom{
+border: 1px solid black;
+
+}
+</style>
+<body>
+	<div class="container">
+    <th:block th:each="room : ${collection}">
+        <a th:href="@{/room(id=${room.id})}">[[${room.id}]]</a>
+    </th:block>
+    <hr>
+    <a href="/room/new" class="chatRoom">채팅방 생성</a>
+</div>
+
+</body>
+</html>

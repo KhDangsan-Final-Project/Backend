@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms2.mapper.BattleMapper">
+    <!-- ResultMap -->
+    <resultMap type="com.ms2.dto.battleDTO" id="battle">
+        <id column="ID" property="id" />
+        <result column="CARD_NO" property="cardNo"/>
+        <result column="MATCH_WIN" property="matchWin"/>
+        <result column="MATCH_LOSS" property="matchLoss"/>
+        <result column="MATCH_NO" property="matchNo"/>
+    </resultMap>
+
+  <!-- 이긴 회원 match_win 1 올리기 -->
+  <insert id="insertMatchWin" parameterType="int">
+  
+  </insert>
+</mapper>
