@@ -1,9 +1,11 @@
 package com.ms4.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.ms4.dto.RankDTO;
 import com.ms4.dto.UserDTO;
 import com.ms4.mapper.UserMapper;
 
@@ -21,6 +23,26 @@ public class UserService {
 
 	public int updateUser(UserDTO dto) {
 		return mapper.updateUser(dto);
+	}
+
+	public int deleteUser(String id) {
+		return mapper.deleteUser(id);
+	}
+
+	public List<RankDTO> selectAllRank() {
+		return mapper.selectAllRank();
+	}
+	
+	public List<RankDTO> selectRankUser(int[] grantNo) {
+		return mapper.selectRankUser(grantNo);
+	}
+
+	public List<UserDTO> searchUser(Map<String, String> param) {
+		return mapper.searchUser(param);
+	}
+
+	public int updateRank(Map<String, String> param) {
+		return mapper.updateRank(param);
 	}
 
  
