@@ -60,6 +60,7 @@
                 obj = {...obj, [e.target.className] : e.target.value};
                 let id = $(e.target).closest('tr').find('input.id');
                 obj = {...obj, [$(id).attr('class')] : $(id).val()};
+                console.log("Sending data: ", obj); // Add this line for debugging
                 $.ajax({
                     url: "/ms4/user/admin/update/rank",
                     method : "PATCH",
@@ -97,7 +98,7 @@
                 });
             });
 
-            // Search user handler
+         // Search user handler
             $('.txt_search').keyup(function(e) {
                 let obj = {
                     searchKind: $('.search_kind').val(),
@@ -117,7 +118,7 @@
                             tag += `<td><input type="text" class="nickname" value="${item.nickname}"></td>`;
                             tag += `<td><input type="text" class="email" value="${item.email}"></td>`;
                             tag += '<td><select class="rank">';
-                            r.grade.forEach((g) => {
+                            r.rank.forEach((g) => {
                                 tag += `<option value="${g.grantNo}" ${g.grantNo == item.grantNo ? 'selected' : ''}>${g.grantName}</option>`;
                             });
                             tag += '</select></td>';

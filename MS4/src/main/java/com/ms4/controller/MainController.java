@@ -67,7 +67,6 @@ public class MainController {
     
     @GetMapping("/user/admin/search")
 	public ResponseEntity<String> searchMember(@RequestParam Map<String , String> param){
-		System.out.println(param);
 		List<UserDTO> list = service.searchUser(param);
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("msg", "유저 조회 성공");
@@ -77,12 +76,11 @@ public class MainController {
 	}
     
     @PatchMapping("/user/admin/update/rank")
-	public ResponseEntity<String> updateMemberGreade(@RequestParam Map<String, String> param){
-		System.out.println(param);
-		int count = service.updateRank(param);		
+	public ResponseEntity<String> updateUserRank(@RequestBody Map<String, String> param){
+		int count = service.updateRank(param);
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("count", count);
-		map.put("msg", count == 0 ? "회원정보 등급 수정 실패" : "회원정보 등급 수정 성공" );
+		map.put("msg", count == 0 ? "유저 랭크 수정 실패" : "유저 랭크 수정 성공" );
 		return new ResponseEntity(map, HttpStatus.OK);
 	}
     

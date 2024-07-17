@@ -63,7 +63,7 @@
 	<select id="searchUser" parameterType="map" resultMap="user">
 		select *
 		from users
-		where ${search_kind} like '%' || #{txt_search} || '%'
+		where ${searchKind} like '%' || #{keyword} || '%'
 	</select>
 	
 	<!-- 관리자 유저 정보 수정 -->
@@ -76,8 +76,8 @@
 	
 	<!-- 관리자 유저 랭크 수정 -->
 	<update id="updateRank" parameterType="map">
-		update users set grant_no = #{grantNo}
-		where id = #{id}
+		update users set grant_no = #{rank}
+    	where id = #{id}
 	</update>
 
 	<!-- 관리자 유저 정보 삭제 -->
