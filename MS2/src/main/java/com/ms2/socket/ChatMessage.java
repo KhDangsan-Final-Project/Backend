@@ -1,27 +1,33 @@
 package com.ms2.socket;
 
 public class ChatMessage {
-	 String chatRoomId;
-     String message;
-     String type;
-	public String getChatRoomId() {
-		return chatRoomId;
-	}
-	public void setChatRoomId(String chatRoomId) {
-		this.chatRoomId = chatRoomId;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-    
-    
+    private String content;
+    private String sender;
+
+    // 기본 생성자
+    public ChatMessage() {
+    }
+
+    // 매개변수가 있는 생성자
+    public ChatMessage(String content, String sender) {
+        this.content = content;
+        this.sender = sender;
+    }
+
+    // Getter와 Setter 메서드
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
 }
