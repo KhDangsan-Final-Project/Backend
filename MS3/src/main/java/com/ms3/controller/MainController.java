@@ -29,7 +29,7 @@ public class MainController {
         String id = param.get("id");
         String password = param.get("password");
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<String, Object>();
         
         UserDTO user = service.selectUser(id, password);
         if (user != null) {
