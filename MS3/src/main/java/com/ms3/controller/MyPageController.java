@@ -85,6 +85,8 @@ public class MyPageController {
         map.put("status", result > 0 ? "success" : "fail");
         return map;
     }
+    
+    
 
     @DeleteMapping("/friend/reject")
     public Map<String, Object> rejectFriendRequest(@RequestBody FriendDTO friendDTO, @RequestParam String token) {
