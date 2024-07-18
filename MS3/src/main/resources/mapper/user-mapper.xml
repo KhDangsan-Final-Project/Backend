@@ -16,13 +16,37 @@
 
     <!-- 회원가입 -->
     <insert id="insertUser" parameterType="user">
-	    insert into users(id, grant_no, password, email, name, nickname, profile)
-	    values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'), #{email}, #{name}, #{nickname}, #{profile})
-	</insert>
+        insert into users(id, grant_no, password, email, name, nickname, profile)
+        values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'),
+        #{email}, #{name}, #{nickname}, #{profile})
+    </insert>
 
-    
     <!-- 로그인 -->
     <select id="selectUser" resultMap="user" parameterType="map">
-        select * from users where id = #{id} and password = STANDARD_HASH(#{password}, 'SHA512')
+        select * from users where id = #{id} and password =
+        STANDARD_HASH(#{password}, 'SHA512')
+    </select>
+
+    <!-- 회원 정보 조회 -->
+    <select id="selectInfoUser" resultMap="user"
+            parameterType="string">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+
+    <!-- 회원 정보 업데이트 -->
+    <update id="userUpdate" parameterType="user">
+        UPDATE users
+        SET
+        email = #{email},
+        password = STANDARD_HASH(#{password}, 'SHA512'),
+        nickname = #{nickname}
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 사용자 검색 -->
+    <select id="searchFriend" resultType="com.ms3.dto.UserDTO">
+        SELECT * FROM users
+        WHERE id LIKE '%' || #{query} || '%'
+        OR nickname LIKE '%' || #{query} || '%'
     </select>
 </mapper>

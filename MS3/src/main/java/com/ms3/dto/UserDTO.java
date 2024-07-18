@@ -2,6 +2,7 @@ package com.ms3.dto;
 
 import org.apache.ibatis.type.Alias;
 
+
 @Alias("user")
 public class UserDTO {
 	private String id;
@@ -88,10 +89,8 @@ public class UserDTO {
 		return "UserDTO [id=" + id + ", grantNo=" + grantNo + ", password=" + password + ", email=" + email + ", name="
 				+ name + ", nickname=" + nickname + ", profile=" + profile + "]";
 	}
-	
-	
 
-	
+
 	
 	
 	
