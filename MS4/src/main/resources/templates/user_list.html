@@ -1,37 +1,61 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>사용자 목록</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-        }
-        body {
-            height: 3000px;
-        }
-        table {
-            border-collapse: collapse;
-            margin: 20px auto;
-            width: 1600px;
-        }
-        td, th {
-            padding: 10px;
-            border: 1px solid black;
-            text-align: center;
-        }
-        input, select {
-            text-align: center;
-            font-size: 1.2em;
-        }
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
+<meta charset="UTF-8">
+<title>사용자 목록</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	text-align: center;
+	margin: 20px 0;
+}
+
+thead th {
+	font-size: 1.4em;
+	border-bottom: 1px solid #5C3BE5;
+}
+
+tbody td {
+	border-bottom: 1px solid #C2C3C5;
+}
+
+body {
+	height: 3000px;
+}
+
+table {
+	border-collapse: collapse;
+	margin: 20px auto;
+	width: 1600px;
+}
+
+td, th {
+	padding: 10px;
+	text-align: center;
+}
+
+input, select {
+	text-align: center;
+	font-size: 1.2em;
+	border : none;
+}
+
+button {
+	border-radius: 15px;
+	border: none;
+	width: 39px;
+	height: 20px;
+	margin-left: 8px;
+	font-weight: bold;
+}
+</style>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
         $(document).ready(function() {
             // Update button click handler
             $(".user_list").on("click", ".btn_update", function() {
@@ -136,47 +160,46 @@
     </script>
 </head>
 <body>
-    <h1>사용자 목록</h1>
-    <table>
-        <thead>
-            <tr>
-                <td colspan="6">
-                    <select class="search_kind">
-                        <option value="name">이름</option>
-                        <option value="id">아이디</option>
-                        <option value="nickname">닉네임</option>
-                    </select>
-                    <input type="text" class="txt_search" placeholder="검색어 입력">
-                </td>
-            </tr>
-            <tr>
-                <th>아이디</th>
-                <th>이름</th>
-                <th>닉네임</th>
-                <th>Email</th>
-                <th>랭크</th>
-                <th>비고</th>
-            </tr>
-        </thead>
-        <tbody class="user_list">
-            <tr th:each="user : ${userList}">
-                <td><input type="text" class="id" th:value="${user.id}" readonly /></td>
-                <td><input type="text" class="name" th:value="${user.name}" /></td>
-                <td><input type="text" class="nickname" th:value="${user.nickname}" /></td>
-                <td><input type="text" class="email" th:value="${user.email}" /></td>
-                <td>
-                    <select class="rank">
-                        <th:block th:each="rank : ${rankList}">
-                            <option th:value="${rank.grantNo}" th:selected="${rank.grantNo == user.grantNo}">[[${rank.grantName}]]</option>
-                        </th:block>
-                    </select>
-                </td>
-                <td>
-                    <button type="button" class="btn_update">수정</button>
-                    <button type="button" class="btn_delete">삭제</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+	<h1>사용자 목록</h1>
+	<table>
+		<thead>
+			<tr>
+				<td colspan="6"><select class="search_kind">
+						<option value="name">이름</option>
+						<option value="id">아이디</option>
+						<option value="nickname">닉네임</option>
+				</select> <input type="text" class="txt_search" placeholder="검색어 입력">
+				</td>
+			</tr>
+			<tr>
+				<th>아이디</th>
+				<th>이름</th>
+				<th>닉네임</th>
+				<th>Email</th>
+				<th>랭크</th>
+				<th>비고</th>
+			</tr>
+		</thead>
+		<tbody class="user_list">
+			<tr th:each="user : ${userList}">
+				<td><input type="text" class="id" th:value="${user.id}"
+					readonly /></td>
+				<td><input type="text" class="name" th:value="${user.name}" /></td>
+				<td><input type="text" class="nickname"
+					th:value="${user.nickname}" /></td>
+				<td><input type="text" class="email" th:value="${user.email}" /></td>
+				<td><select class="rank">
+						<th:block th:each="rank : ${rankList}">
+							<option th:value="${rank.grantNo}"
+								th:selected="${rank.grantNo == user.grantNo}">[[${rank.grantName}]]</option>
+						</th:block>
+				</select></td>
+				<td>
+					<button type="button" class="btn_update">수정</button>
+					<button type="button" class="btn_delete">삭제</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </body>
 </html>
