@@ -1,5 +1,7 @@
 package com.ms3.dto;
 
+import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
 
 @Alias("user")
@@ -11,20 +13,10 @@ public class UserDTO {
 	private String name;
 	private String nickname;
 	private String profile;
+	private String passwardResetToken;
+	private Date tokenExpiryTime;
 	
 	public UserDTO() {
-	}
-
-	public UserDTO(String id, int grantNo, String password, String email, String name, String nickname,
-			String profile) {
-		super();
-		this.id = id;
-		this.grantNo = grantNo;
-		this.password = password;
-		this.email = email;
-		this.name = name;
-		this.nickname = nickname;
-		this.profile = profile;
 	}
 
 	public String getId() {
@@ -83,12 +75,29 @@ public class UserDTO {
 		this.profile = profile;
 	}
 
+	public String getPasswardResetToken() {
+		return passwardResetToken;
+	}
+
+	public void setPasswardResetToken(String passwardResetToken) {
+		this.passwardResetToken = passwardResetToken;
+	}
+
+	public Date getTokenExpiryTime() {
+		return tokenExpiryTime;
+	}
+
+	public void setTokenExpiryTime(Date tokenExpiryTime) {
+		this.tokenExpiryTime = tokenExpiryTime;
+	}
+
 	@Override
 	public String toString() {
 		return "UserDTO [id=" + id + ", grantNo=" + grantNo + ", password=" + password + ", email=" + email + ", name="
-				+ name + ", nickname=" + nickname + ", profile=" + profile + "]";
+				+ name + ", nickname=" + nickname + ", profile=" + profile + ", passwardResetToken="
+				+ passwardResetToken + ", tokenExpiryTime=" + tokenExpiryTime + "]";
 	}
-	
+
 	
 
 	
