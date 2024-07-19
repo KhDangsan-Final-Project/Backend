@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Backend/src/main/java"/>
+	<classpathentry kind="src" path="MS1/src/main/java"/>
+	<classpathentry kind="src" path="MS1/src/test/java"/>
+	<classpathentry kind="src" path="MS2/src/main/java"/>
+	<classpathentry kind="src" path="MS2/src/test/java"/>
+	<classpathentry kind="src" path="MS3/src/main/java"/>
+	<classpathentry kind="src" path="MS3/src/test/java"/>
+	<classpathentry kind="output" path="MS1/target/classes"/>
+</classpath>
