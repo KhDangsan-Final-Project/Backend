@@ -14,5 +14,5 @@ public interface UserMapper {
     UserDTO selectUser(Map<String, Object> map);
     int userUpdate(UserDTO dto);
     UserDTO selectInfoUser(String id);
-    List<UserDTO> searchFriend(@Param("query") String query);
+    List<UserDTO> searchFriend(@Param("query") String query, @Param("userId") String userId);
 }

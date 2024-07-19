@@ -64,9 +64,9 @@ public class MyPageController {
     }
 
     @GetMapping("/friend/search")
-    public List<UserDTO> searchFriend(@RequestParam String query) {
-    	System.out.println(query);
-        return service.searchFriend(query);
+    public List<UserDTO> searchFriend(@RequestParam String query, @RequestParam String token) {
+        String userId = jwtUtil.extractId(token);
+        return service.searchFriend(query, userId);
     }
 
     @GetMapping("/friend/request")
@@ -85,8 +85,6 @@ public class MyPageController {
         map.put("status", result > 0 ? "success" : "fail");
         return map;
     }
-    
-    
 
     @DeleteMapping("/friend/reject")
     public Map<String, Object> rejectFriendRequest(@RequestBody FriendDTO friendDTO, @RequestParam String token) {
@@ -108,11 +106,5 @@ public class MyPageController {
     	map.put("status", result > 0 ? "success" : "fail");
     	return map;
     }
-    
-    
-    
-    
-    
-    
     
 }

@@ -12,10 +12,7 @@
 
 	<!-- 친구 추가 요청 -->
 	<insert id="addFriendRequest" parameterType="map">
-		insert into
-		friend(user_id, friend_id, status) values (#{userId},
-		#{friendId},
-		'pending')
+		insert into friend(user_id, friend_id, status) values (#{userId}, #{friendId}, 'pending')
 	</insert>
 
 	<!-- 친구 목록 조회 -->
@@ -26,13 +23,11 @@
 
 	<!-- 친구 요청 조회 -->
 	<select id="requestFriend" resultMap="friend" parameterType="string">
-		select * from friend where friend_id = #{userId} and
-		status = 'pending'
+		select * from friend where friend_id = #{userId} and status = 'pending'
 	</select>
 
 	<update id="acceptFriendRequest" parameterType="com.ms3.dto.FriendDTO">
-		UPDATE friend
-		SET status = #{status}
+		UPDATE friend SET status = #{status}
 		WHERE user_id = #{userId} AND friend_id = #{friendId}
 	</update>
 
@@ -48,22 +43,16 @@
 
 	<select id="checkFriendRequestExist"
 		parameterType="com.ms3.dto.FriendDTO" resultType="int">
-		SELECT COUNT(*)
-		FROM friend
-		WHERE (user_id = #{userId} AND friend_id = #{friendId} AND status =
-		'pending')
-		OR (user_id = #{friendId} AND friend_id = #{userId} AND status =
-		'pending')
+		SELECT COUNT(*) FROM friend
+		WHERE (user_id = #{userId} AND friend_id = #{friendId} AND status = 'pending')
+		OR (user_id = #{friendId} AND friend_id = #{userId} AND status = 'pending')
 	</select>
 
 	<select id="checkFriendExist"
 		parameterType="com.ms3.dto.FriendDTO" resultType="int">
-		SELECT COUNT(*)
-		FROM friend
-		WHERE (user_id = #{userId} AND friend_id = #{friendId} AND status =
-		'accepted')
-		OR (user_id = #{friendId} AND friend_id = #{userId} AND status =
-		'accepted')
+		SELECT COUNT(*) FROM friend
+		WHERE (user_id = #{userId} AND friend_id = #{friendId} AND status = 'accepted')
+		OR (user_id = #{friendId} AND friend_id = #{userId} AND status = 'accepted')
 	</select>
 
 

@@ -38,7 +38,7 @@ public class UserService {
         return mapper.userUpdate(userDTO);
     }
 
-    public List<UserDTO> searchFriend(String query) {
-        return mapper.searchFriend(query);
-    }
+	public List<UserDTO> searchFriend(String query, String userId) {
+		return mapper.searchFriend(query, userId);
+	}
 }
