@@ -1,4 +1,4 @@
-package com.ms2.socket;
+package com.ms2.dto;
 
 public class ChatMessage {
     private String content;

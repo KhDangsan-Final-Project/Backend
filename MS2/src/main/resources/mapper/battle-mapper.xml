@@ -16,4 +16,6 @@
   <insert id="insertMatchWin" parameterType="int">
   
   </insert>
+  
+ 
 </mapper>

@@ -33,7 +33,7 @@ public class MainController {
         
         UserDTO user = service.selectUser(id, password);
         if (user != null) {
-            String token = jwtUtil.generateToken(user.getId(), user.getNickname(), user.getGrantNo(), user.getProfile());
+        	String token = jwtUtil.generateToken(user.getId(), user.getNickname(), user.getGrantNo(), user.getProfile());
             map.put("msg", "로그인 성공");
             map.put("result", true);
             map.put("token", token);
