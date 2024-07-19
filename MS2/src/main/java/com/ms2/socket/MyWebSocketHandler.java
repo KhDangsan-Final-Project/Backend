@@ -1,17 +1,28 @@
 package com.ms2.socket;
 
+import com.ms2.dto.UserDTO;
 import com.ms2.util.JwtUtil;
+import com.ms2.event.UserConnectedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.json.JSONObject;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class MyWebSocketHandler extends TextWebSocketHandler {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
+    private Map<String, String> sessionNicknameMap = new ConcurrentHashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -24,38 +35,56 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         System.out.println("Received message from client: " + payload);
 
         try {
-            // JSON 형식으로 토큰을 추출
             JSONObject json = new JSONObject(payload);
-            String token = json.getString("token");
-
-            // 토큰 검증 및 사용자 정보 조회
             JSONObject response = new JSONObject();
-            if (validateToken(token)) {
-                // 클레임을 추출하여 응답에 포함
-                String id = jwtUtil.extractId(token);
-                String nickname = jwtUtil.extractNickname(token);
-                Integer grantNo = jwtUtil.extractGrantNo(token);
-                String profile = jwtUtil.extractProfile(token);
 
-                response.put("id", id);
-                response.put("nickname", nickname);
-                response.put("grantNo", grantNo);
-                response.put("profile", profile);
+            if (json.has("token")) {
+                String token = json.getString("token");
 
-                // 콘솔에 토큰과 클레임 정보 출력
-                System.out.println("Valid token received:");
-                System.out.println("ID: " + id);
-                System.out.println("Nickname: " + nickname);
-                System.out.println("Grant No: " + grantNo);
-                System.out.println("Profile: " + profile);
+                if (validateToken(token)) {
+                    String id = jwtUtil.extractId(token);
+                    String nickname = jwtUtil.extractNickname(token);
+                    Integer grantNo = jwtUtil.extractGrantNo(token);
+                    String profile = jwtUtil.extractProfile(token);
+
+                    response.put("id", id);
+                    response.put("nickname", nickname);
+                    response.put("grantNo", grantNo);
+                    response.put("profile", profile);
+
+                    UserDTO user = new UserDTO();
+                    user.setId(id);
+                    user.setGrantNo(grantNo);
+                    user.setNickname(nickname);
+                    user.setProfile(profile);
+
+                    System.out.println("Valid token received:");
+                    System.out.println("ID: " + id);
+                    System.out.println("Nickname: " + nickname);
+                    System.out.println("Grant No: " + grantNo);
+                    System.out.println("Profile: " + profile);
+
+                    sessionNicknameMap.put(session.getId(), nickname);
+
+                    // UserConnectedEvent 게시
+                    eventPublisher.publishEvent(new UserConnectedEvent(this, id));
+                } else {
+                    response.put("error", "Invalid token");
+                    System.out.println("Invalid token received: " + token);
+                }
+                session.sendMessage(new TextMessage(response.toString()));
             } else {
-                response.put("error", "Invalid token");
+                String senderNickname = sessionNicknameMap.getOrDefault(session.getId(), "unknown");
 
-                // 유효하지 않은 토큰에 대한 정보 출력
-                System.out.println("Invalid token received: " + token);
+                response.put("sender", senderNickname);
+                response.put("content", json.optString("content", "user"));
+
+                System.out.println("Message received:");
+                System.out.println("Sender: " + response.getString("sender"));
+                System.out.println("Content: " + response.getString("content"));
+
+                session.sendMessage(new TextMessage(response.toString()));
             }
-
-            session.sendMessage(new TextMessage(response.toString()));
         } catch (Exception e) {
             System.err.println("Error processing message: " + e.getMessage());
             e.printStackTrace();
@@ -67,21 +96,20 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         System.err.println("WebSocket transport error: " + exception.getMessage());
         exception.printStackTrace();
-        // 에러 발생 시에도 연결을 닫지 않고 에러 로그만 출력합니다.
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         System.out.println("WebSocket 연결 종료: " + session.getId() + ", 상태: " + status);
-        // 연결 종료 로그를 남기고, 연결 종료 상태를 모니터링합니다.
+        sessionNicknameMap.remove(session.getId());
     }
 
     private boolean validateToken(String token) {
         try {
-            jwtUtil.extractClaims(token);  // 예외가 발생하지 않으면 토큰이 유효하다고 간주
+            jwtUtil.extractClaims(token);
             return true;
         } catch (Exception e) {
-            return false;  // 토큰이 유효하지 않거나 파싱 에러 발생 시
+            return false;
         }
     }
 }

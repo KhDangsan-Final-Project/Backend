@@ -3,19 +3,28 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ms2.mapper.BattleMapper">
-    <!-- ResultMap -->
-    <resultMap type="com.ms2.dto.battleDTO" id="battle">
+
+    <!-- ResultMap 정의 -->
+    <resultMap type="com.ms2.dto.UserDTO" id="user">
         <id column="ID" property="id" />
         <result column="CARD_NO" property="cardNo"/>
         <result column="MATCH_WIN" property="matchWin"/>
         <result column="MATCH_LOSS" property="matchLoss"/>
-        <result column="MATCH_NO" property="matchNo"/>
+        <result column="NICKNAME" property="nickname"/>
     </resultMap>
 
-  <!-- 이긴 회원 match_win 1 올리기 -->
-  <insert id="insertMatchWin" parameterType="int">
-  
-  </insert>
-  
- 
+    <!-- 이긴 회원의 승리 수를 1 증가시키는 SQL 쿼리 -->
+    <update id="updateMatchWin" parameterType="String">
+        UPDATE users
+        SET match_win = match_win + 1
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 특정 회원의 정보 조회 쿼리 예시 -->
+    <select id="selectUserById" parameterType="String" resultMap="battle">
+        SELECT ID, CARD_NO, MATCH_WIN, MATCH_LOSS, MATCH_NO
+        FROM users
+        WHERE ID = #{id}
+    </select>
+
 </mapper>
