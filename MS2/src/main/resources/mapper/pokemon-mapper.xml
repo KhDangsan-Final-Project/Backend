@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms2.mapper.PokemonMapper">
+    <!-- ResultMap -->
+    <resultMap type="com.ms2.dto.PokemonDTO" id="pokemon">
+        <id column="id" property="id" />
+        <result column="korean_name" property="koreanName" />
+        <result column="english_name" property="englishName" />
+    </resultMap>
+
+    <!-- 리턴 코드 -->
+	<select id="pokemonSelect" resultMap="pokemon">
+	    SELECT * FROM pokemon WHERE korean_name LIKE '%' || #{koreanName} || '%'
+	</select>
+
+</mapper>
