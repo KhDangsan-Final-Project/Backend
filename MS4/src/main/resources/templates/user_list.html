@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>사용자 목록</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	text-align: center;
+	margin: 20px 0;
+}
+
+thead th {
+	font-size: 1.4em;
+	border-bottom: 1px solid #5C3BE5;
+}
+
+tbody td {
+	border-bottom: 1px solid #C2C3C5;
+}
+
+body {
+	height: 3000px;
+}
+
+table {
+	border-collapse: collapse;
+	margin: 20px auto;
+	width: 1600px;
+}
+
+td, th {
+	padding: 10px;
+	text-align: center;
+}
+
+input, select {
+	text-align: center;
+	font-size: 1.2em;
+	border : none;
+}
+
+button {
+	border-radius: 15px;
+	border: none;
+	width: 39px;
+	height: 20px;
+	margin-left: 8px;
+	font-weight: bold;
+}
+</style>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+        $(document).ready(function() {
+            // Update button click handler
+            $(".user_list").on("click", ".btn_update", function() {
+                let obj = {};
+                $(this).closest('tr').find('input, select').each(function(idx, val) {
+                    obj = {...obj, [val.className]: val.value};
+                });
+                $.ajax({
+                    url: "/ms4/user/admin/update",
+                    data: JSON.stringify(obj),
+                    dataType: 'json',
+                    contentType: "application/json",
+                    method: "PUT",
+                    success: function(r) {
+                        alert(r.msg);
+                    },
+                    error: function(err) {
+                        alert("수정 실패!");
+                    }
+                });
+            });
+
+            // Update rank handler
+            $(".user_list").on("change", ".rank", function(e) {
+                let obj = {};
+                obj = {...obj, [e.target.className] : e.target.value};
+                let id = $(e.target).closest('tr').find('input.id');
+                obj = {...obj, [$(id).attr('class')] : $(id).val()};
+                console.log("Sending data: ", obj); // Add this line for debugging
+                $.ajax({
+                    url: "/ms4/user/admin/update/rank",
+                    method : "PATCH",
+                    data : JSON.stringify(obj),
+                    dataType : 'json',
+                    contentType: "application/json",
+                    success: function(r) {
+                        console.log(r);
+                    },
+                    error: function(err) {
+                        alert("수정 실패!");
+                    }
+                });
+            });
+
+            // Delete button click handler
+            $(".user_list").on("click", ".btn_delete", function() {
+                var memberId = $(this).closest('tr').find('input.id').val();
+                const obj = {
+                    'id': memberId
+                };
+                $.ajax({
+                    url: "/ms4/user/admin/delete",
+                    method: "DELETE",
+                    data: JSON.stringify(obj),
+                    dataType: 'json',
+                    contentType: "application/json",
+                    success: function(result) {
+                        alert(result.msg);
+                        location.reload();
+                    },
+                    error: function(err) {
+                        alert("삭제 실패!");
+                    }
+                });
+            });
+
+         // Search user handler
+            $('.txt_search').keyup(function(e) {
+                let obj = {
+                    searchKind: $('.search_kind').val(),
+                    keyword: $('.txt_search').val()
+                };
+                $.ajax({
+                    url: '/ms4/user/admin/search',
+                    data: obj,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(r) {
+                        let tag = '';
+                        r.list.forEach((item) => {
+                            tag += '<tr>';
+                            tag += `<td><input type="text" class="id" value="${item.id}" readonly></td>`;
+                            tag += `<td><input type="text" class="name" value="${item.name}"></td>`;
+                            tag += `<td><input type="text" class="nickname" value="${item.nickname}"></td>`;
+                            tag += `<td><input type="text" class="email" value="${item.email}"></td>`;
+                            tag += '<td><select class="rank">';
+                            r.rank.forEach((g) => {
+                                tag += `<option value="${g.grantNo}" ${g.grantNo == item.grantNo ? 'selected' : ''}>${g.grantName}</option>`;
+                            });
+                            tag += '</select></td>';
+                            tag += `<td><button class="btn_update">수정</button><button class="btn_delete">삭제</button></td>`;
+                            tag += '</tr>';
+                        });
+                        $('.user_list').html(tag);
+                    },
+                    error: function(err) {
+                        alert("검색 실패!");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+	<h1>사용자 목록</h1>
+	<table>
+		<thead>
+			<tr>
+				<td colspan="6"><select class="search_kind">
+						<option value="name">이름</option>
+						<option value="id">아이디</option>
+						<option value="nickname">닉네임</option>
+				</select> <input type="text" class="txt_search" placeholder="검색어 입력">
+				</td>
+			</tr>
+			<tr>
+				<th>아이디</th>
+				<th>이름</th>
+				<th>닉네임</th>
+				<th>Email</th>
+				<th>랭크</th>
+				<th>비고</th>
+			</tr>
+		</thead>
+		<tbody class="user_list">
+			<tr th:each="user : ${userList}">
+				<td><input type="text" class="id" th:value="${user.id}"
+					readonly /></td>
+				<td><input type="text" class="name" th:value="${user.name}" /></td>
+				<td><input type="text" class="nickname"
+					th:value="${user.nickname}" /></td>
+				<td><input type="text" class="email" th:value="${user.email}" /></td>
+				<td><select class="rank">
+						<th:block th:each="rank : ${rankList}">
+							<option th:value="${rank.grantNo}"
+								th:selected="${rank.grantNo == user.grantNo}">[[${rank.grantName}]]</option>
+						</th:block>
+				</select></td>
+				<td>
+					<button type="button" class="btn_update">수정</button>
+					<button type="button" class="btn_delete">삭제</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
