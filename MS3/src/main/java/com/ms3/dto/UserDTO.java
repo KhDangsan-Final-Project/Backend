@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
+
 @Alias("user")
 public class UserDTO {
 	private String id;
@@ -98,9 +99,8 @@ public class UserDTO {
 				+ passwardResetToken + ", tokenExpiryTime=" + tokenExpiryTime + "]";
 	}
 
-	
 
-	
+
 	
 	
 	

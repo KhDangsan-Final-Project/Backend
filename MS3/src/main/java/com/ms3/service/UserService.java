@@ -2,10 +2,13 @@ package com.ms3.service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ms3.dto.UserDTO;
@@ -30,6 +33,17 @@ public class UserService {
         return mapper.selectUser(map);
     }
 
+    public UserDTO selectInfoUser(String id) {
+        return mapper.selectInfoUser(id);
+    }
+
+    public int userUpdate(UserDTO userDTO) {
+        return mapper.userUpdate(userDTO);
+    }
+
+	public List<UserDTO> searchFriend(String query, String userId) {
+		return mapper.searchFriend(query, userId);
+	}
     
  // 비밀번호 재설정 요청 처리
     public String createPasswordResetToken(String email) {
