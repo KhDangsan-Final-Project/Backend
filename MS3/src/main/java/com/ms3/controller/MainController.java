@@ -17,7 +17,6 @@ import com.ms3.dto.UserDTO;
 import com.ms3.service.EmailService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
-import com.ms3.vo.PaggingVO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,12 +25,12 @@ import jakarta.servlet.http.HttpSession;
 public class MainController {
 
 	private final UserService service;
-	private final BoardService boardService;
+	private final EmailService emailService;
 	private final JwtUtil jwtUtil;
 
-	public MainController(UserService service, BoardService boardService, JwtUtil jwtUtil) {
+	public MainController(UserService service, EmailService emailService, JwtUtil jwtUtil) {
 		this.service = service;
-		this.boardService = boardService;
+		this.emailService = emailService;
 		this.jwtUtil = jwtUtil;
 	}
 
@@ -86,7 +85,6 @@ public class MainController {
 		int count = service.idcheck(id);
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		count = service.idcheck(id);
 		map.put("count", count);
 
 		return map;

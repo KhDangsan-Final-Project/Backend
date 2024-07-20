@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ms3.dto.UserDTO;
@@ -68,5 +66,9 @@ public class UserService {
 
         mapper.updateUserPassword(user.getId(), newPassword);
     }
+
+	public int idcheck(String id) {
+		return mapper.idcheck(id);
+	}
 
 }
