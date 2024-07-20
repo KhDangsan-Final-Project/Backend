@@ -20,13 +20,33 @@
 	    values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'), #{email}, #{name}, #{nickname}, #{profile})
 	</insert>
 
-    
     <!-- 로그인 -->
     <select id="selectUser" resultMap="user" parameterType="map">
         select * from users where id = #{id} and password = STANDARD_HASH(#{password}, 'SHA512')
     </select>
-    
-    <select id="idcheck" resultType="int" parameterType="map">
-    	select count(*) from users where id = #{id}
+
+    <!-- 이메일로 사용자 검색 -->
+    <select id="selectUserByEmail" parameterType="string" resultMap="user">
+        SELECT * FROM users WHERE email = #{email}
     </select>
+    
+
+    <!-- 비밀번호 재설정 토큰으로 사용자 검색 -->
+    <select id="selectUserByResetToken" parameterType="string" resultType="com.ms3.dto.UserDTO">
+        SELECT * FROM USERS WHERE PASSWORD_RESET_TOKEN = #{token}
+    </select>
+
+    <!-- 비밀번호 업데이트 -->
+    <update id="updatePassword" parameterType="map">
+        UPDATE USERS
+        SET PASSWORD = #{password}, PASSWORD_RESET_TOKEN = NULL, TOKEN_EXPIRY_TIME = NULL
+        WHERE PASSWORD_RESET_TOKEN = #{token}
+    </update>
+    
+    <!-- 비밀번호 재설정 토큰 및 만료 시간 업데이트 -->
+    <update id="savePasswordResetToken" parameterType="map">
+        UPDATE USERS
+        SET PASSWORD_RESET_TOKEN = #{token}, TOKEN_EXPIRY_TIME = #{expiryTime}
+        WHERE EMAIL = #{email}
+    </update>
 </mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms1.mapper.AiMapper">
+	<resultMap type="com.ms1.dto.AiDTO" id="ai">
+	    <id column="view_no" property="viewNo" />
+        <result column="ip_address" property="ipAddress" />
+	</resultMap>
+
+	<select id="requestImg" resultType="int">
+		SELECT count(*)
+		FROM AI_IMAGE_UPLOAD
+		WHERE TO_CHAR(REQUEST_DATE, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+	</select>
+	
+	<insert id="insertRequest">
+		insert into AI_IMAGE_UPLOAD(REQUEST_DATE) values(SYSDATE)
+	</insert>
+	
+	<insert id="insertDetected" parameterType="String">
+		insert into TEXT_DATA(TEXT_CONTENT, ID) values(#{detectedText},#{id})
+	</insert>
+	
+	<select id="selectDetected" parameterType="String">
+		SELECT P.KOREAN_NAME AS EXTRACTED_WORD
+		FROM TEXT_DATA TD
+		JOIN POKEMON P
+		ON REGEXP_LIKE(TD.TEXT_CONTENT, P.KOREAN_NAME)
+		WHERE TD.ID = #{id}
+		ORDER BY TD.UPLOAD_DATE DESC
+		FETCH FIRST 5 ROWS ONLY
+	</select>
+	
+</mapper>

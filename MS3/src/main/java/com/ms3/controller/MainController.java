@@ -4,20 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.hc.core5.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ms3.dto.BoardDTO;
 import com.ms3.dto.UserDTO;
-import com.ms3.service.BoardService;
+import com.ms3.service.EmailService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
 import com.ms3.vo.PaggingVO;
@@ -94,25 +91,46 @@ public class MainController {
 
 		return map;
 	}
-	
-	@GetMapping("/board/list")
-	@ResponseBody
-	public List<BoardDTO> list(
-							@RequestParam(defaultValue = "1") int pageNo,
-							@RequestParam(defaultValue = "15") int pageContentEa) {
-		List<BoardDTO> boardList = boardService.selectBoardNewList(pageNo, pageContentEa);
-		System.out.println(boardList);
-		return boardList;
-	}
-	
-	@PostMapping("/board/write")
-	public String boardWrite(BoardDTO dto, HttpSession session){
-		UserDTO memberDTO = (UserDTO) session.getAttribute("user");
-		dto.setId(memberDTO.getId());
-		int bno = boardService.getBoardNo();
-		dto.setBoardNo(bno);
-		boardService.insertBoard(dto);
-		return "redirect:/board/"+bno;
-	}
+  
+   @PostMapping("/password-reset-request")
+   public Map<String, Object> requestPasswordReset(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        Map<String, Object> map = new HashMap<>();
+        try {
+            // 비밀번호 재설정 토큰 생성
+            String token = service.createPasswordResetToken(email);
+            
+            // 이메일 전송
+            emailService.sendPasswordResetEmail(email, token);
+            
+            map.put("msg", "비밀번호 재설정 이메일이 전송되었습니다.");
+            map.put("result", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", "비밀번호 재설정 요청 실패");
+            map.put("result", false);
+        }
+        return map;
+    }
+
+    @PostMapping("/password-reset")
+    public Map<String, Object> resetPassword(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        String newPassword = request.get("newPassword");
+        Map<String, Object> map = new HashMap<>();
+        try {
+            service.resetPassword(token, newPassword);
+            map.put("msg", "비밀번호가 성공적으로 재설정되었습니다.");
+            map.put("result", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", "비밀번호 재설정 실패");
+            map.put("result", false);
+        }
+        return map;
+    }
+
+}
+
 
 }
