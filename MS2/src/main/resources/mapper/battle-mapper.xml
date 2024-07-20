@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms2.mapper.BattleMapper">
+
+    <!-- ResultMap -->
+    <resultMap id="userResultMap" type="com.ms2.dto.UserDTO">
+        <id column="ID" property="id"/>
+        <result column="NICKNAME" property="nickname"/>
+        <result column="GRANT_NO" property="grantNo"/>
+        <result column="PROFILE" property="profile"/>
+        <result column="MATCH_WIN" property="matchWin"/>
+    </resultMap>
+
+    <!-- 사용자 승리 수 조회 쿼리 -->
+    <select id="selectUserVictoryCount" parameterType="String" resultMap="userResultMap">
+        SELECT u.ID, u.NICKNAME, u.GRANT_NO, u.PROFILE, m.MATCH_WIN
+        FROM USERS u
+        INNER JOIN MATCH m ON u.ID = m.ID
+        WHERE u.ID = #{id}
+    </select>
+
+</mapper>
