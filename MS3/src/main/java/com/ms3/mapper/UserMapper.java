@@ -1,5 +1,6 @@
 package com.ms3.mapper;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,12 +17,13 @@ public interface UserMapper {
     UserDTO selectInfoUser(String id);
     List<UserDTO> searchFriend(@Param("query") String query, @Param("userId") String userId);
 
+    int idcheck(String id);
 
 
     // 이메일로 사용자 조회
     UserDTO selectUserByEmail(String email);
     // 비밀번호 재설정 토큰 저장
-    void savePasswordResetToken(@Param("userId") String userId, @Param("token") String token, @Param("expiryTime") Date expiryTime);
+    void savePasswordResetToken(String id, String token, java.util.Date expiryTime);
     // 토큰으로 사용자 조회
     UserDTO selectUserByToken(String token);
     // 비밀번호 업데이트

@@ -17,16 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/ms2")
 public class WebSocketController {
 	
-
-
 	@MessageMapping("/sendMessage")
 	 public void sendMessage(@Payload ChatMessage chatMessage) {
 	     System.out.println("Received message: " + chatMessage.getSender() + ": " + chatMessage.getContent());
 	 }
-	 
-//	 @GetMapping("hello")
-//	 public String hello() {
-//	     return "hello";
-//	 }
-// 
+
 }

@@ -73,5 +73,9 @@
         SET PASSWORD_RESET_TOKEN = #{token}, TOKEN_EXPIRY_TIME = #{expiryTime}
         WHERE EMAIL = #{email}
     </update>
+    
+    <select id="idcheck">
+    	SELECT COUNT(*) FROM USERS WHERE ID = #{id}
+    </select>
 
 </mapper>
