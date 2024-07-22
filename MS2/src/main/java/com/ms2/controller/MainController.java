@@ -20,7 +20,6 @@ public class MainController {
         this.userId = event.getId();
         System.out.println("User connected with ID//mainController: " + userId);
 
-        // ID를 설정한 후 someOtherMethod를 호출합니다.
         someOtherMethod();
     }
 
