@@ -55,4 +55,8 @@ public class UserService {
         mapper.updateUserPassword(user.getId(), newPassword);
     }
 
+	public int idcheck(String id) {
+		return mapper.idcheck(id);
+	}
+
 }

@@ -1,4 +1,4 @@
-package com.ms3.dto;
+package com.ms1.dto;
 
 import org.apache.ibatis.type.Alias;
 
@@ -10,11 +10,13 @@ public class BoardDTO {
 	private String boardContent;
 	private	String boardWrite;
 	private int boardCount;
+	private String category;
 
 	public BoardDTO() {
 	}
 
-	public BoardDTO(int boardNo, String id, String boardTitle, String boardContent, String boardWrite, int boardCount) {
+	public BoardDTO(int boardNo, String id, String boardTitle, String boardContent, String boardWrite, int boardCount,
+			String category) {
 		super();
 		this.boardNo = boardNo;
 		this.id = id;
@@ -22,6 +24,7 @@ public class BoardDTO {
 		this.boardContent = boardContent;
 		this.boardWrite = boardWrite;
 		this.boardCount = boardCount;
+		this.category = category;
 	}
 
 	public int getBoardNo() {
@@ -72,12 +75,21 @@ public class BoardDTO {
 		this.boardCount = boardCount;
 	}
 
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	@Override
 	public String toString() {
 		return "BoardDTO [boardNo=" + boardNo + ", id=" + id + ", boardTitle=" + boardTitle + ", boardContent="
-				+ boardContent + ", boardWrite=" + boardWrite + ", boardCount=" + boardCount + "]";
+				+ boardContent + ", boardWrite=" + boardWrite + ", boardCount=" + boardCount + ", category=" + category
+				+ "]";
 	}
-	
+
 	
 	
 	

@@ -22,5 +22,6 @@ public interface UserMapper {
     UserDTO selectUserByToken(String token);
     // 비밀번호 업데이트
     void updateUserPassword(@Param("userId") String userId, @Param("password") String newPassword);
+	int idcheck(String id);
 
 }

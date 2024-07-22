@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-	<mapper namespace="com.ms3.mapper.BoardMapper">
+	<mapper namespace="com.ms1.mapper.BoardMapper">
 	<!-- ResultMap -->
-	<resultMap type="com.ms3.dto.BoardDTO" id="board">
+	<resultMap type="com.ms1.dto.BoardDTO" id="board">
         <id column="board_no" property="boardNo" />
         <result column="id" property="id" />
         <result column="board_title" property="boardTitle" />

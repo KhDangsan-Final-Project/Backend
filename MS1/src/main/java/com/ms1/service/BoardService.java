@@ -1,4 +1,4 @@
-package com.ms3.service;
+package com.ms1.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.ms3.dto.BoardDTO;
-import com.ms3.mapper.BoardMapper;
+import com.ms1.dto.BoardDTO;
+import com.ms1.mapper.BoardMapper;
 
 @Service
 public class BoardService {
@@ -31,4 +31,5 @@ public class BoardService {
 	public int insertBoard(BoardDTO dto) {
 		return mapper.insertBoard(dto);
 	}
+
 }

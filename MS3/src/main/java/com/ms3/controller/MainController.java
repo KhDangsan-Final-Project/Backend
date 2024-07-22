@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ms3.dto.BoardDTO;
 import com.ms3.dto.UserDTO;
 import com.ms3.service.EmailService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
-import com.ms3.vo.PaggingVO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,13 +24,13 @@ import jakarta.servlet.http.HttpSession;
 public class MainController {
 
 	private final UserService service;
-	private final BoardService boardService;
 	private final JwtUtil jwtUtil;
+	private final EmailService emailService;
 
-	public MainController(UserService service, BoardService boardService, JwtUtil jwtUtil) {
+	public MainController(UserService service, JwtUtil jwtUtil, EmailService emailService) {
 		this.service = service;
-		this.boardService = boardService;
 		this.jwtUtil = jwtUtil;
+		this.emailService = emailService;
 	}
 
 	@PostMapping("/user/select")
@@ -133,4 +131,4 @@ public class MainController {
 }
 
 
-}
+

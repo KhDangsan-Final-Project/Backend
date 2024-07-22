@@ -1,4 +1,4 @@
-package com.ms3.vo;
+package com.ms1.vo;
 
 public class PaggingVO {
 	private int count;
