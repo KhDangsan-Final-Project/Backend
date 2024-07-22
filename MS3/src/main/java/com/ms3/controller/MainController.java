@@ -3,6 +3,8 @@ package com.ms3.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,8 @@ public class MainController {
     private final UserService service;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
     
     public MainController(UserService service, JwtUtil jwtUtil, EmailService emailService) {
         this.service = service;
@@ -76,20 +80,21 @@ public class MainController {
     
     @PostMapping("/password-reset-request")
     public Map<String, Object> requestPasswordReset(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
+    	String email = request.get("email");
         Map<String, Object> map = new HashMap<>();
+        
         try {
             // 비밀번호 재설정 토큰 생성
             String token = service.createPasswordResetToken(email);
-            
+                
             // 이메일 전송
             emailService.sendPasswordResetEmail(email, token);
-            
-            map.put("msg", "비밀번호 재설정 이메일이 전송되었습니다.");
+                
+            map.put("message", "비밀번호 재설정 이메일이 전송되었습니다.");
             map.put("result", true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("msg", "비밀번호 재설정 요청 실패");
+        }catch (Exception e) {
+            logger.error("Error during password reset request", e);
+            map.put("message", "비밀번호 재설정 요청 실패");
             map.put("result", false);
         }
         return map;

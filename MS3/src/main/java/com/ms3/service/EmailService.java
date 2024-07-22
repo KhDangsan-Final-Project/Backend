@@ -4,6 +4,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.ms3.mapper.UserMapper;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -42,4 +44,5 @@ public class EmailService {
             throw new RuntimeException("이메일 전송 실패", e);
         }
     }
+
 }

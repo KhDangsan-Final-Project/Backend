@@ -33,11 +33,13 @@ public class UserService {
  // 비밀번호 재설정 요청 처리
     public String createPasswordResetToken(String email) {
         UserDTO user = mapper.selectUserByEmail(email);
+        System.out.println(email);
         if (user == null) {
             throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
         }
 
         String token = UUID.randomUUID().toString();
+        System.out.println(token);
         Date expiryTime = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)); // 1시간 유효
 
         mapper.savePasswordResetToken(user.getId(), token, expiryTime);
@@ -53,5 +55,6 @@ public class UserService {
 
         mapper.updateUserPassword(user.getId(), newPassword);
     }
+
 
 }
