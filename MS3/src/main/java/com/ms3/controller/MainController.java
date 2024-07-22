@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ms3.dto.BoardDTO;
+import com.ms3.dto.MailDTO;
 import com.ms3.dto.UserDTO;
-import com.ms3.service.EmailService;
+import com.ms3.service.MailService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
 
@@ -25,12 +26,10 @@ import jakarta.servlet.http.HttpSession;
 public class MainController {
 
 	private final UserService service;
-	private final EmailService emailService;
 	private final JwtUtil jwtUtil;
 
-	public MainController(UserService service, EmailService emailService, JwtUtil jwtUtil) {
+	public MainController(UserService service, JwtUtil jwtUtil) {
 		this.service = service;
-		this.emailService = emailService;
 		this.jwtUtil = jwtUtil;
 	}
 
@@ -78,55 +77,10 @@ public class MainController {
 		}
 		return map;
 	}
-
-	@PostMapping("/user/idcheck")
-	public Map<String, Object> idcheck(@RequestBody Map<String, String> payload) {
-		String id = payload.get("id");
-		int count = service.idcheck(id);
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("count", count);
-
-		return map;
-	}
   
-   @PostMapping("/password-reset-request")
-   public Map<String, Object> requestPasswordReset(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        Map<String, Object> map = new HashMap<>();
-        try {
-            // 비밀번호 재설정 토큰 생성
-            String token = service.createPasswordResetToken(email);
-            
-            // 이메일 전송
-            emailService.sendPasswordResetEmail(email, token);
-            
-            map.put("msg", "비밀번호 재설정 이메일이 전송되었습니다.");
-            map.put("result", true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("msg", "비밀번호 재설정 요청 실패");
-            map.put("result", false);
-        }
-        return map;
-    }
+   
 
-    @PostMapping("/password-reset")
-    public Map<String, Object> resetPassword(@RequestBody Map<String, String> request) {
-        String token = request.get("token");
-        String newPassword = request.get("newPassword");
-        Map<String, Object> map = new HashMap<>();
-        try {
-            service.resetPassword(token, newPassword);
-            map.put("msg", "비밀번호가 성공적으로 재설정되었습니다.");
-            map.put("result", true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("msg", "비밀번호 재설정 실패");
-            map.put("result", false);
-        }
-        return map;
-    }
-
-
+  
+    
+    
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ms3.mapper.MailMapper">
+
+	<resultMap id="mail" type="com.ms3.dto.MailDTO">
+		<id property="sender" column="sender" />
+		<result property="receiver" column="receiver" />
+		<result property="subject" column="subject" />
+		<result property="content" column="content" />
+		<result property="timestamp" column="timestamp" />
+	</resultMap>
+
+	<select id="selectMail" resultMap="mail" parameterType="string">
+		SELECT sender, receiver, subject, content, timestamp
+		FROM MAILBOX
+		WHERE receiver = #{userId}
+	</select>
+
+	<insert id="sendMail" parameterType="com.ms3.dto.MailDTO">
+		INSERT INTO MAILBOX (sender, receiver, subject, content, timestamp)
+		VALUES (#{sender}, #{receiver}, #{subject}, #{content}, #{timestamp,
+		jdbcType=TIMESTAMP})
+	</insert>
+
+
+</mapper>
