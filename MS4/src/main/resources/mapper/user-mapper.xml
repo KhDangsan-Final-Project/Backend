@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms4.mapper.UserMapper">
+	<!-- ResultMap -->
+	<resultMap type="com.ms4.dto.UserDTO" id="user">
+		<id column="id" property="id" />
+		<result column="grant_no" property="grantNo" />
+		<result column="password" property="password" />
+		<result column="name" property="name" />
+		<result column="nickname" property="nickname" />
+		<result column="email" property="email" />
+		<result column="profile" property="profile" />
+	</resultMap>
+
+	<resultMap type="com.ms4.dto.RankDTO" id="rank">
+		<id column="grant_no" property="grantNo" />
+		<result column="grant_name" property="grantName" />
+	</resultMap>
+
+	<!-- 회원가입 -->
+	<insert id="insertUser" parameterType="user">
+		insert into users(id,
+		grant_no, password, email, name, nickname, profile)
+		values(#{id},
+		#{grantNo}, STANDARD_HASH(#{password}, 'SHA512'),
+		#{email}, #{name},
+		#{nickname}, #{profile})
+	</insert>
+
+
+	<!-- 로그인 -->
+	<select id="selectUser" resultMap="user" parameterType="map">
+		select *
+		from users where id = #{id} and password =
+		STANDARD_HASH(#{password},
+		'SHA512')
+	</select>
+
+	<!-- 전체 유저 조회 -->
+	<select id="selectAllUser" resultMap="user">
+		select * from users
+	</select>
+
+	<!-- 전체 랭크 조회 -->
+	<select id="selectAllRank" resultMap="rank">
+		select * from rank
+	</select>
+
+	<!-- 랭크 조회 -->
+	<select id="selectRankUser" resultMap="user">
+		select * from users
+		where
+		rank in
+		<foreach collection="array" open="(" item="i" separator=","
+			close=")">
+			#{i}
+		</foreach>
+	</select>
+
+	<!-- 유저 찾기 -->
+	<select id="searchUser" parameterType="map" resultMap="user">
+		select *
+		from users
+		where ${searchKind} like '%' || #{keyword} || '%'
+	</select>
+	
+	<!-- 관리자 유저 정보 수정 -->
+	<update id="updateUser" parameterType="user">
+		update users set name = #{name},
+		nickname = #{nickname},
+		email = #{email}
+		where id = #{id}
+	</update>
+	
+	<!-- 관리자 유저 랭크 수정 -->
+	<update id="updateRank" parameterType="map">
+		update users set grant_no = #{rank}
+    	where id = #{id}
+	</update>
+
+	<!-- 관리자 유저 정보 삭제 -->
+	<delete id="deleteUser" parameterType="String">
+		delete from users where id
+		like #{id}
+	</delete>
+
+</mapper>

@@ -110,6 +110,30 @@
             <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+        	<groupId>com.web</groupId>
+        	<artifactId>SpringWebSocketChat</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!-- springframework-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+    </dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<!--json -->
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20210307</version> <!-- 또는 최신 버전으로 업데이트 -->
+</dependency>
     </dependencies>
 
     <dependencyManagement>
