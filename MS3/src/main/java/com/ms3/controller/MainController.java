@@ -1,24 +1,20 @@
 package com.ms3.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.http.HttpHeaders;
 
-import com.ms3.dto.BoardDTO;
 import com.ms3.dto.UserDTO;
 import com.ms3.service.EmailService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
-
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/ms3")
@@ -35,27 +31,30 @@ public class MainController {
 	}
 
 	@PostMapping("/user/select")
-	public Map<String, Object> login(@RequestBody Map<String, String> param) {
-		String id = param.get("id");
-		String password = param.get("password");
+	public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> param) {
+	    String id = param.get("id");
+	    String password = param.get("password");
 
-		Map<String, Object> map = new HashMap<>();
+	    Map<String, Object> map = new HashMap<>();
 
-		UserDTO user = service.selectUser(id, password);
-		if (user != null) {
-			String token = jwtUtil.generateToken(user.getId(), user.getNickname(), user.getGrantNo(),
-					user.getProfile());
-			map.put("msg", "로그인 성공");
-			map.put("result", true);
-			map.put("token", token);
-		} else {
-			map.put("msg", "로그인 실패");
-			map.put("result", false);
-		}
-
-		return map;
+	    UserDTO user = service.selectUser(id, password);
+	    if (user != null) {
+	        String token = jwtUtil.generateToken(user.getId(), user.getNickname(), user.getGrantNo(),
+	                user.getProfile());
+	        map.put("msg", "로그인 성공");
+	        map.put("result", true);
+	        // HTTP 응답 헤더에 토큰 추가
+	        
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.add("Authorization", "Bearer " + token);
+	        return ResponseEntity.ok().headers(headers).body(map);
+	    } else {
+	        map.put("msg", "로그인 실패");
+	        map.put("result", false);
+	        return ResponseEntity.status(401).body(map);
+	    }
 	}
-
+	
 	@PostMapping("/user/insert")
 	public Map<String, Object> insertUser(@RequestBody Map<String, String> param) {
 		UserDTO dto = new UserDTO();
