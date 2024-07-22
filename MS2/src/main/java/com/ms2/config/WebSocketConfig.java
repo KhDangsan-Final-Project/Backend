@@ -18,17 +18,17 @@ public class WebSocketConfig implements WebSocketConfigurer {
         return new MyWebSocketHandler();
     }
 
-
     @Bean
     public TokenWebSocketHandler tokenWebSocketHandler() {
         return new TokenWebSocketHandler();
     }
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(myWebSocketHandler(), "/ms2/ws")
                 .setAllowedOrigins("*");
         
-        registry.addHandler(myWebSocketHandler(), "/ms2/token")
+        registry.addHandler(tokenWebSocketHandler(), "/ms2/token")
                 .setAllowedOrigins("*");
     }
 }

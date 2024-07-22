@@ -35,6 +35,11 @@ public class MainController {
             UserDTO user = userService.selectUserVictoryCount(userId);
             if (user != null) {
                 System.out.println("User Info: " + user.toString()); // UserDTO의 toString() 메서드 호출
+                if (user.getMatchWin() != null) {
+                    System.out.println("user matchWin info: " + user.getMatchWin().toString());
+                } else {
+                    System.out.println("matchWin value is null.");
+                }
             } else {
                 System.out.println("User not found for ID: " + userId);
             }
