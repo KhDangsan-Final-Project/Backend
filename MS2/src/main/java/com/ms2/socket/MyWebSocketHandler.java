@@ -1,8 +1,8 @@
 package com.ms2.socket;
 
+import com.ms2.dto.UserDTO;
 import com.ms2.util.JwtUtil;
 import com.ms2.event.UserConnectedEvent;
-import com.ms2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.socket.CloseStatus;
@@ -17,9 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MyWebSocketHandler extends TextWebSocketHandler {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
@@ -29,9 +26,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("MyWebSocketHandler WebSocket 연결 성공: " + session.getId());
-        // Optionally send a welcome message
-        sendMessage(session, "Welcome to the WebSocket server!");
+        System.out.println("WebSocket 연결 성공: " + session.getId());
     }
 
     @Override
@@ -40,45 +35,59 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         System.out.println("Received message from client: " + payload);
 
         try {
-            // Parse the received message payload as a JSON object
             JSONObject json = new JSONObject(payload);
+            JSONObject response = new JSONObject();
 
             if (json.has("token")) {
                 String token = json.getString("token");
 
-                // Validate the token and extract id and nickname
                 if (validateToken(token)) {
                     String id = jwtUtil.extractId(token);
                     String nickname = jwtUtil.extractNickname(token);
+                    Integer grantNo = jwtUtil.extractGrantNo(token);
+                    String profile = jwtUtil.extractProfile(token);
 
-                    // Print the extracted id and nickname to the console
+                    response.put("id", id);
+                    response.put("nickname", nickname);
+                    response.put("grantNo", grantNo);
+                    response.put("profile", profile);
+
+                    UserDTO user = new UserDTO();
+                    user.setId(id);
+                    user.setGrantNo(grantNo);
+                    user.setNickname(nickname);
+                    user.setProfile(profile);
+
                     System.out.println("Valid token received:");
                     System.out.println("ID: " + id);
                     System.out.println("Nickname: " + nickname);
+                    System.out.println("Grant No: " + grantNo);
+                    System.out.println("Profile: " + profile);
 
-                    // Save the nickname associated with the session
                     sessionNicknameMap.put(session.getId(), nickname);
 
-                    // Optionally, you can also publish the UserConnectedEvent if needed
+                    // UserConnectedEvent 게시
                     eventPublisher.publishEvent(new UserConnectedEvent(this, id));
-                    
-                    // Send acknowledgment message back to client
-                    sendMessage(session, "Token validated. You are connected as " + nickname);
-
                 } else {
+                    response.put("error", "Invalid token");
                     System.out.println("Invalid token received: " + token);
-                    sendMessage(session, "Invalid token. Connection closed.");
-                    session.close(CloseStatus.BAD_DATA);
                 }
+                session.sendMessage(new TextMessage(response.toString()));
             } else {
-                System.out.println("No token found in message.");
-                sendMessage(session, "No token found. Connection closed.");
-                session.close(CloseStatus.BAD_DATA);
+                String senderNickname = sessionNicknameMap.getOrDefault(session.getId(), "unknown");
+
+                response.put("sender", senderNickname);
+                response.put("content", json.optString("content", "user"));
+
+                System.out.println("Message received:");
+                System.out.println("Sender: " + response.getString("sender"));
+                System.out.println("Content: " + response.getString("content"));
+
+                session.sendMessage(new TextMessage(response.toString()));
             }
         } catch (Exception e) {
             System.err.println("Error processing message: " + e.getMessage());
             e.printStackTrace();
-            sendMessage(session, "Error processing message.");
             session.close(CloseStatus.SERVER_ERROR);
         }
     }
@@ -87,13 +96,11 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         System.err.println("WebSocket transport error: " + exception.getMessage());
         exception.printStackTrace();
-        sendMessage(session, "Transport error occurred.");
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        System.out.println("MyWebSocketHandler WebSocket 연결 종료: " + session.getId() + ", 상태: " + status);
-        // Remove the nickname associated with the session
+        System.out.println("WebSocket 연결 종료: " + session.getId() + ", 상태: " + status);
         sessionNicknameMap.remove(session.getId());
     }
 
@@ -104,9 +111,5 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    private void sendMessage(WebSocketSession session, String message) throws Exception {
-        session.sendMessage(new TextMessage(message));
     }
 }
