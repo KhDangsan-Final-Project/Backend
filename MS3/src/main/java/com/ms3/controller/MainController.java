@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,7 +30,7 @@ public class MainController {
 
 	public MainController(UserService service, JwtUtil jwtUtil, EmailService emailService) {
 		this.service = service;
-		this.jwtUtil = jwtUtil;
+		this.jwtUtil = jwtUtil; 
 		this.emailService = emailService;
 	}
 
@@ -89,7 +90,7 @@ public class MainController {
 
 		return map;
 	}
-  
+	
    @PostMapping("/password-reset-request")
    public Map<String, Object> requestPasswordReset(@RequestBody Map<String, String> request) {
         String email = request.get("email");

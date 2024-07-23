@@ -51,4 +51,13 @@ public class JwtUtil {
     public String extractProfile(String token) {
         return extractClaims(token).get("profile", String.class);
     }
+
+    public String getUserIdFromToken(String token) {
+        try {
+            return extractId(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

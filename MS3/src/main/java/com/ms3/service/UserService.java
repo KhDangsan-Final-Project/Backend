@@ -29,6 +29,10 @@ public class UserService {
         map.put("password", password);
         return mapper.selectUser(map);
     }
+    
+    public int idcheck(String id) {
+		return mapper.idcheck(id);
+	}
 
     
  // 비밀번호 재설정 요청 처리
@@ -55,8 +59,7 @@ public class UserService {
         mapper.updateUserPassword(user.getId(), newPassword);
     }
 
-	public int idcheck(String id) {
-		return mapper.idcheck(id);
-	}
+	
+
 
 }
