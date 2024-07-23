@@ -17,9 +17,6 @@ public class JwtUtil {
     private static final String SECRET_KEY = "g2d2b2PpL1tFs3uHd9qF8h2vF3sR6wU4g7zH9k2mQ1pF3x2zJ1oL";
     private static final long EXPIRATION_TIME = 86400000; // 1일
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-
     public String generateToken(String id, String nickname, int grantNo, String profile) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("nickname", nickname);
@@ -34,8 +31,6 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
 
-        // Redis에 토큰 저장
-        redisTemplate.opsForValue().set(token, id, EXPIRATION_TIME, TimeUnit.MILLISECONDS);
         return token;
     }
 
@@ -44,10 +39,6 @@ public class JwtUtil {
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    public boolean isTokenValid(String token) {
-        return redisTemplate.hasKey(token);
     }
 
     public String extractId(String token) {
