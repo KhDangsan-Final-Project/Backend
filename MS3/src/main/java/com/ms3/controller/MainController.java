@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ms3.dto.UserDTO;
 import com.ms3.service.EmailService;
+import com.ms3.service.TokenService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
 
@@ -25,16 +26,17 @@ public class MainController {
     private final UserService service;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
+    private final TokenService tokenService;
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
-    
-    public MainController(UserService service, JwtUtil jwtUtil, EmailService emailService) {
-        this.service = service;
-        this.jwtUtil = jwtUtil;
-        this.emailService = emailService;
-    }
-    
-    @PostMapping("/user/select")
+    public MainController(UserService service, JwtUtil jwtUtil, EmailService emailService, TokenService tokenService) {
+		this.service = service;
+		this.jwtUtil = jwtUtil;
+		this.emailService = emailService;
+		this.tokenService = tokenService;
+	}
+
+	@PostMapping("/user/select")
     public Map<String, Object> login(@RequestBody Map<String, String> param) {
         String id = param.get("id");
         String password = param.get("password");
@@ -85,7 +87,7 @@ public class MainController {
         
         try {
             // 비밀번호 재설정 토큰 생성
-            String token = service.createPasswordResetToken(email);
+            String token = tokenService.createPasswordResetToken(email);
                 
             // 이메일 전송
             emailService.sendPasswordResetEmail(email, token);
@@ -104,9 +106,10 @@ public class MainController {
     public Map<String, Object> resetPassword(@RequestBody Map<String, String> request) {
         String token = request.get("token");
         String newPassword = request.get("newPassword");
+        System.out.println("받은토큰 : " + token);
         Map<String, Object> map = new HashMap<>();
         try {
-            service.resetPassword(token, newPassword);
+            tokenService.resetPassword(token, newPassword);
             map.put("msg", "비밀번호가 성공적으로 재설정되었습니다.");
             map.put("result", true);
         } catch (Exception e) {

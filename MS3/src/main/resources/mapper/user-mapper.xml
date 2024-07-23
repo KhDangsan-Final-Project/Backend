@@ -21,12 +21,7 @@
 		#{email}, #{name}, #{nickname}, #{profile})
 	</insert>
 	
-	<!-- 비밀번호 재설정 토큰 및 만료 시간 업데이트 -->
-	<insert id="savePasswordResetToken" parameterType="map">
-		INSERT INTO password_reset_tokens (user_id, token, expiry_time)
-		VALUES (#{userId}, #{token}, #{expiryTime})
-	</insert>
-
+	
 	<!-- 로그인 -->
 	<select id="selectUser" resultMap="user" parameterType="map">
 		select * from users where id = #{id} and password =
@@ -39,19 +34,9 @@
 		SELECT * FROM users WHERE email = #{email}
 	</select>
 
-	<!-- 비밀번호 재설정 토큰으로 사용자 검색 -->
-	<select id="selectUserByResetToken" parameterType="string"
-		resultType="com.ms3.dto.UserDTO">
-		SELECT * FROM USERS WHERE PASSWORD_RESET_TOKEN = #{token}
-	</select>
-
 	<!-- 비밀번호 업데이트 -->
-	<update id="updatePassword" parameterType="map">
-		UPDATE USERS
-		SET PASSWORD = #{password}, PASSWORD_RESET_TOKEN = NULL,
-		TOKEN_EXPIRY_TIME
-		= NULL
-		WHERE PASSWORD_RESET_TOKEN = #{token}
+	<update id="updateUserPassword" parameterType="map">
+		UPDATE users SET password = STANDARD_HASH(#{password}, 'SHA512') WHERE id = #{userId}
 	</update>
 
 </mapper>
