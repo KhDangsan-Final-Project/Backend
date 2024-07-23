@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms1.mapper.BoardMapper">
+
+	<!-- 게시판 DTO -->
+	<resultMap type="com.ms1.dto.BoardDTO" id="board">
+		<id column="board_no" property="boardNo" />
+		<result column="id" property="id" />
+		<result column="board_title" property="boardTitle" />
+		<result column="board_content" property="boardContent" />
+		<result column="board_write" property="boardWrite" />
+		<result column="board_count" property="boardCount" />
+		<result column="board_category" property="boardCategory" />
+	</resultMap>
+	
+	<!-- 파일 DTO -->
+	<resultMap type="com.ms1.dto.FileDTO" id="file">
+ 		<result column="BOARD_FILE_NO" property="fno"/>
+ 		<result column="BOARD_NO" property="bno"/>
+ 		<result column="BOARD_PATH" property="path"/>
+ 	</resultMap>
+		
+	<select id="selectAllList" resultMap="board">
+		select * from board
+	</select>
+	
+	<select id="boardSelect" resultMap="board" parameterType="int">
+		select * from board where board_no = #{boardNo}
+	</select>
+	
+	<insert id="boardInsert" parameterType="com.ms1.dto.BoardDTO">
+		INSERT INTO board(ID, BOARD_TITLE, BOARD_CONTENT, BOARD_CATEGORY) values(#{id}, #{boardTitle}, #{boardContent}, #{boardCategory})
+	</insert>
+	
+	<select id="boardNoSelect" resultType="int">
+		select board_seq.nextval from dual
+	</select>
+
+	<insert id="insertBoardFile" parameterType="com.ms1.dto.FileDTO">
+	    INSERT INTO board_file(BOARD_FILE_NO, BOARD_NO, BOARD_PATH) 
+	    VALUES (#{fno}, #{bno}, #{path})
+	</insert>
+
+	
+	<select id="getNextFileNo" resultType="int">
+		select file_seq.nextval from dual
+	</select>
+
+</mapper>
