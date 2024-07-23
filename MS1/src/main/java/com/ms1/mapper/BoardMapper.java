@@ -6,14 +6,25 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ms1.dto.BoardDTO;
+import com.ms1.dto.FileDTO;
 
 @Mapper
 public interface BoardMapper {
 
 	List<BoardDTO> selectBoardNewList(Map<String, Object> map);
-	int getBoardNo();
-	int insertBoard(BoardDTO dto);
+	List<BoardDTO> selectBoardListByCategory(Map<String, Object> params);
 
+
+	int getBoardNo();
+	BoardDTO boardSelect(int boardNo);
+
+	int boardInsert(BoardDTO dto);
+
+	int boardNoSelect();
+
+	void insertBoardFile(FileDTO fileDTO);
+
+	int getNextFileNo();
 
 
 }

@@ -3,28 +3,52 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ms3.mapper.UserMapper">
-    <!-- ResultMap -->
-    <resultMap type="com.ms3.dto.UserDTO" id="user">
-        <id column="id" property="id" />
-        <result column="grant_no" property="grantNo" />
-        <result column="password" property="password" />
-        <result column="name" property="name" />
-        <result column="nickname" property="nickname" />
-        <result column="email" property="email" />
-        <result column="profile" property="profile" />
-    </resultMap>
+	<!-- ResultMap -->
+	<resultMap type="com.ms3.dto.UserDTO" id="user">
+		<id column="id" property="id" />
+		<result column="grant_no" property="grantNo" />
+		<result column="password" property="password" />
+		<result column="name" property="name" />
+		<result column="nickname" property="nickname" />
+		<result column="email" property="email" />
+		<result column="profile" property="profile" />
+	</resultMap>
 
-    <!-- 회원가입 -->
-    <insert id="insertUser" parameterType="user">
-	    insert into users(id, grant_no, password, email, name, nickname, profile)
-	    values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'), #{email}, #{name}, #{nickname}, #{profile})
+	<!-- 회원가입 -->
+	<insert id="insertUser" parameterType="user">
+		insert into users(id, grant_no, password, email, name, nickname, profile)
+		values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'),
+		#{email}, #{name}, #{nickname}, #{profile})
 	</insert>
 
-    <!-- 로그인 -->
-    <select id="selectUser" resultMap="user" parameterType="map">
-        select * from users where id = #{id} and password = STANDARD_HASH(#{password}, 'SHA512')
-    </select>
-   
+	<!-- 로그인 -->
+	<select id="selectUser" resultMap="user" parameterType="map">
+		select * from users where id = #{id} and password =
+		STANDARD_HASH(#{password}, 'SHA512')
+	</select>
+
+	<!-- 회원 정보 조회 -->
+	<select id="selectInfoUser" resultMap="user" parameterType="string">
+		SELECT * FROM users WHERE id = #{id}
+	</select>
+
+	<!-- 회원 정보 업데이트 -->
+	<update id="userUpdate" parameterType="user">
+		UPDATE users SET
+		email = #{email},
+		password = STANDARD_HASH(#{password}, 'SHA512'),
+		nickname = #{nickname}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 사용자 검색 -->
+	<select id="searchFriend" parameterType="map" resultType="com.ms3.dto.UserDTO">
+		SELECT * FROM users 
+		WHERE (id LIKE '%' || #{query} || '%'
+		OR nickname LIKE '%' || #{query} || '%')
+		AND id != #{userId}
+	</select>
+
     <!-- 이메일로 사용자 검색 -->
     <select id="selectUserByEmail" parameterType="string" resultMap="user">
         SELECT * FROM users WHERE email = #{email}
@@ -49,4 +73,9 @@
         SET PASSWORD_RESET_TOKEN = #{token}, TOKEN_EXPIRY_TIME = #{expiryTime}
         WHERE EMAIL = #{email}
     </update>
+    
+    <select id="idcheck">
+    	SELECT COUNT(*) FROM USERS WHERE ID = #{id}
+    </select>
+
 </mapper>

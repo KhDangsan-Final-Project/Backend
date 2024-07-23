@@ -5,31 +5,56 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ms1.dto.BoardDTO;
+import com.ms1.dto.FileDTO;
 import com.ms1.mapper.BoardMapper;
 
 @Service
 public class BoardService {
-	private BoardMapper mapper;
+	private BoardMapper boardMapper;
 
-	public BoardService(BoardMapper mapper) {
-		this.mapper = mapper;
+	public BoardService(BoardMapper boardMapper) {
+		this.boardMapper = boardMapper;
 	}
 
 	public List<BoardDTO> selectBoardNewList(int pageNo, int pageContentEa) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pageNo", pageNo);
 		map.put("pageContentCount", pageContentEa);
-		return mapper.selectBoardNewList(map);
+		return boardMapper.selectBoardNewList(map);
+	}
+	public List<BoardDTO> selectBoardListByCategory(int pageNo, int pageContentEa, String category) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("pageNo", pageNo);
+		map.put("pageContentCount", pageContentEa);
+		map.put("category", category);
+		return boardMapper.selectBoardListByCategory(map);
 	}
 
-	public int getBoardNo() {
-		return mapper.getBoardNo();
+	public BoardDTO boardSelect(int boardNo) {
+		return boardMapper.boardSelect(boardNo);
 	}
 
-	public int insertBoard(BoardDTO dto) {
-		return mapper.insertBoard(dto);
+	public int boardInsert(BoardDTO dto) {
+		return boardMapper.boardInsert(dto);
 	}
 
+	public int boardNoSelect() {
+		return boardMapper.boardNoSelect();
+	}
+
+	@Transactional
+    public void insertBoardFile(FileDTO fileDTO) {
+        boardMapper.insertBoardFile(fileDTO);
+    }
+
+	public int getNextFileNo() {
+        return boardMapper.getNextFileNo();
+    }
+
+
+	
+	
 }

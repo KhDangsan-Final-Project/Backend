@@ -2,6 +2,7 @@ package com.ms3.service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -29,11 +30,18 @@ public class UserService {
         map.put("password", password);
         return mapper.selectUser(map);
     }
-    
-    public int idcheck(String id) {
-		return mapper.idcheck(id);
-	}
 
+    public UserDTO selectInfoUser(String id) {
+        return mapper.selectInfoUser(id);
+    }
+
+    public int userUpdate(UserDTO userDTO) {
+        return mapper.userUpdate(userDTO);
+    }
+
+	public List<UserDTO> searchFriend(String query, String userId) {
+		return mapper.searchFriend(query, userId);
+	}
     
  // 비밀번호 재설정 요청 처리
     public String createPasswordResetToken(String email) {
@@ -59,7 +67,8 @@ public class UserService {
         mapper.updateUserPassword(user.getId(), newPassword);
     }
 
-	
-
+	public int idcheck(String id) {
+		return mapper.idcheck(id);
+	}
 
 }
