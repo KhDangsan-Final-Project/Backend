@@ -1,82 +1,108 @@
 package com.ms2.socket;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ms2.event.RoomInfoEvent;
+import com.ms2.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.TextMessage;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomWebSocketHandler extends TextWebSocketHandler {
 
-    // 방 번호와 세션을 매핑하는 저장소
-    private final Map<String, Set<WebSocketSession>> roomSessions = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
+    private final ObjectMapper objectMapper = new ObjectMapper(); // JSON 파서
+
+    @Autowired
+    private JwtUtil jwtUtil; // JwtUtil 주입
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher; // 이벤트 발행기
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         String payload = message.getPayload();
-        System.out.println("Received message: " + payload);
+        System.out.println("Received payload: " + payload); // 디버깅을 위한 로그
 
         try {
-            // 메시지 파싱
-            JSONObject jsonObject = new JSONObject(payload);
-            String type = jsonObject.getString("type");
-            String roomId = jsonObject.optString("roomId", null);
+            // JSON으로 파싱
+            JsonNode jsonNode = objectMapper.readTree(payload);
+            String roomId = jsonNode.get("roomId").asText();
+            String type = jsonNode.get("type").asText();
+            String token = jsonNode.has("token") ? jsonNode.get("token").asText() : null;
 
-            if ("CREATE_OR_JOIN_ROOM".equals(type) && roomId != null) {
-                handleRoomJoin(roomId, session);
+            if (token != null && !token.isEmpty()) {
+                // JWT 토큰을 해석하여 사용자 정보를 얻습니다.
+                String userId = jwtUtil.extractId(token);
+                String nickname = jwtUtil.extractNickname(token);
+                Integer grantNo = jwtUtil.extractGrantNo(token);
+                String profile = jwtUtil.extractProfile(token);
+
+                System.out.println("User ID: " + userId);
+                System.out.println("Nickname: " + nickname);
+                System.out.println("Grant No: " + grantNo);
+                System.out.println("Profile: " + profile);
+
+                // 방 번호를 클라이언트에게 응답으로 보내줍니다.
+                switch (type) {
+                    case "CREATE_OR_JOIN_ROOM":
+                        handleRoomCreationOrJoining(session, roomId, userId, nickname, grantNo, profile);
+                        break;
+                    case "DELETE_ROOM":
+                        handleRoomDeletion(roomId);
+                        break;
+                    default:
+                        System.out.println("Unknown message type: " + type); // 디버깅을 위한 로그
+                        break;
+                }
+
+                // 방 정보 이벤트 발행
+                RoomInfoEvent event = new RoomInfoEvent(this, roomId, userId, nickname, grantNo, profile);
+                eventPublisher.publishEvent(event);
+
             } else {
-                // 잘못된 메시지 형식 처리
-                session.sendMessage(new TextMessage("{\"error\": \"Invalid message format.\"}"));
+                session.sendMessage(new TextMessage("{\"error\": \"Invalid token\"}"));
             }
-        } catch (JSONException e) {
-            session.sendMessage(new TextMessage("{\"error\": \"Invalid JSON format.\"}"));
+        } catch (Exception e) {
+            e.printStackTrace(); // 예외 로그
+            session.sendMessage(new TextMessage("{\"error\": \"Invalid message format\"}"));
         }
     }
 
-    private void handleRoomJoin(String roomId, WebSocketSession session) throws IOException {
-        // 방 번호에 대한 세션 관리
-        synchronized (roomSessions) {
-            roomSessions.putIfAbsent(roomId, Collections.synchronizedSet(new HashSet<>()));
-            roomSessions.get(roomId).add(session);
-        }
-
-        // 방 번호와 연결된 세션을 클라이언트에게 전송
-        String joinMessage = "{\"type\": \"ROOM_JOINED\", \"roomId\": \"" + roomId + "\"}";
-        session.sendMessage(new TextMessage(joinMessage));
-
-        // 방에 있는 다른 클라이언트에게 새로운 클라이언트가 들어왔다는 메시지 전송
-        String newClientMessage = "{\"type\": \"NEW_CLIENT\", \"roomId\": \"" + roomId + "\"}";
-        for (WebSocketSession s : roomSessions.get(roomId)) {
-            if (s != session) { // 현재 세션은 제외
-                s.sendMessage(new TextMessage(newClientMessage));
-            }
-        }
+    private void handleRoomCreationOrJoining(WebSocketSession session, String roomId, String userId, String nickname, Integer grantNo, String profile) throws IOException {
+        rooms.computeIfAbsent(roomId, k -> new HashSet<>()).add(session);
+        String response = String.format(
+            "{\"type\": \"ROOM_JOINED\", \"roomId\": \"%s\", \"userId\": \"%s\", \"nickname\": \"%s\", \"grantNo\": %d, \"profile\": \"%s\"}",
+            roomId, userId, nickname, grantNo, profile
+        );
+        session.sendMessage(new TextMessage(response));
+        System.out.println("Room created or joined: " + roomId);
     }
 
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-        // 새로운 클라이언트가 연결되면 호출됩니다.
-        System.out.println("New WebSocket session established: " + session.getId());
+    private void handleRoomDeletion(String roomId) throws IOException {
+        rooms.remove(roomId);
+        String response = "{\"type\": \"ROOM_DELETED\", \"roomId\": \"" + roomId + "\"}";
+        // 방 삭제 메시지를 모든 클라이언트에게 전송
+        broadcastToRoom(roomId, new TextMessage(response));
+        System.out.println("Room deleted: " + roomId);
     }
 
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws IOException {
-        // 클라이언트가 연결을 종료하면 호출됩니다.
-        System.out.println("WebSocket session closed: " + session.getId());
-
-        // 방에서 세션 제거
-        synchronized (roomSessions) {
-            for (Set<WebSocketSession> sessions : roomSessions.values()) {
-                sessions.remove(session);
+    private void broadcastToRoom(String roomId, TextMessage message) throws IOException {
+        Set<WebSocketSession> sessions = rooms.get(roomId);
+        if (sessions != null) {
+            for (WebSocketSession session : sessions) {
+                if (session.isOpen()) {
+                    session.sendMessage(message);
+                }
             }
         }
     }

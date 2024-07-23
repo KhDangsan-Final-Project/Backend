@@ -1,6 +1,7 @@
 package com.ms2.controller;
 
 import com.ms2.dto.UserDTO;
+import com.ms2.event.RoomInfoEvent;
 import com.ms2.event.UserConnectedEvent;
 import com.ms2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,22 @@ public class MainController {
     public String getUserId() {
         return userId;
     }
-
+    
+    @EventListener
+    public void handleRoomInfoEvent(RoomInfoEvent event) {
+        System.out.println("Room Info Event Received");
+        System.out.println("Room Info Room ID: " + event.getRoomId());
+        System.out.println("Room Info User ID: " + event.getUserId());
+        System.out.println("Room Info Nickname: " + event.getNickname());
+        System.out.println("Room Info Grant No: " + event.getGrantNo());
+        System.out.println("Room Info Profile: " + event.getProfile());
+        
+        
+        
+    }
+    
+    
+    
     public void someOtherMethod() {
         System.out.println("User ID in someOtherMethod: " + userId);
         try {
