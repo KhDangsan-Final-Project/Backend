@@ -110,7 +110,7 @@ public class MyPageController {
         String userId = jwtUtil.extractId(token);
         friendDTO.setUserId(userId);
         int result = friendService.deleteFriend(friendDTO);
-        map.put("status", result > 0 ? "success" : "fail");
+        map.put("status", result > 0 ? "삭제 성공" : "삭제 실패");
         System.out.println(result);
         return map;
     }
@@ -121,7 +121,6 @@ public class MyPageController {
         Map<String, Object> map = new HashMap<String, Object>();
         List<MailDTO> result = mailService.selectMail(userId);
         System.out.println(result);
-        
         map.put("result", result);
         return map;
     }
@@ -130,7 +129,7 @@ public class MyPageController {
     public Map<String, Object> sendMail(@RequestBody MailDTO mailDTO, @RequestParam String token) {
         String userId = jwtUtil.extractId(token);
         mailDTO.setSender(userId);
-        mailDTO.setTimestamp(LocalDateTime.now()); 
+        mailDTO.setTimestamp(LocalDateTime.now());
         Map<String, Object> map = new HashMap<>();
         try {
             if (!service.isUserExists(mailDTO.getReceiver())) {
@@ -152,7 +151,27 @@ public class MyPageController {
     }
 
 
-    
+    @DeleteMapping("/mail/delete")
+    public Map<String, Object> deleteMail(@RequestParam int mailNo, @RequestParam String token) {
+        Map<String, Object> map = new HashMap<>();
+        String userId = jwtUtil.extractId(token);
+        try {
+            int result = mailService.deleteMail(mailNo);
+            map.put("status", result > 0 ? "success" : "fail");
+            map.put("message", result > 0 ? "메일이 성공적으로 삭제되었습니다." : "메일 삭제에 실패했습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", "fail");
+            map.put("message", "서버 오류가 발생했습니다.");
+        }
+        return map;
+    }
+
+    @GetMapping("/mail/detail")
+    public MailDTO selectMailDetail(@RequestParam int mailNo, @RequestParam String token) {
+        String userId = jwtUtil.extractId(token);
+        return mailService.selectMailDetail(mailNo, userId);
+    }
     
     
     

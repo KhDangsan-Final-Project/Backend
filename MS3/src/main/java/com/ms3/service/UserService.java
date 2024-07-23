@@ -44,8 +44,9 @@ public class UserService {
 	}
 
 	public boolean isUserExists(String userId) {
-        return mapper.isUserExists(userId) > 0;
-    }
+	    Integer count = mapper.isUserExists(userId);
+	    return count != null && count > 0;
+	}
     
 
 }

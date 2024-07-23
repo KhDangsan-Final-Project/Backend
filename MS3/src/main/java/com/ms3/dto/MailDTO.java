@@ -6,19 +6,30 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("mail")
 public class MailDTO {
-
+	
+	private int mailNo;
 	private String sender;
     private String receiver;
     private String subject;
     private String content;
     private LocalDateTime timestamp;
     
-	public MailDTO(String sender, String receiver, String subject, String content, LocalDateTime timestamp) {
+	public MailDTO(int mailNo, String sender, String receiver, String subject, String content,
+			LocalDateTime timestamp) {
+		this.mailNo = mailNo;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.subject = subject;
 		this.content = content;
 		this.timestamp = timestamp;
+	}
+
+	public int getMailNo() {
+		return mailNo;
+	}
+
+	public void setMailNo(int mailNo) {
+		this.mailNo = mailNo;
 	}
 
 	public String getSender() {
@@ -63,8 +74,11 @@ public class MailDTO {
 
 	@Override
 	public String toString() {
-		return "MailDTO [sender=" + sender + ", receiver=" + receiver + ", subject=" + subject + ", content=" + content
-				+ ", timestamp=" + timestamp + "]";
+		return "MailDTO [mailNo=" + mailNo + ", sender=" + sender + ", receiver=" + receiver + ", subject=" + subject
+				+ ", content=" + content + ", timestamp=" + timestamp + "]";
 	}
+    
+	
+	
     
 }
