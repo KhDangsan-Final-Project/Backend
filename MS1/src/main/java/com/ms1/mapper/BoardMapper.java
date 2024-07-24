@@ -26,6 +26,7 @@ public interface BoardMapper {
 
 	int getNextFileNo();
 	int selectBoardTotalCount();
+	int selectBoardTotalCountByCategory(String category);
 
 
 }

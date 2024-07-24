@@ -58,6 +58,10 @@ public class BoardService {
 		return boardMapper.selectBoardTotalCount();
 	}
 
+	public int selectBoardTotalCountByCategory(String category) {
+		return boardMapper.selectBoardTotalCountByCategory(category);
+	}
+
 
 	
 	

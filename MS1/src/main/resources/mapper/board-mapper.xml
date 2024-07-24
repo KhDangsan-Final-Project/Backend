@@ -50,14 +50,21 @@
 	<select id="selectBoardListByCategory" parameterType="map"
 		resultMap="board">
 		SELECT * FROM
-		(SELECT CEIL(ROW_NUMBER() OVER(ORDER BY B.BOARD_NO DESC) /
+		(SELECT CEIL(ROW_NUMBER() OVER(ORDER BY
+		B.BOARD_NO DESC) /
 		#{pageContentCount}) AS PAGE_NO,
-		B.*FROM BOARD B WHERE B.BOARD_CATEGORY = #{category}) WHERE PAGE_NO =
+		B.*FROM BOARD B
+		WHERE B.BOARD_CATEGORY = #{category}) WHERE PAGE_NO =
 		#{pageNo}
 	</select>
 
 	<select id="selectBoardTotalCount">
 		SELECT COUNT(*) FROM BOARD
+	</select>
+
+	<select id="selectBoardTotalCountByCategory" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM BOARD WHERE
+		BOARD_CATEGORY = #{category}
 	</select>
 
 	<select id="boardSelect" resultMap="board" parameterType="int">
@@ -78,8 +85,10 @@
 	</select>
 
 	<insert id="insertBoardFile" parameterType="com.ms1.dto.FileDTO">
-		INSERT INTO board_file(BOARD_FILE_NO, BOARD_NO, BOARD_PATH)
-		VALUES (#{fno}, #{bno}, #{path})
+		INSERT INTO
+		board_file(BOARD_FILE_NO, BOARD_NO, BOARD_PATH)
+		VALUES (#{fno}, #{bno},
+		#{path})
 	</insert>
 
 
