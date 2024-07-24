@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +16,8 @@ import com.ms3.dto.UserDTO;
 import com.ms3.service.EmailService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
+
+import jakarta.ws.rs.core.Response;
 
 @RestController
 @RequestMapping("/ms3")
@@ -59,12 +62,12 @@ public class MainController {
 	public Map<String, Object> insertUser(@RequestBody Map<String, String> param) {
 		UserDTO dto = new UserDTO();
 		dto.setId(param.get("id"));
-		dto.setGrantNo(Integer.parseInt(param.get("grantNo")));
 		dto.setPassword(param.get("password"));
 		dto.setEmail(param.get("email"));
 		dto.setName(param.get("name"));
 		dto.setNickname(param.get("nickname"));
-		dto.setProfile(param.get("profile"));
+	    dto.setProfile(param.get("profile") != null ? param.get("profile") : "");
+		System.out.println(dto);
 		Map<String, Object> map = new HashMap<>();
 		try {
 			service.insertUser(dto);
@@ -125,6 +128,19 @@ public class MainController {
             map.put("result", false);
         }
         return map;
+    }
+    
+    @GetMapping("/rankcheck")
+    public ResponseEntity<Integer> RankCheck(@RequestHeader("Authorization") String authorization) throws Exception {
+    	if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new Exception("계정을 확인해주세요!");
+        }
+
+        // 토큰에서 사용자 ID 추출
+        String token = authorization.substring(7);
+        int grantNo = jwtUtil.extractGrantNo(token);
+        
+    	return ResponseEntity.ok(grantNo);
     }
 
 

@@ -16,14 +16,21 @@ public class FriendService {
     }
 
     public int addFriendRequest(FriendDTO friendDTO) {
-    	if (mapper.checkFriendRequestExist(friendDTO) > 0) {
-            return -1; // 이미 존재하는 친구 요청
-        }
+    	// 친구 요청 삽입
+    	int result1 = mapper.addFriendRequest(friendDTO);
     	
-        if (mapper.checkFriendExist(friendDTO) > 0) {
-            return -2; // 이미 친구 상태
-        }
-        return mapper.addFriendRequest(friendDTO);
+    	// 반대 친구 요청 삽입
+    	int result2 = mapper.insertFriend(friendDTO);
+    	
+    	return (result1 > 0 && result2 > 0) ? 1 : 0;
+        
+//        if (mapper.checkFriendRequestExist(friendDTO) > 0) {
+//            return -1; // 이미 존재하는 친구 요청
+//        }
+//        
+//        if (mapper.checkFriendExist(friendDTO) > 0) {
+//            return -2; // 이미 친구 상태
+//        }
     }
 
     public List<FriendDTO> selectFriend(String userId) {
@@ -35,7 +42,8 @@ public class FriendService {
     }
 
     public int acceptFriendRequest(FriendDTO friendDTO) {
-        return mapper.acceptFriendRequest(friendDTO);
+        // 친구 요청 상태 업데이트
+    	  return mapper.acceptFriendRequest(friendDTO);
     }
 
     public int rejectFriendRequest(FriendDTO friendDTO) {
