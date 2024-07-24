@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms3.mapper.AttendanceMapper">
+    <resultMap type="com.ms3.dto.AttendanceDTO" id="attendance">
+        <id column="id" property="id" />
+        <result column="attendance_date" property="attendanceDate" />
+    </resultMap>
+    
+    <select id="selectAllList" resultType="string">
+        SELECT count(TO_CHAR(ATTENDANCE_DATE, 'YYYY-MM-DD')) AS attendanceDate
+        FROM ATTENDANCE
+        WHERE ID = #{id}
+    </select>
+    
+    <select id="selectCount">
+        select count(*) from attendance where id = #{id}
+    </select>
+    
+    <insert id="insertAttendance">
+        INSERT INTO ATTENDANCE(id, attendance_date)
+	    SELECT #{id}, SYSDATE
+	    FROM DUAL
+	    WHERE NOT EXISTS (
+	        SELECT 1
+	        FROM ATTENDANCE
+	        WHERE id = #{id}
+	        AND TRUNC(attendance_date) = TRUNC(SYSDATE)
+	    )
+    </insert>
+    
+    <!-- 프로시저 호출 -->
+    <insert id="getPokemon809">
+        {CALL give_additional_pokemon(#{id, jdbcType=VARCHAR}, 809)}
+    </insert>
+    
+    <insert id="getPokemon248">
+        {CALL give_additional_pokemon(#{id, jdbcType=VARCHAR}, 248)}
+    </insert>
+    
+    <insert id="getPokemon887">
+        {CALL give_additional_pokemon(#{id, jdbcType=VARCHAR}, 887)}
+    </insert>
+    
+    <insert id="getPokemon635">
+        {CALL give_additional_pokemon(#{id, jdbcType=VARCHAR}, 635)}
+    </insert>
+    
+    <insert id="getPokemon359">
+        {CALL give_additional_pokemon(#{id, jdbcType=VARCHAR}, 359)}
+    </insert>
+    
+    <insert id="getPokemon448">
+        {CALL give_additional_pokemon(#{id, jdbcType=VARCHAR}, 448)}
+    </insert>
+    
+</mapper>
