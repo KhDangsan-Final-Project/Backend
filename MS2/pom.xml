@@ -53,6 +53,11 @@
             <artifactId>spring-cloud-starter-config</artifactId> <!-- Spring Cloud Config Client 의존성 추가 -->
         </dependency>
         <dependency>
+		    <groupId>org.springframework.cloud</groupId>
+		    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+		    <version>4.1.4</version>
+		</dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId> <!-- Eureka Client 의존성 추가 -->
         </dependency>
