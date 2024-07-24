@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms3.dto.FriendDTO;
+import com.ms3.dto.LibraryDTO;
 import com.ms3.dto.MailDTO;
 import com.ms3.dto.UserDTO;
 import com.ms3.service.MailService;
 import com.ms3.service.FriendService;
+import com.ms3.service.LibraryService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
 
@@ -30,15 +32,18 @@ public class MyPageController {
     private final UserService service;
     private final JwtUtil jwtUtil;
     private final MailService mailService;
-
-    public MyPageController(FriendService friendService, UserService service, JwtUtil jwtUtil,
-			MailService mailService) {
+    private final LibraryService libraryService;  
+    
+    
+	public MyPageController(FriendService friendService, UserService service, JwtUtil jwtUtil, MailService mailService,
+			LibraryService libraryService) {
 		this.friendService = friendService;
 		this.service = service;
 		this.jwtUtil = jwtUtil;
 		this.mailService = mailService;
+		this.libraryService = libraryService;
 	}
-    
+
 	@GetMapping("/mypage")
     public UserDTO selectInfoUser(@RequestParam String token) {
         String userId = jwtUtil.extractId(token);
@@ -173,6 +178,21 @@ public class MyPageController {
         return mailService.selectMailDetail(mailNo, userId);
     }
     
+    @GetMapping("/library")
+    public Map<String, Object> getPokemon(@RequestParam String token) {
+        String userId = jwtUtil.extractId(token);
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<LibraryDTO> lib = libraryService.getPokemon(userId);
+            map.put("status", "success");
+            map.put("lib", lib);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", "fail");
+            map.put("message", "포켓몬 카드 조회에 실패했습니다.");
+        }
+        return map;
+    }
     
     
 }
