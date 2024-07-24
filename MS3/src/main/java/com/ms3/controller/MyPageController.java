@@ -38,7 +38,7 @@ public class MyPageController {
 		this.jwtUtil = jwtUtil;
 		this.mailService = mailService;
 	}
-
+    
 	@GetMapping("/mypage")
     public UserDTO selectInfoUser(@RequestParam String token) {
         String userId = jwtUtil.extractId(token);
@@ -110,7 +110,7 @@ public class MyPageController {
         String userId = jwtUtil.extractId(token);
         friendDTO.setUserId(userId);
         int result = friendService.deleteFriend(friendDTO);
-        map.put("status", result > 0 ? "삭제 성공" : "삭제 실패");
+        map.put("status", result > 0 ? "success" : "fail");
         System.out.println(result);
         return map;
     }

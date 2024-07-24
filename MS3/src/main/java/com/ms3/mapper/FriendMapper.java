@@ -24,8 +24,11 @@ public interface FriendMapper {
 
 	int deleteFriend(FriendDTO friendDTO);
 
-	int checkFriendRequestExist(FriendDTO friendDTO);
+	int insertFriend(FriendDTO friendDTO);
 
-	int checkFriendExist(FriendDTO friendDTO);
 
+
+//	int checkFriendRequestExist(FriendDTO friendDTO);
+//
+//	int checkFriendExist(FriendDTO friendDTO);
 }
