@@ -17,4 +17,6 @@ import com.ms4.dto.UserDTO;
 		List<RankDTO> selectRankUser(int[] grantNo);
 		List<UserDTO> searchUser(Map<String, String> param);
 		int updateRank(Map<String, String> param);
+		UserDTO selectUser(Map<String, Object> map);
+
 	}

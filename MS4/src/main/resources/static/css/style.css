@@ -1,0 +1,57 @@
+/* 기본 스타일 */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box; /* 모든 요소의 박스 모델을 border-box로 설정 */
+}
+
+h1 {
+	text-align:center;
+}
+
+body {
+	font-family: Arial, sans-serif;
+}
+
+.container {
+	width: 100%;
+	padding: 20px;
+	overflow: hidden;
+}
+
+input {
+	border: none;
+	width: 100%;
+	padding: 15px 0px;
+	font-size: 15px;
+	outline: none;
+}
+
+.flex_container {
+	display:flex;
+	flex-flow: row nowrap;	
+	justify-content: center;
+	align-items: center;
+}
+
+td {
+	width: calc(100%/6);
+	text-align: center;
+}
+
+th {
+	width: calc(100%/6);
+	text-align: center;
+}
+
+.txt_search {
+	width:80%;
+	margin-bottom: 20px;
+}
+
+button {
+	background-color: white;
+	border-radius: 10px;
+	padding: 5px 10px;
+}
+

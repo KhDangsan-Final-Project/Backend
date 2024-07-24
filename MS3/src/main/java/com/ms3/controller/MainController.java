@@ -96,7 +96,7 @@ public class MainController {
             map.put("result", true);
         }catch (Exception e) {
             logger.error("Error during password reset request", e);
-            map.put("message", "비밀번호 재설정 요청 실패");
+            map.put("message", "이메일 확인 바랍니다.");
             map.put("result", false);
         }
         return map;

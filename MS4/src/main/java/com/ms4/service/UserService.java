@@ -1,5 +1,6 @@
 package com.ms4.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,14 @@ public class UserService {
 
 	public int updateRank(Map<String, String> param) {
 		return mapper.updateRank(param);
+	}
+
+	public UserDTO selectUser(String id, String password) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", id);
+		map.put("password", password);
+		System.out.println(map);
+		return mapper.selectUser(map);
 	}
 
  
