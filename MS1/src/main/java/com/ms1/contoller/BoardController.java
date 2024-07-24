@@ -26,6 +26,7 @@ import com.ms1.dto.BoardDTO;
 import com.ms1.dto.FileDTO;
 import com.ms1.service.BoardService;
 import com.ms1.util.JwtUtil;
+import com.ms1.vo.PaggingVO;
 
 @RestController
 @RequestMapping("/ms1")
@@ -44,7 +45,7 @@ public class BoardController {
 
 	@GetMapping("/board/list")
 	@ResponseBody
-	public List<BoardDTO> list(
+	public Map<String,Object> list(
 							@RequestParam(defaultValue = "1") int pageNo,
 							@RequestParam(defaultValue = "15") int pageContentEa,
 							@RequestParam(required = false)String category) {
@@ -52,10 +53,19 @@ public class BoardController {
 		if(category != null && !category.isEmpty()) {
 			boardList = boardService.selectBoardListByCategory(pageNo, pageContentEa, category);
 	}else {	
-		boardList = boardService.selectBoardNewList(pageNo, pageContentEa);
+		boardList = boardService.selectBoardList(pageNo, pageContentEa);
 	}
-		return boardList;
+		int totalCount = boardService.selectBoardTotalCount();
+		PaggingVO vo = new PaggingVO(totalCount, pageNo, pageContentEa);
+		System.out.println(vo.toString());
+		Map<String,Object> response = new HashMap<>();
+		response.put("boards", boardList);
+		response.put("pagging", vo);
+		
+		return response;
 	}
+	
+	
 	
 	@GetMapping("/board/{boardNo}")
 	public BoardDTO BoardSelect(@PathVariable int boardNo) {
@@ -140,6 +150,7 @@ public class BoardController {
 	        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("게시판 작성 실패: " + e.getMessage());
 	    }
 	}
+	
 
 
 

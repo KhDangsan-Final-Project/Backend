@@ -19,11 +19,11 @@ public class BoardService {
 		this.boardMapper = boardMapper;
 	}
 
-	public List<BoardDTO> selectBoardNewList(int pageNo, int pageContentEa) {
+	public List<BoardDTO> selectBoardList(int pageNo, int pageContentEa) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pageNo", pageNo);
 		map.put("pageContentCount", pageContentEa);
-		return boardMapper.selectBoardNewList(map);
+		return boardMapper.selectBoardList(map);
 	}
 	public List<BoardDTO> selectBoardListByCategory(int pageNo, int pageContentEa, String category) {
 		Map<String, Object> map = new HashMap<>();
@@ -53,6 +53,10 @@ public class BoardService {
 	public int getNextFileNo() {
         return boardMapper.getNextFileNo();
     }
+
+	public int selectBoardTotalCount() {
+		return boardMapper.selectBoardTotalCount();
+	}
 
 
 	

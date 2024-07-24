@@ -15,6 +15,15 @@
 		<result column="board_category" property="boardCategory" />
 	</resultMap>
 	
+	<!-- 게시물 Coment DTO -->
+	<resultMap type="com.ms1.dto.BoardCommentDTO" id="comment">
+		<id column="board_comment_no" property="cno" />
+		<result column="board_no" property="bno" />
+		<result column="id" property="id" />
+		<result column="board_comment_content" property="comment" />
+		<result column="board_comment_write" property="write" />
+	</resultMap>
+	
 	<!-- 파일 DTO -->
 	<resultMap type="com.ms1.dto.FileDTO" id="file">
  		<result column="BOARD_FILE_NO" property="fno"/>
@@ -22,15 +31,26 @@
  		<result column="BOARD_PATH" property="path"/>
  	</resultMap>
 		
-	<select id="selectBoardNewList" parameterType="map"
-		resultMap="board">
-		select * from board
+	<select id="selectBoardCommentList" parameterType="int" resultMap="comment">
+		SELECT * FROM BOARD_COMMENT_VIEW 
+		WHERE BOARD_NO = #{bno}
+		ORDER BY BOARD_COMMENT_NO DESC
+	</select>
+	
+	<select id="selectBoardList" parameterType="map" resultMap="board">
+		SELECT * FROM
+		(SELECT CEIL(ROW_NUMBER() OVER(ORDER BY B.BOARD_NO DESC) / #{pageContentCount}) AS PAGE_NO,
+		B.* FROM BOARD B) WHERE PAGE_NO = #{pageNo}
 	</select>
 	
 	<select id="selectBoardListByCategory" parameterType="map" resultMap="board">
 		SELECT *
 		FROM board
 		WHERE board_category = #{category}
+	</select>
+	
+	<select id="selectBoardTotalCount">
+		SELECT COUNT(*) FROM BOARD
 	</select>
 	
 	<select id="boardSelect" resultMap="board" parameterType="int">

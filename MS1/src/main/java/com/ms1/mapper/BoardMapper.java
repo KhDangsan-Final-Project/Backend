@@ -11,7 +11,7 @@ import com.ms1.dto.FileDTO;
 @Mapper
 public interface BoardMapper {
 
-	List<BoardDTO> selectBoardNewList(Map<String, Object> map);
+	List<BoardDTO> selectBoardList(Map<String, Object> map);
 	List<BoardDTO> selectBoardListByCategory(Map<String, Object> params);
 
 
@@ -25,6 +25,7 @@ public interface BoardMapper {
 	void insertBoardFile(FileDTO fileDTO);
 
 	int getNextFileNo();
+	int selectBoardTotalCount();
 
 
 }
