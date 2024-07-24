@@ -14,7 +14,7 @@
 		<result column="board_count" property="boardCount" />
 		<result column="board_category" property="boardCategory" />
 	</resultMap>
-	
+
 	<!-- 게시물 Coment DTO -->
 	<resultMap type="com.ms1.dto.BoardCommentDTO" id="comment">
 		<id column="board_comment_no" property="cno" />
@@ -23,56 +23,69 @@
 		<result column="board_comment_content" property="comment" />
 		<result column="board_comment_write" property="write" />
 	</resultMap>
-	
+
 	<!-- 파일 DTO -->
 	<resultMap type="com.ms1.dto.FileDTO" id="file">
- 		<result column="BOARD_FILE_NO" property="fno"/>
- 		<result column="BOARD_NO" property="bno"/>
- 		<result column="BOARD_PATH" property="path"/>
- 	</resultMap>
-		
-	<select id="selectBoardCommentList" parameterType="int" resultMap="comment">
-		SELECT * FROM BOARD_COMMENT_VIEW 
+		<result column="BOARD_FILE_NO" property="fno" />
+		<result column="BOARD_NO" property="bno" />
+		<result column="BOARD_PATH" property="path" />
+	</resultMap>
+
+	<select id="selectBoardCommentList" parameterType="int"
+		resultMap="comment">
+		SELECT * FROM BOARD_COMMENT_VIEW
 		WHERE BOARD_NO = #{bno}
 		ORDER BY BOARD_COMMENT_NO DESC
 	</select>
-	
-	<select id="selectBoardList" parameterType="map" resultMap="board">
+
+	<select id="selectBoardList" parameterType="map"
+		resultMap="board">
 		SELECT * FROM
-		(SELECT CEIL(ROW_NUMBER() OVER(ORDER BY B.BOARD_NO DESC) / #{pageContentCount}) AS PAGE_NO,
-		B.* FROM BOARD B) WHERE PAGE_NO = #{pageNo}
+		(SELECT CEIL(ROW_NUMBER() OVER(ORDER BY
+		B.BOARD_NO DESC) / #{pageContentCount}) AS PAGE_NO,
+		B.* FROM BOARD B)
+		WHERE PAGE_NO = #{pageNo}
 	</select>
-	
-	<select id="selectBoardListByCategory" parameterType="map" resultMap="board">
-		SELECT *
-		FROM board
-		WHERE board_category = #{category}
+
+	<select id="selectBoardListByCategory" parameterType="map"
+		resultMap="board">
+		SELECT * FROM
+		(SELECT CEIL(ROW_NUMBER() OVER(ORDER BY B.BOARD_NO DESC) /
+		#{pageContentCount}) AS PAGE_NO,
+		B.*FROM BOARD B WHERE B.BOARD_CATEGORY = #{category}) WHERE PAGE_NO =
+		#{pageNo}
 	</select>
-	
+
 	<select id="selectBoardTotalCount">
 		SELECT COUNT(*) FROM BOARD
 	</select>
-	
+
 	<select id="boardSelect" resultMap="board" parameterType="int">
-		select * from board where board_no = #{boardNo}
+		select
+		* from board where board_no = #{boardNo}
 	</select>
-	
+
 	<insert id="boardInsert" parameterType="com.ms1.dto.BoardDTO">
-		INSERT INTO board(BOARD_NO, ID, BOARD_TITLE, BOARD_CONTENT, BOARD_CATEGORY) values(#{boardNo}, #{id}, #{boardTitle}, #{boardContent}, #{boardCategory})
+		INSERT INTO
+		board(BOARD_NO, ID, BOARD_TITLE, BOARD_CONTENT, BOARD_CATEGORY)
+		values(#{boardNo}, #{id}, #{boardTitle}, #{boardContent},
+		#{boardCategory})
 	</insert>
-	
+
 	<select id="boardNoSelect" resultType="int">
-		select board_seq.nextval from dual
+		select board_seq.nextval
+		from dual
 	</select>
 
 	<insert id="insertBoardFile" parameterType="com.ms1.dto.FileDTO">
-	    INSERT INTO board_file(BOARD_FILE_NO, BOARD_NO, BOARD_PATH) 
-	    VALUES (#{fno}, #{bno}, #{path})
+		INSERT INTO board_file(BOARD_FILE_NO, BOARD_NO, BOARD_PATH)
+		VALUES (#{fno}, #{bno}, #{path})
 	</insert>
 
-	
+
 	<select id="getNextFileNo" resultType="int">
-		select file_seq.nextval from dual
+		select file_seq.nextval
+		from dual
 	</select>
 
 </mapper>
