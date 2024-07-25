@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms3.mapper.TokenMapper">
+	<!-- ResultMap -->
+	<resultMap type="com.ms3.dto.TokenDTO" id="tokenDTO">
+		<id column="token" property="token" />
+		<result column="user_id" property="userId" />
+		<result column="expiry_time" property="expiryTime" />
+	</resultMap>
+
+	<insert id="savePasswordResetToken">
+		INSERT INTO password_reset_tokens (user_id, token, expiry_time)
+		VALUES (#{userId}, #{token}, #{expiryTime})
+	</insert>
+
+	<select id="selectTokenByToken" resultMap="tokenDTO" >
+		SELECT user_id, token, expiry_time FROM password_reset_tokens WHERE token = #{token}
+	</select>
+
+</mapper>

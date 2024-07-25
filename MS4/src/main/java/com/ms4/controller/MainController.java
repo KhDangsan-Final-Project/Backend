@@ -1,5 +1,6 @@
 package com.ms4.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +24,10 @@ import com.ms4.dto.UserDTO;
 import com.ms4.service.UserService;
 
 import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-@RestController
+@Controller
 @RequestMapping("/ms4")
 public class MainController {
 	
@@ -83,6 +87,42 @@ public class MainController {
 		map.put("msg", count == 0 ? "유저 랭크 수정 실패" : "유저 랭크 수정 성공" );
 		return new ResponseEntity(map, HttpStatus.OK);
 	}
+    
+    @GetMapping("/login/view")
+	public String loginView() {
+		return "login";
+	}
+    
+    @PostMapping("/login")
+	public ModelAndView login(ModelAndView view, HttpSession session,
+			String id, String passwd, HttpServletResponse response) throws IOException {
+		
+		UserDTO dto = service.selectUser(id, passwd);
+		System.out.println("관리자번호" + dto.getGrantNo());
+		if(dto == null) {
+			response.setContentType("text/html;charset=utf-8");
+			response.getWriter().println("<script>"
+					+ "alert('로그인 실패 \\n아이디와 비밀번호 확인하세요');"
+					+ "history.back();"
+					+ "</script>");
+			return null;
+		}else if (dto.getGrantNo() != 0){
+			response.setContentType("text/html;charset=utf-8");
+			response.getWriter().println("<script>"
+					+ "alert('로그인 실패 \\ 관리자에게 문의 하세요');"
+					+ "</script>");
+		}else {
+			session.setAttribute("user", dto);
+			view.setViewName("redirect:/ms4/manage/view");
+		}
+		
+		return view;
+	}
+    
+    @GetMapping("/manage/view")
+    public String manageView() {
+    	return "manage";
+    }
     
 	
 }
