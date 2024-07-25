@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ms1.dto.BoardCommentDTO;
 import com.ms1.dto.BoardDTO;
 import com.ms1.dto.FileDTO;
 import com.ms1.mapper.BoardMapper;
@@ -90,6 +91,15 @@ public class BoardService {
 	public int selectBoardLikeCount(int bno) {
 		return boardMapper.selectBoardLikeCount(bno);
 	}
+
+	public int boardCommentInsert(BoardCommentDTO dto) {
+		return boardMapper.boardCommentInsert(dto);
+	}
+
+	public int boardCommentNoSelect() {
+		return boardMapper.boardCommentNoSelect();
+	}
+
 
 
 	

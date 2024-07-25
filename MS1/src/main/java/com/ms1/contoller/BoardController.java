@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.api.client.util.Value;
+import com.ms1.dto.BoardCommentDTO;
 import com.ms1.dto.BoardDTO;
 import com.ms1.dto.FileDTO;
 import com.ms1.service.BoardService;
@@ -139,6 +140,35 @@ public class BoardController {
 		}
 
 		return response;
+	}
+
+	@PostMapping("/comment/insert/{boardNo}")
+	public ResponseEntity<String> CommentInsert(@PathVariable int boardNo,
+			@RequestParam("comment") String comment, @RequestHeader("Authorization") String authorization) {
+		String id;
+		try {
+			// JWT 토큰 검증
+			if (authorization == null || !authorization.startsWith("Bearer ")) {
+				throw new IllegalArgumentException("계정을 확인해주세요!");
+			}
+
+			// 토큰에서 사용자 ID 추출
+			String token = authorization.substring(7);
+			id = jwtUtil.extractId(token);
+			
+			// BoardCommentDTO 객체 생성 및 값 설정
+			BoardCommentDTO dto = new BoardCommentDTO();
+			dto.setId(id);
+			dto.setComment(comment);
+			dto.setBno(boardNo);
+			dto.setCno(boardService.boardCommentNoSelect());
+			// 게시판 글 삽입
+			boardService.boardCommentInsert(dto);
+			return ResponseEntity.ok("댓글 작성 성공");
+		} catch (Exception e) {
+			e.printStackTrace(); // 예외 스택 트레이스를 출력하여 디버깅 정보 추가
+			return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("댓글 작성 실패: " + e.getMessage());
+		}
 	}
 
 	/**

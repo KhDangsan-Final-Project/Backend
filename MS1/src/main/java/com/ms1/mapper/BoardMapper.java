@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ms1.dto.BoardCommentDTO;
 import com.ms1.dto.BoardDTO;
 import com.ms1.dto.FileDTO;
 
@@ -31,6 +32,8 @@ public interface BoardMapper {
 	int insertBoardLike(Map<String, Object> map);
 	int selectBoardLikeCount(int bno);
 	int selectBoardLike(Map<String, Object> map);
+	int boardCommentNoSelect();
+	int boardCommentInsert(BoardCommentDTO dto);
 
 
 }

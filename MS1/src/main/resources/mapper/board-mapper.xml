@@ -76,6 +76,25 @@
 		select board_seq.nextval
 		from dual
 	</select>
+	
+	<insert id="boardCommentInsert" parameterType="com.ms1.dto.BoardCommentDTO">
+    INSERT INTO board_comment (
+        BOARD_COMMENT_NO,
+        BOARD_NO,
+        ID,
+        BOARD_COMMENT_CONTENT
+    ) VALUES (
+        #{cno},
+        #{bno},
+        #{id},
+        #{comment}
+    )
+	</insert>
+	
+	<select id="boardCommentNoSelect" resultType="int">
+		select board_comment_seq.nextval
+		from dual
+	</select>
 
 	<insert id="insertBoardFile" parameterType="com.ms1.dto.FileDTO">
 		INSERT INTO
