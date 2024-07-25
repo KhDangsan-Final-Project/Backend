@@ -1,8 +1,8 @@
 package com.ms2.socket;
 
 import com.ms2.dto.UserDTO;
-import com.ms2.util.JwtUtil;
 import com.ms2.event.UserConnectedEvent;
+import com.ms2.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.socket.CloseStatus;
@@ -34,61 +34,55 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         String payload = message.getPayload();
         System.out.println("Received message from client: " + payload);
 
-        try {
-            JSONObject json = new JSONObject(payload);
-            JSONObject response = new JSONObject();
+        JSONObject json = new JSONObject(payload);
+        JSONObject response = new JSONObject();
+        System.out.println(json.has("token"));
+        if (json.has("token")) {
+            String token = json.getString("token");
 
-            if (json.has("token")) {
-                String token = json.getString("token");
+            if (validateToken(token)) {
+                String id = jwtUtil.extractId(token);
+                String nickname = jwtUtil.extractNickname(token);
+                Integer grantNo = jwtUtil.extractGrantNo(token);
+                String profile = jwtUtil.extractProfile(token);
 
-                if (validateToken(token)) {
-                    String id = jwtUtil.extractId(token);
-                    String nickname = jwtUtil.extractNickname(token);
-                    Integer grantNo = jwtUtil.extractGrantNo(token);
-                    String profile = jwtUtil.extractProfile(token);
+                response.put("id", id);
+                response.put("nickname", nickname);
+                response.put("grantNo", grantNo);
+                response.put("profile", profile);
 
-                    response.put("id", id);
-                    response.put("nickname", nickname);
-                    response.put("grantNo", grantNo);
-                    response.put("profile", profile);
+                UserDTO user = new UserDTO();
+                user.setId(id);
+                user.setGrantNo(grantNo);
+                user.setNickname(nickname);
+                user.setProfile(profile);
 
-                    UserDTO user = new UserDTO();
-                    user.setId(id);
-                    user.setGrantNo(grantNo);
-                    user.setNickname(nickname);
-                    user.setProfile(profile);
+                System.out.println("Valid token received:");
+                System.out.println("ID: " + id);
+                System.out.println("Nickname: " + nickname);
+                System.out.println("Grant No: " + grantNo);
+                System.out.println("Profile: " + profile);
 
-                    System.out.println("Valid token received:");
-                    System.out.println("ID: " + id);
-                    System.out.println("Nickname: " + nickname);
-                    System.out.println("Grant No: " + grantNo);
-                    System.out.println("Profile: " + profile);
+                sessionNicknameMap.put(session.getId(), nickname);
 
-                    sessionNicknameMap.put(session.getId(), nickname);
-
-                    // UserConnectedEvent 게시
-                    eventPublisher.publishEvent(new UserConnectedEvent(this, id));
-                } else {
-                    response.put("error", "Invalid token");
-                    System.out.println("Invalid token received: " + token);
-                }
-                session.sendMessage(new TextMessage(response.toString()));
+                // UserConnectedEvent 게시
+                eventPublisher.publishEvent(new UserConnectedEvent(this, id));
             } else {
-                String senderNickname = sessionNicknameMap.getOrDefault(session.getId(), "unknown");
-
-                response.put("sender", senderNickname);
-                response.put("content", json.optString("content", "user"));
-
-                System.out.println("Message received:");
-                System.out.println("Sender: " + response.getString("sender"));
-                System.out.println("Content: " + response.getString("content"));
-
-                session.sendMessage(new TextMessage(response.toString()));
+                response.put("error", "Invalid token");
+                System.out.println("Invalid token received: " + token);
             }
-        } catch (Exception e) {
-            System.err.println("Error processing message: " + e.getMessage());
-            e.printStackTrace();
-            session.close(CloseStatus.SERVER_ERROR);
+            session.sendMessage(new TextMessage(response.toString()));
+        } else {
+            String senderNickname = sessionNicknameMap.getOrDefault(session.getId(), "unknown");
+
+            response.put("sender", senderNickname);
+            response.put("content", json.optString("content", "user"));
+
+            System.out.println("Message received:");
+            System.out.println("Sender: " + response.getString("sender"));
+            System.out.println("Content: " + response.getString("content"));
+
+            session.sendMessage(new TextMessage(response.toString()));
         }
     }
 
@@ -106,9 +100,11 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
     private boolean validateToken(String token) {
         try {
-            jwtUtil.extractClaims(token);
+            jwtUtil.extractClaims(token); // 예외가 발생하지 않으면 유효한 토큰
             return true;
         } catch (Exception e) {
+            // 예외 발생 시 false 반환
+            System.out.println("Token validation failed: " + e.getMessage());
             return false;
         }
     }
