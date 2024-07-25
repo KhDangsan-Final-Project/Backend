@@ -17,6 +17,7 @@ public interface UserMapper {
     UserDTO selectInfoUser(String id);
     List<UserDTO> searchFriend(@Param("query") String query, @Param("userId") String userId);
 	int isUserExists(String userId);
+	int deleteUser(String id);
 
 
 

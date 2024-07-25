@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -77,6 +79,32 @@ public class MainController {
 		}
 		return map;
 	}
+	
+	@DeleteMapping("/user/delete")
+	public Map<String, Object> deleteUser(@RequestParam String id, @RequestParam String token) {
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        String userId = jwtUtil.extractId(token);
+	        if (!userId.equals(id)) {
+	            response.put("status", "fail");
+	            response.put("message", "사용자 ID가 일치하지 않습니다.");
+	            return response;
+	        }
+	        int result = service.deleteUser(id);
+	        if (result > 0) {
+	            response.put("status", "success");
+	            response.put("message", "회원 탈퇴가 성공적으로 처리되었습니다.");
+	        } else {
+	            response.put("status", "fail");
+	            response.put("message", "회원 탈퇴에 실패했습니다.");
+	        }
+	    } catch (Exception e) {
+	        response.put("status", "error");
+	        response.put("message", e.getMessage());
+	    }
+	    return response;
+	}
+
   
    
 

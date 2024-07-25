@@ -12,4 +12,6 @@
 	<select id="getPokemon" resultMap="library">
         SELECT * FROM GETPOKEMON WHERE ID = #{Id}
     </select>
+    
+    
 </mapper>

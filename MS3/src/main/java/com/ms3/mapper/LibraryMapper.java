@@ -12,4 +12,5 @@ import com.ms3.dto.LibraryDTO;
 public interface LibraryMapper {
 
 	List<LibraryDTO> getPokemon(String userId);
+
 }

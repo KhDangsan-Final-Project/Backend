@@ -47,6 +47,10 @@ public class UserService {
 	    Integer count = mapper.isUserExists(userId);
 	    return count != null && count > 0;
 	}
-    
+
+	public int deleteUser(String id) {
+		return mapper.deleteUser(id);
+	}
+
 
 }
