@@ -1,4 +1,4 @@
-package com.ms2.contoller;
+package com.ms2.controller;
 
 import java.util.List;
 import java.util.Map;

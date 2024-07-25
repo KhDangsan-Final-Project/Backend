@@ -29,4 +29,8 @@ public class MailService {
     public MailDTO selectMailDetail(int mailNo, String userId) {
         return mapper.selectMailDetail(mailNo, userId);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2

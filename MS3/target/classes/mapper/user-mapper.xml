@@ -16,8 +16,8 @@
 
 	<!-- 회원가입 -->
 	<insert id="insertUser" parameterType="user">
-		insert into users(id, grant_no, password, email, name, nickname, profile)
-		values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'),
+		insert into users(id, password, email, name, nickname, profile)
+		values(#{id}, STANDARD_HASH(#{password}, 'SHA512'),
 		#{email}, #{name}, #{nickname}, #{profile})
 	</insert>
 
@@ -55,8 +55,34 @@
         WHERE id = #{id}
     </select>
 
+<<<<<<< HEAD
 	<delete id="deleteUser" parameterType="com.ms3.dto.UserDTO">
         DELETE FROM users WHERE id = #{id}
     </delete>
+=======
+    <!-- 비밀번호 업데이트 -->
+    <update id="updatePassword" parameterType="map">
+        UPDATE USERS
+        SET PASSWORD = #{password}, PASSWORD_RESET_TOKEN = NULL, TOKEN_EXPIRY_TIME = NULL
+        WHERE PASSWORD_RESET_TOKEN = #{token}
+    </update>
+    
+    <!-- 비밀번호 재설정 토큰 및 만료 시간 업데이트 -->
+    <update id="savePasswordResetToken" parameterType="map">
+        UPDATE USERS
+        SET PASSWORD_RESET_TOKEN = #{token}, TOKEN_EXPIRY_TIME = #{expiryTime}
+        WHERE EMAIL = #{email}
+    </update>
+    
+    <select id="idcheck">
+    	SELECT COUNT(*) FROM USERS WHERE ID = #{id}
+    </select>
+    
+    <select id="isUserExists" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE id = #{id}
+    </select>
+>>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
 
 </mapper>

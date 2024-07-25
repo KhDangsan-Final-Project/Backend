@@ -1,6 +1,8 @@
 package com.ms2.controller;
 
+import com.ms2.dto.RoomInfoDTO;
 import com.ms2.dto.UserDTO;
+import com.ms2.event.RoomInfoEvent;
 import com.ms2.event.UserConnectedEvent;
 import com.ms2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,17 @@ public class MainController {
         this.userId = event.getId();
         System.out.println("User connected with ID//mainController: " + userId);
 
-        // ID를 설정한 후 someOtherMethod를 호출합니다.
         someOtherMethod();
     }
 
     public String getUserId() {
         return userId;
     }
+    
 
+    
+    
+    
     public void someOtherMethod() {
         System.out.println("User ID in someOtherMethod: " + userId);
         try {
@@ -35,6 +40,11 @@ public class MainController {
             UserDTO user = userService.selectUserVictoryCount(userId);
             if (user != null) {
                 System.out.println("User Info: " + user.toString()); // UserDTO의 toString() 메서드 호출
+                if (user.getMatchWin() != null) {
+                    System.out.println("user matchWin info: " + user.getMatchWin().toString());
+                } else {
+                    System.out.println("matchWin value is null.");
+                }
             } else {
                 System.out.println("User not found for ID: " + userId);
             }
