@@ -1,6 +1,8 @@
 package com.ms2.controller;
 
+import com.ms2.dto.RoomInfoDTO;
 import com.ms2.dto.UserDTO;
+import com.ms2.event.RoomInfoEvent;
 import com.ms2.event.UserConnectedEvent;
 import com.ms2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,17 @@ public class MainController {
         this.userId = event.getId();
         System.out.println("User connected with ID//mainController: " + userId);
 
-        // ID를 설정한 후 someOtherMethod를 호출합니다.
         someOtherMethod();
     }
 
     public String getUserId() {
         return userId;
     }
+    
 
+    
+    
+    
     public void someOtherMethod() {
         System.out.println("User ID in someOtherMethod: " + userId);
         try {
