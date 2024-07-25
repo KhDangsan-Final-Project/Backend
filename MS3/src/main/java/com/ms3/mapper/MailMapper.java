@@ -18,8 +18,7 @@ public interface MailMapper {
 	
 	MailDTO selectMailDetail(@Param("mailNo") int mailNo, @Param("userId") String userId);
 	
-<<<<<<< HEAD
+
+
+
 }
-=======
-}
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2

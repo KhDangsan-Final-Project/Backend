@@ -34,9 +34,6 @@
         FROM MAILBOX
         WHERE mailNo = #{mailNo} AND receiver = #{userId}
     </select>
-    
-<<<<<<< HEAD
+
 </mapper>
-=======
-</mapper>
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
+

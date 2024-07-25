@@ -37,19 +37,14 @@ import com.ms3.util.JwtUtil;
 @RequestMapping("/ms3")
 public class MainController {
 
-	private final UserService service;
-<<<<<<< HEAD
-	private final JwtUtil jwtUtil;
-
-	public MainController(UserService service, JwtUtil jwtUtil) {
-=======
+    private final UserService service;
     private final EmailService emailService;
     private final TokenService tokenService;
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 	private final JwtUtil jwtUtil;
 	
 	public MainController(UserService service, JwtUtil jwtUtil, EmailService emailService, TokenService tokenService) {
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
+
 		this.service = service;
 		this.jwtUtil = jwtUtil;
 		this.emailService = emailService;
@@ -101,7 +96,6 @@ public class MainController {
 		}
 		return map;
 	}
-<<<<<<< HEAD
 	
 	@DeleteMapping("/user/delete")
 	public Map<String, Object> deleteUser(@RequestParam String id, @RequestParam String token) {
@@ -126,7 +120,6 @@ public class MainController {
 	        response.put("message", e.getMessage());
 	    }
 	    return response;
-=======
 
 	@PostMapping("/user/idcheck")
 	public Map<String, Object> idcheck(@RequestBody Map<String, String> payload) {
@@ -137,13 +130,9 @@ public class MainController {
 		map.put("count", count);
 
 		return map;
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
+
 	}
 
-  
-<<<<<<< HEAD
-   
-=======
 	@PostMapping("/password-reset-request")
     public Map<String, Object> requestPasswordReset(@RequestBody Map<String, String> request) {
     	String email = request.get("email");
@@ -200,10 +189,6 @@ public class MainController {
 
 }
 
-
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
-
   
     
     
-}

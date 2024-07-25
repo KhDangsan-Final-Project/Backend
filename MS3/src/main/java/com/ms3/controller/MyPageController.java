@@ -35,7 +35,6 @@ public class MyPageController {
     private final UserService service;
     private final JwtUtil jwtUtil;
     private final MailService mailService;
-<<<<<<< HEAD
     private final LibraryService libraryService;  
     
     
@@ -48,17 +47,6 @@ public class MyPageController {
 		this.libraryService = libraryService;
 	}
 
-=======
-
-    public MyPageController(FriendService friendService, UserService service, JwtUtil jwtUtil,
-			MailService mailService) {
-		this.friendService = friendService;
-		this.service = service;
-		this.jwtUtil = jwtUtil;
-		this.mailService = mailService;
-	}
-    
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
 	@GetMapping("/mypage")
     public UserDTO selectInfoUser(@RequestParam String token) {
         String userId = jwtUtil.extractId(token);
@@ -133,7 +121,6 @@ public class MyPageController {
         map.put("status", result > 0 ? "success" : "fail");
         System.out.println(result);
         return map;
-<<<<<<< HEAD
     }
 
     @GetMapping("/mail")
@@ -188,74 +175,13 @@ public class MyPageController {
         return map;
     }
 
-    @GetMapping("/mail/detail")
-    public MailDTO selectMailDetail(@RequestParam int mailNo, @RequestParam String token) {
-        String userId = jwtUtil.extractId(token);
-        return mailService.selectMailDetail(mailNo, userId);
-=======
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
-    }
-
-    @GetMapping("/mail")
-    public Map<String, Object> selectMail(@RequestParam String token) {
-        String userId = jwtUtil.extractId(token);
-        Map<String, Object> map = new HashMap<String, Object>();
-        List<MailDTO> result = mailService.selectMail(userId);
-        System.out.println(result);
-        map.put("result", result);
-        return map;
-    }
-
-    @PostMapping("/mail/send")
-    public Map<String, Object> sendMail(@RequestBody MailDTO mailDTO, @RequestParam String token) {
-        String userId = jwtUtil.extractId(token);
-        mailDTO.setSender(userId);
-        mailDTO.setTimestamp(LocalDateTime.now());
-        Map<String, Object> map = new HashMap<>();
-        try {
-            if (!service.isUserExists(mailDTO.getReceiver())) {
-                map.put("status", "fail");
-                map.put("message", "아이디를 확인해주세요");
-                return map;
-            }
-            int result = mailService.sendMail(mailDTO);
-            map.put("status", result > 0 ? "success" : "fail");
-            if (result <= 0) {
-                map.put("message", "메일 전송에 실패했습니다.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", "fail");
-            map.put("message", "서버 오류가 발생했습니다.");
-        }
-        return map;
-    }
-
-
-    @DeleteMapping("/mail/delete")
-    public Map<String, Object> deleteMail(@RequestParam int mailNo, @RequestParam String token) {
-        Map<String, Object> map = new HashMap<>();
-        String userId = jwtUtil.extractId(token);
-        try {
-            int result = mailService.deleteMail(mailNo);
-            map.put("status", result > 0 ? "success" : "fail");
-            map.put("message", result > 0 ? "메일이 성공적으로 삭제되었습니다." : "메일 삭제에 실패했습니다.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("status", "fail");
-            map.put("message", "서버 오류가 발생했습니다.");
-        }
-        return map;
-    }
-
-    @GetMapping("/mail/detail")
+    @GetMapping("/mail/detail") 
     public MailDTO selectMailDetail(@RequestParam int mailNo, @RequestParam String token) {
         String userId = jwtUtil.extractId(token);
         return mailService.selectMailDetail(mailNo, userId);
     }
         
     
-<<<<<<< HEAD
     @GetMapping("/library")
     public Map<String, Object> getPokemon(@RequestParam String token) {
         String userId = jwtUtil.extractId(token);
@@ -271,8 +197,6 @@ public class MyPageController {
         }
         return map;
     }
-        
-=======
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
+
     
 }

@@ -55,11 +55,11 @@
         WHERE id = #{id}
     </select>
 
-<<<<<<< HEAD
+
 	<delete id="deleteUser" parameterType="com.ms3.dto.UserDTO">
         DELETE FROM users WHERE id = #{id}
     </delete>
-=======
+
     <!-- 비밀번호 업데이트 -->
     <update id="updatePassword" parameterType="map">
         UPDATE USERS
@@ -83,6 +83,6 @@
         FROM USERS
         WHERE id = #{id}
     </select>
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
+
 
 </mapper>

@@ -17,17 +17,9 @@ public interface UserMapper {
     UserDTO selectInfoUser(String id);
     List<UserDTO> searchFriend(@Param("query") String query, @Param("userId") String userId);
 	int isUserExists(String userId);
-<<<<<<< HEAD
 	int deleteUser(String id);
-=======
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
-
     int idcheck(String id);
 
-
-<<<<<<< HEAD
-}
-=======
     // 이메일로 사용자 조회
     UserDTO selectUserByEmail(String email);
     // 비밀번호 재설정 토큰 저장
@@ -40,4 +32,4 @@ public interface UserMapper {
 
 
 }
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
+
