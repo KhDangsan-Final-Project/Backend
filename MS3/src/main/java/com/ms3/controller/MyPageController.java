@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms3.dto.FriendDTO;
-<<<<<<< HEAD
 import com.ms3.dto.LibraryDTO;
-=======
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
 import com.ms3.dto.MailDTO;
 import com.ms3.dto.UserDTO;
 import com.ms3.service.MailService;

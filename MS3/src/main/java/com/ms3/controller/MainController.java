@@ -3,13 +3,11 @@ package com.ms3.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-<<<<<<< HEAD
+
 import org.springframework.web.bind.annotation.DeleteMapping;
-=======
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,18 +15,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpHeaders;
 
-<<<<<<< HEAD
-import com.ms3.dto.BoardDTO;
-import com.ms3.dto.MailDTO;
-import com.ms3.dto.UserDTO;
-import com.ms3.service.MailService;
-=======
 import com.ms3.dto.UserDTO;
 import com.ms3.service.EmailService;
 import com.ms3.service.TokenService;
->>>>>>> 930680a6f270399ebf3b0992538fa7cb05d8bea2
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
 
@@ -120,6 +110,7 @@ public class MainController {
 	        response.put("message", e.getMessage());
 	    }
 	    return response;
+	}
 
 	@PostMapping("/user/idcheck")
 	public Map<String, Object> idcheck(@RequestBody Map<String, String> payload) {

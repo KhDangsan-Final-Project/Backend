@@ -77,12 +77,7 @@
     <select id="idcheck">
     	SELECT COUNT(*) FROM USERS WHERE ID = #{id}
     </select>
-    
-    <select id="isUserExists" parameterType="string" resultType="int">
-        SELECT COUNT(*)
-        FROM USERS
-        WHERE id = #{id}
-    </select>
+   
 
 
 </mapper>
