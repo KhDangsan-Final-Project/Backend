@@ -40,28 +40,25 @@ public class MainController {
 	
 
 	@PostMapping("/user/select")
-	public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> param) {
-	    String id = param.get("id");
-	    String password = param.get("password");
+	public Map<String, Object> login(@RequestBody Map<String, String> param) {
+		String id = param.get("id");
+		String password = param.get("password");
 
-	    Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 
-	    UserDTO user = service.selectUser(id, password);
-	    if (user != null) {
-	        String token = jwtUtil.generateToken(user.getId(), user.getNickname(), user.getGrantNo(),
-	                user.getProfile());
-	        map.put("msg", "로그인 성공");
-	        map.put("result", true);
-	        // HTTP 응답 헤더에 토큰 추가
-	        
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.add("Authorization", "Bearer " + token);
-	        return ResponseEntity.ok().headers(headers).body(map);
-	    } else {
-	        map.put("msg", "로그인 실패");
-	        map.put("result", false);
-	        return ResponseEntity.status(401).body(map);
-	    }
+		UserDTO user = service.selectUser(id, password);
+		if (user != null) {
+			String token = jwtUtil.generateToken(user.getId(), user.getNickname(), user.getGrantNo(),
+					user.getProfile());
+			map.put("msg", "로그인 성공");
+			map.put("result", true);
+			map.put("token", token);
+		} else {
+			map.put("msg", "로그인 실패");
+			map.put("result", false);
+		}
+
+		return map;
 	}
 	
 	@PostMapping("/user/insert")
