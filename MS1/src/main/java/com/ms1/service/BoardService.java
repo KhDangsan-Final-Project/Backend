@@ -62,6 +62,35 @@ public class BoardService {
 		return boardMapper.selectBoardTotalCountByCategory(category);
 	}
 
+	public boolean isLiked(int bno, String id) {
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("bno", bno);
+	    map.put("id", id);
+	    return boardMapper.selectBoardLike(map) > 0; // selectBoardLike 메소드가 좋아요 존재 여부를 반환해야 함
+	}
+	
+	public int selectBoardLike(Map<String, Object> map) {
+	    return boardMapper.selectBoardLike(map);
+	}
+
+	public int deleteBoardLike(int bno, String id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bno", bno);
+		map.put("id", id);
+		return boardMapper.deleteBoardLike(map);
+	}
+
+	public int insertBoardLike(int bno, String id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bno", bno);
+		map.put("id", id);
+		return boardMapper.insertBoardLike(map);
+	}
+
+	public int selectBoardLikeCount(int bno) {
+		return boardMapper.selectBoardLikeCount(bno);
+	}
+
 
 	
 	

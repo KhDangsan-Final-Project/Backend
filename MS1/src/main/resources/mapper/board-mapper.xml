@@ -31,13 +31,6 @@
 		<result column="BOARD_PATH" property="path" />
 	</resultMap>
 
-	<select id="selectBoardCommentList" parameterType="int"
-		resultMap="comment">
-		SELECT * FROM BOARD_COMMENT_VIEW
-		WHERE BOARD_NO = #{bno}
-		ORDER BY BOARD_COMMENT_NO DESC
-	</select>
-
 	<select id="selectBoardList" parameterType="map"
 		resultMap="board">
 		SELECT * FROM
@@ -90,11 +83,31 @@
 		VALUES (#{fno}, #{bno},
 		#{path})
 	</insert>
+	
+	<insert id="insertBoardLike" parameterType="map">
+ 	   insert into board_like (ID, BOARD_NO) values(#{id}, #{bno})
+	</insert>
+	<delete id="deleteBoardLike" parameterType="map">
+		delete from board_like where id = #{id} and board_no = #{bno}
+	</delete>
+	<select id="selectBoardLikeCount" parameterType="int">
+		select count(*) from board_like where board_no = #{bno}
+	</select>
+	<select id="selectBoardLike" parameterType="map" resultType="int">
+        select count(*) from board_like where id = #{id} and board_no = #{bno}
+    </select>
 
 
 	<select id="getNextFileNo" resultType="int">
 		select file_seq.nextval
 		from dual
+	</select>
+	
+	<select id="selectBoardCommentList" parameterType="int"
+		resultMap="comment">
+		SELECT * FROM BOARD_COMMENT_VIEW
+		WHERE BOARD_NO = #{bno}
+		ORDER BY BOARD_COMMENT_NO DESC
 	</select>
 
 </mapper>

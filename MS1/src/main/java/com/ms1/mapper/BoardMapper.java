@@ -27,6 +27,10 @@ public interface BoardMapper {
 	int getNextFileNo();
 	int selectBoardTotalCount();
 	int selectBoardTotalCountByCategory(String category);
+	int deleteBoardLike(Map<String, Object> map);
+	int insertBoardLike(Map<String, Object> map);
+	int selectBoardLikeCount(int bno);
+	int selectBoardLike(Map<String, Object> map);
 
 
 }

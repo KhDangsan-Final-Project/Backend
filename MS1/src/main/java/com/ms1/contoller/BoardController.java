@@ -28,6 +28,8 @@ import com.ms1.service.BoardService;
 import com.ms1.util.JwtUtil;
 import com.ms1.vo.PaggingVO;
 
+import jakarta.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping("/ms1")
 public class BoardController {
@@ -69,6 +71,74 @@ public class BoardController {
 	public BoardDTO BoardSelect(@PathVariable int boardNo) {
 		BoardDTO dto = boardService.boardSelect(boardNo);
 		return dto;
+	}
+
+	@PostMapping("/boardLike/{boardNo}")
+	public Map<String, Object> BoardLike(@PathVariable int boardNo,
+			@RequestHeader("Authorization") String authorization) {
+		Map<String, Object> response = new HashMap<>();
+		String id;
+		try {
+			// JWT 토큰 검증
+			if (authorization == null || !authorization.startsWith("Bearer ")) {
+				throw new Exception("계정을 확인해주세요!");
+			}
+
+			// 토큰에서 사용자 ID 추출
+			String token = authorization.substring(7);
+			id = jwtUtil.extractId(token);
+			System.out.println(id);
+
+			boolean isLiked = boardService.isLiked(boardNo, id);
+
+			if (isLiked) {
+				boardService.deleteBoardLike(boardNo, id);
+				response.put("msg", "해당 게시글에 좋아요를 취소하였습니다.");
+				System.out.println("취소" + boardNo);
+				System.out.println("취소" + id);
+			} else {
+				boardService.insertBoardLike(boardNo, id);
+				response.put("msg", "해당 게시글에 좋아요를 하였습니다.");
+				System.out.println(boardNo);
+				System.out.println(id);
+			}
+			response.put("code", 1);
+		} catch (Exception e) {
+			response.put("code", 2);
+			e.printStackTrace();
+			response.put("msg", "로그인하셔야 이용하실 수 있습니다.");
+		}
+		int count = boardService.selectBoardLikeCount(boardNo);
+		response.put("count", count);
+		System.out.println(count);
+
+		return response;
+	}
+
+	@GetMapping("/boardLikeView/{boardNo}")
+	public Map<String, Object> getBoardLikeStatus(@PathVariable int boardNo,
+			@RequestHeader("Authorization") String authorization) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			if (authorization == null || !authorization.startsWith("Bearer ")) {
+				throw new Exception("계정을 확인해주세요!");
+			}
+			String token = authorization.substring(7);
+			String id = jwtUtil.extractId(token);
+
+			boolean isLiked = boardService.isLiked(boardNo, id);
+			int count = boardService.selectBoardLikeCount(boardNo);
+
+			response.put("liked", isLiked);
+			response.put("count", count);
+			response.put("code", 1);
+		} catch (Exception e) {
+			response.put("code", 2);
+			e.printStackTrace();
+			response.put("msg", "로그인하셔야 이용하실 수 있습니다.");
+		}
+
+		return response;
 	}
 
 	/**
