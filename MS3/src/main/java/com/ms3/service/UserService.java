@@ -42,7 +42,16 @@ public class UserService {
 	public List<UserDTO> searchFriend(String query, String userId) {
 		return mapper.searchFriend(query, userId);
 	}
-    
+	
+	public boolean isUserExists(String userId) {
+	    Integer count = mapper.isUserExists(userId);
+	    return count != null && count > 0;
+	}
+	
+	public int idcheck(String id) {
+		return mapper.idcheck(id);
+	}
+	
  // 비밀번호 재설정 요청 처리
     public String createPasswordResetToken(String email) {
         UserDTO user = mapper.selectUserByEmail(email);
@@ -67,8 +76,5 @@ public class UserService {
         mapper.updateUserPassword(user.getId(), newPassword);
     }
 
-	public int idcheck(String id) {
-		return mapper.idcheck(id);
-	}
 
 }

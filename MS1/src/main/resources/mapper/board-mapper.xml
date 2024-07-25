@@ -31,7 +31,7 @@
 	</select>
 	
 	<insert id="boardInsert" parameterType="com.ms1.dto.BoardDTO">
-		INSERT INTO board(ID, BOARD_TITLE, BOARD_CONTENT, BOARD_CATEGORY) values(#{id}, #{boardTitle}, #{boardContent}, #{boardCategory})
+		INSERT INTO board(BOARD_NO, ID, BOARD_TITLE, BOARD_CONTENT, BOARD_CATEGORY) values(#{boardNo}, #{id}, #{boardTitle}, #{boardContent}, #{boardCategory})
 	</insert>
 	
 	<select id="boardNoSelect" resultType="int">

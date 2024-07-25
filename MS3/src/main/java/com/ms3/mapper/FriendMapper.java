@@ -3,7 +3,6 @@ package com.ms3.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import com.ms3.dto.FriendDTO;
 
@@ -24,8 +23,11 @@ public interface FriendMapper {
 
 	int deleteFriend(FriendDTO friendDTO);
 
-	int checkFriendRequestExist(FriendDTO friendDTO);
+	int insertFriend(FriendDTO friendDTO);
 
-	int checkFriendExist(FriendDTO friendDTO);
 
+
+//	int checkFriendRequestExist(FriendDTO friendDTO);
+//
+//	int checkFriendExist(FriendDTO friendDTO);
 }
