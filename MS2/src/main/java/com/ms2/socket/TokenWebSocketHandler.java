@@ -26,7 +26,7 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        System.out.println("Received message from client: " + payload);
+        System.out.println("Received message from client tokenwebsocket:  " + payload);
 
         try {
             JSONObject json = new JSONObject(payload);
