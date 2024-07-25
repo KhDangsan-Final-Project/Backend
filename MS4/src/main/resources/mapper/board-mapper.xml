@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms4.mapper.BoardMapper">
+
+	<!-- 게시판 DTO -->
+	<resultMap type="com.ms4.dto.BoardDTO" id="board">
+		<id column="board_no" property="boardNo" />
+		<result column="id" property="id" />
+		<result column="board_title" property="boardTitle" />
+		<result column="board_content" property="boardContent" />
+		<result column="board_write" property="boardWrite" />
+		<result column="board_count" property="boardCount" />
+		<result column="board_category" property="boardCategory" />
+	</resultMap>
+
+	<!-- 게시물 Coment DTO -->
+	<resultMap type="com.ms4.dto.BoardCommentDTO" id="comment">
+		<id column="board_comment_no" property="cno" />
+		<result column="board_no" property="bno" />
+		<result column="id" property="id" />
+		<result column="board_comment_content" property="comment" />
+		<result column="board_comment_write" property="write" />
+	</resultMap>
+
+	<select id="selectBoardNewList" resultMap="board">
+		SELECT * FROM
+		(SELECT
+		CEIL(ROW_NUMBER() OVER(ORDER BY
+		B.BOARD_NO DESC) / #{pageContentCount})
+		AS PAGE_NO,
+		B.* FROM BOARD B)
+		WHERE PAGE_NO = #{pageNo}
+	</select>
+
+	<select id="selectBoardTotalCount" resultType="int">
+		SELECT COUNT(*)
+		FROM BOARD
+	</select>
+
+	<select id="selectBoard" parameterType="int" resultMap="board">
+		select *
+		from board where board_no = #{bno}
+	</select>
+
+	<select id="selectBoardCommentList" resultMap="comment">
+		select * from
+		board_comment where board_comment_no = #{cno}
+	</select>
+
+	<delete id="deleteBoard">
+		delete from board where board_no =
+		#{bno}
+	</delete>
+
+	<select id="getBoardNo" resultType="int">
+		select board_seq.nextval from
+		dual
+	</select>
+
+	<insert id="insertBoard" parameterType="com.ms4.dto.BoardDTO">
+		insert into board(board_no, board_title, board_content, board_category, id)
+		values(#{boardNo},#{boardTitle},#{boardContent},#{boardCategory},#{id})
+	</insert>
+
+
+</mapper>

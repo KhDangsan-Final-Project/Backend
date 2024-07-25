@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>사용자 목록</title>
 <link rel="stylesheet" th:href="@{/css/style.css}">
+<link href="/css/menu.css" rel="stylesheet">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
@@ -112,6 +113,8 @@
 </head>
 <body>
 <div class='container'>
+	<th:block th:include="/fragments/header.html"></th:block>
+  	<hr>
 	<h1>사용자 목록</h1>
 	<table>
 		<thead>
