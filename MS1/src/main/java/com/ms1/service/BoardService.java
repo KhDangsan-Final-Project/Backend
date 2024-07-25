@@ -100,8 +100,8 @@ public class BoardService {
 		return boardMapper.boardCommentNoSelect();
 	}
 
+	public List<BoardCommentDTO> boardSelectComment(int boardNo) {
+		return boardMapper.boardSelectComment(boardNo);
+	}
 
-
-	
-	
 }

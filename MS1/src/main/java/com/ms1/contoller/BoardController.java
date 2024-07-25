@@ -74,6 +74,15 @@ public class BoardController {
 		return dto;
 	}
 
+	@GetMapping("/comments/{boardNo}")
+	public ResponseEntity<List<BoardCommentDTO>> getComments(@PathVariable("boardNo") int boardNo) {
+	    List<BoardCommentDTO> comments = boardService.boardSelectComment(boardNo);
+	    System.out.println(comments);
+	    return ResponseEntity.ok(comments);
+	}
+
+
+	
 	@PostMapping("/boardLike/{boardNo}")
 	public Map<String, Object> BoardLike(@PathVariable int boardNo,
 			@RequestHeader("Authorization") String authorization) {

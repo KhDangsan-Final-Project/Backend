@@ -21,7 +21,7 @@
 		<result column="board_no" property="bno" />
 		<result column="id" property="id" />
 		<result column="board_comment_content" property="comment" />
-		<result column="board_comment_write" property="write" />
+		<result column="board_comment_write" property="cdate" />
 	</resultMap>
 
 	<!-- 파일 DTO -->
@@ -95,6 +95,10 @@
 		select board_comment_seq.nextval
 		from dual
 	</select>
+	
+	<select id="boardSelectComment" resultType="com.ms1.dto.BoardCommentDTO" resultMap="comment">
+   		SELECT * FROM BOARD_COMMENT WHERE BOARD_NO = #{boardNo}
+	</select>
 
 	<insert id="insertBoardFile" parameterType="com.ms1.dto.FileDTO">
 		INSERT INTO
@@ -122,11 +126,5 @@
 		from dual
 	</select>
 	
-	<select id="selectBoardCommentList" parameterType="int"
-		resultMap="comment">
-		SELECT * FROM BOARD_COMMENT_VIEW
-		WHERE BOARD_NO = #{bno}
-		ORDER BY BOARD_COMMENT_NO DESC
-	</select>
 
 </mapper>

@@ -34,6 +34,7 @@ public interface BoardMapper {
 	int selectBoardLike(Map<String, Object> map);
 	int boardCommentNoSelect();
 	int boardCommentInsert(BoardCommentDTO dto);
+	List<BoardCommentDTO> boardSelectComment(int boardNo);
 
 
 }
