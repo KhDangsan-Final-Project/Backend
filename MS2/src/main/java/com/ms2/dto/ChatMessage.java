@@ -1,20 +1,28 @@
 package com.ms2.dto;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+
 public class ChatMessage {
+    private String nickname;
     private String content;
-    private String sender;
 
-    // 기본 생성자
-    public ChatMessage() {
-    }
+    public ChatMessage() {}
 
-    // 매개변수가 있는 생성자
-    public ChatMessage(String content, String sender) {
+    public ChatMessage(String nickname, String content) {
+        this.nickname = nickname;
         this.content = content;
-        this.sender = sender;
     }
 
-    // Getter와 Setter 메서드
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public String getContent() {
         return content;
     }
@@ -23,11 +31,21 @@ public class ChatMessage {
         this.content = content;
     }
 
-    public String getSender() {
-        return sender;
+    public String toJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public static ChatMessage fromJson(String json) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(json, ChatMessage.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

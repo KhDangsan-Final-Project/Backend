@@ -19,7 +19,7 @@ public class WebSocketController {
 	
 	@MessageMapping("/sendMessage")
 	 public void sendMessage(@Payload ChatMessage chatMessage) {
-	     System.out.println("Received message: " + chatMessage.getSender() + ": " + chatMessage.getContent());
+	     System.out.println("Received message: " + chatMessage.getNickname() + ": " + chatMessage.getContent());
 	 }
 
 }
