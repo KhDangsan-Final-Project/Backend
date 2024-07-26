@@ -3,8 +3,8 @@
 		<th:block th:if="${session.user != null}">
 			<li><a href="/ms4/user/list" th:if="${session.user.grantNo == 0}">회원관리</a></li>
 			<li><a href="/ms4/board/view" th:if="${session.user.grantNo == 0}">게시판</a></li>
-			<li><a href="/ms4/board/list" th:if="${session.user.grantNo == 0}">신고 목록</a></li>
-			<li><a href="/logout">로그아웃</a></li>
+			<li><a href="/ms4/admin/report" th:if="${session.user.grantNo == 0}">신고 목록</a></li>
+			<li><a href="/ms4/logout">로그아웃</a></li>
 		</th:block>
 	</ul>
 </nav>

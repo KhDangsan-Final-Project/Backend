@@ -112,6 +112,12 @@
 </head>
 <body>
 	<th:block th:include="/fragments/header.html"></th:block>
+	<th:block th:if="${session.user == null}">
+		<script>
+		alert('로그인 하셔야 이용하실 수 있습니다.');
+		location.href = '/ms4/login/view';
+	</script>
+	</th:block>
 
 <div id="container">
   <h2>글조회 페이지</h2>
@@ -150,11 +156,23 @@
 			 			location.href='/ms4/board/delete/[[${board.boardNo}]]';
 			 		}
 			 		document.querySelector("#btn_Adelete").onclick = () =>{
-			 			location.href='/ms4/board/Adelete/[[${board.boardNo}]]';
+			 			location.href='/ms4/board/aDelete/[[${board.boardNo}]]';
 			 		}
 			 		
 			 	</script>
 			 </td>
+			 <tr>
+		 	<td colspan="2">
+		 		<!-- 댓글 입력 폼 -->
+		 		<div class="comment_form">
+					<form action="/ms4/comment/add" method="post">
+						<input type="hidden" name="bno" th:value="${board.boardNo }">
+						<textarea name="comment" placeholder="댓글을 입력하세요"></textarea>
+						<button>댓글작성</button>
+					</form>
+				</div>
+		 	</td>
+		 </tr>
 		 
 	</table>
 	<hr>
@@ -169,11 +187,12 @@
 	 	<div class="comment" th:each="comment : ${commentList}">
 	 		<p>
 	 			<input type="hidden" name="cno" th:value="${comment.cno }"/>
-	 			<span>[[${comment.writer }]]</span>
+	 			<span>[[${comment.id }]]</span>
 	 			<span>작성일 : [[${comment.cdate }]]</span>
 	 		</p>
 	 		<p>[[${comment.comment }]]</p>
-	 		<a th:href="@{/boardComment/delete(cno=${comment.cno },bno=${comment.bno})}" th:if="${session.user != null && session.user.grantNo == 0 }">댓글 삭제</a>
+	 		<a th:href="@{/ms4/boardComment/delete(cno=${comment.cno },bno=${comment.bno})}" th:if="${session.user != null && session.user.grantNo == 0 }">댓글 삭제</a>
+	 		<a th:href="@{/ms4/boardComment/aDelete(cno=${comment.cno },bno=${comment.bno})}" th:if="${session.user != null && session.user.grantNo == 0 }">관리자 댓글 삭제</a>
 	 	</div>
 	</div>
 </body>

@@ -48,5 +48,34 @@ public class BoardService {
 	public int insertBoard(BoardDTO dto) {
 		return mapper.insertBoard(dto);
 	}
+
+	public int insertBoardComment(BoardCommentDTO dto) {
+		return mapper.insertBoardComment(dto);
+		
+	}
+
+	public int deleteBoardComment(int cno) {
+		return mapper.deleteBoardComment(cno);
+	}
+
+	public int updateBoard(BoardDTO dto) {
+		return mapper.updateBoard(dto);
+	}
+
+	public int adminDeleteBoardComment(int cno) {
+		return mapper.adminDeleteBoardComment(cno);
+	}
+
+	public void adminDeleteBoard(int bno) {
+		mapper.adminDeleteBoard(bno);
+	}
+
+	public List<BoardDTO> selectReportBoard() {
+		return mapper.selectReportBoard();
+	}
+
+	public List<BoardCommentDTO> selectReportComment() {
+		return mapper.selectReportComment();
+	}
 	
 }

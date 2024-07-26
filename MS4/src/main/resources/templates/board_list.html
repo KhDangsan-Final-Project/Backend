@@ -26,6 +26,12 @@
 </head>
 <body>
 <th:block th:include="/fragments/header.html"></th:block>
+<th:block th:if="${session.user == null}">
+		<script>
+		alert('로그인 하셔야 이용하실 수 있습니다.');
+		location.href = '/ms4/login/view';
+	</script>
+	</th:block>
   	<hr>
   	<a href="/ms4/board/write/view">글쓰기</a>
 	<table>

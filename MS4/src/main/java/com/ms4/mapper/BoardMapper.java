@@ -25,4 +25,19 @@ public interface BoardMapper {
 	int getBoardNo();
 
 	int insertBoard(BoardDTO dto);
+
+	int insertBoardComment(BoardCommentDTO dto);
+
+	int deleteBoardComment(int cno);
+
+	int updateBoard(BoardDTO dto);
+
+	int adminDeleteBoardComment(int cno);
+
+	void adminDeleteBoard(int bno);
+
+	List<BoardDTO> selectReportBoard();
+
+	List<BoardCommentDTO> selectReportComment();
+
 }

@@ -9,6 +9,7 @@ public class BoardCommentDTO {
 	private String id;
 	private String comment;
 	private String cdate;
+	private int report;
 	
 	public BoardCommentDTO() {
 	}
@@ -59,11 +60,22 @@ public class BoardCommentDTO {
 		this.cdate = cdate;
 	}
 
+	public int getReport() {
+		return report;
+	}
+
+	public void setReport(int report) {
+		this.report = report;
+	}
+
 	@Override
 	public String toString() {
 		return "BoardCommentDTO [bno=" + bno + ", cno=" + cno + ", id=" + id + ", comment=" + comment + ", cdate="
-				+ cdate + "]";
+				+ cdate + ", report=" + report + "]";
 	}
+
+	
+	
 
 	
 	

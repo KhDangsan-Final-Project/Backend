@@ -11,6 +11,7 @@ public class BoardDTO {
 	private	String boardWrite;
 	private int boardCount;
 	private String boardCategory;
+	private int report;
 	
 	
 	
@@ -116,10 +117,26 @@ public class BoardDTO {
 
 
 
+	public int getReport() {
+		return report;
+	}
+
+
+
+	public void setReport(int report) {
+		this.report = report;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "BoardDTO [boardNo=" + boardNo + ", id=" + id + ", boardTitle=" + boardTitle + ", boardContent="
 				+ boardContent + ", boardWrite=" + boardWrite + ", boardCount=" + boardCount + ", boardCategory="
-				+ boardCategory + "]";
-	} 
+				+ boardCategory + ", report=" + report + "]";
+	}
+
+	
+
+
 }

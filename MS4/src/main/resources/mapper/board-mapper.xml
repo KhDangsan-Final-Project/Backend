@@ -13,6 +13,7 @@
 		<result column="board_write" property="boardWrite" />
 		<result column="board_count" property="boardCount" />
 		<result column="board_category" property="boardCategory" />
+		<result column="report_count" property="report" />
 	</resultMap>
 
 	<!-- 게시물 Coment DTO -->
@@ -21,7 +22,8 @@
 		<result column="board_no" property="bno" />
 		<result column="id" property="id" />
 		<result column="board_comment_content" property="comment" />
-		<result column="board_comment_write" property="write" />
+		<result column="board_comment_write" property="cdate" />
+		<result column="report_count" property="report" />
 	</resultMap>
 
 	<select id="selectBoardNewList" resultMap="board">
@@ -44,9 +46,12 @@
 		from board where board_no = #{bno}
 	</select>
 
-	<select id="selectBoardCommentList" resultMap="comment">
-		select * from
-		board_comment where board_comment_no = #{cno}
+	<select id="selectBoardCommentList" parameterType="int"
+		resultMap="comment">
+		SELECT * FROM BOARD_COMMENT
+		WHERE BOARD_NO = #{bno}
+		ORDER BY
+		BOARD_COMMENT_NO DESC
 	</select>
 
 	<delete id="deleteBoard">
@@ -60,9 +65,48 @@
 	</select>
 
 	<insert id="insertBoard" parameterType="com.ms4.dto.BoardDTO">
-		insert into board(board_no, board_title, board_content, board_category, id)
+		insert into
+		board(board_no, board_title, board_content, board_category, id)
 		values(#{boardNo},#{boardTitle},#{boardContent},#{boardCategory},#{id})
 	</insert>
 
+	<insert id="insertBoardComment" parameterType="comment">
+		INSERT INTO
+		BOARD_COMMENT(board_comment_no, board_no, id, board_comment_content)
+		VALUES(BOARD_COMMENT_SEQ.NEXTVAL,#{bno},#{id},#{comment})
+	</insert>
+
+	<delete id="deleteBoardComment" parameterType="int">
+		DELETE FROM
+		BOARD_COMMENT WHERE BOARD_COMMENT_NO = #{cno}
+	</delete>
+
+	<update id="updateBoard" parameterType="com.ms4.dto.BoardDTO">
+		update board set
+		board_title = #{boardTitle}, board_content = #{boardContent}
+		where
+		board_no = #{boardNo}
+	</update>
+
+	<update id="adminDeleteBoardComment" parameterType="int">
+		UPDATE board_comment
+		SET board_comment_content = '관리자의 의해 삭제되었습니다'
+		WHERE board_comment_no = #{cno}
+	</update>
+
+	<update id="adminDeleteBoard" parameterType="int">
+		UPDATE board
+		SET board_title = '관리자에 의해 삭제되었습니다',
+		board_content = '관리자에 의해 삭제되었습니다'
+		WHERE board_no = #{bno}
+	</update>
+
+	<select id="selectReportBoard" resultMap="board">
+		SELECT * FROM board WHERE report_count > 0
+	</select>
+
+	<select id="selectReportComment" resultMap="comment">
+		SELECT * FROM board_comment WHERE report_count > 0
+	</select>
 
 </mapper>
