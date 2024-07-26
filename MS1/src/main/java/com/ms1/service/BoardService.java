@@ -171,4 +171,10 @@ public class BoardService {
 	public int selectCommentHateCount(int cno) {
 		return boardMapper.selectCommentHateCount(cno);
 	}
+	
+	@Transactional
+	public int increaseViewCount(int boardNo) {
+		return boardMapper.increaseViewCount(boardNo);
+	}
+	
 }

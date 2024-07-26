@@ -20,10 +20,8 @@ public interface BoardMapper {
 	BoardDTO boardSelect(int boardNo);
 
 	int boardInsert(BoardDTO dto);
-
-	int boardNoSelect();
-
 	void insertBoardFile(FileDTO fileDTO);
+	int boardNoSelect();
 
 	int getNextFileNo();
 	
@@ -46,6 +44,7 @@ public interface BoardMapper {
 	int deleteCommentHate(Map<String, Object> map);
 	int insertCommentHate(Map<String, Object> map);
 	int selectCommentHateCount(int cno);
-
+	
+	int increaseViewCount(int boardNo);
 
 }
