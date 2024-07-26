@@ -7,9 +7,9 @@ import com.ms3.mapper.LibraryMapper;
 
 @Service
 public class LibraryService {
-    private final LibraryDTO mapper;
+    private final LibraryMapper mapper;
 
-    public LibraryService(LibraryDTO mapper) {
+    public LibraryService(LibraryMapper mapper) {
         this.mapper = mapper;
     }
 
