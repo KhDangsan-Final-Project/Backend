@@ -6,7 +6,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import com.ms2.socket.ChatWebSocketHandler;
+import com.ms2.socket.MyWebSocketHandler;
 import com.ms2.socket.RoomWebSocketHandler;
 import com.ms2.socket.TokenWebSocketHandler;
 import com.ms2.socket.UpdateWebSocketHandler;
@@ -15,7 +15,10 @@ import com.ms2.socket.UpdateWebSocketHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-  
+    @Bean
+    public MyWebSocketHandler myWebSocketHandler() {
+        return new MyWebSocketHandler();
+    }
 
     @Bean
     public TokenWebSocketHandler tokenWebSocketHandler() {
@@ -31,14 +34,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public UpdateWebSocketHandler updateWebSocketHandler() {
         return new UpdateWebSocketHandler();
     }
-    @Bean
-    public ChatWebSocketHandler chatWebSocketHandler() {
-    	return new ChatWebSocketHandler();
-    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(chatWebSocketHandler(), "/ms2/ws")
+        registry.addHandler(myWebSocketHandler(), "/ms2/ws")
                 .setAllowedOrigins("*");
         registry.addHandler(tokenWebSocketHandler(), "/ms2/token")
                 .setAllowedOrigins("*");
@@ -46,7 +45,5 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .setAllowedOrigins("*");
         registry.addHandler(updateWebSocketHandler(), "/ms2/update")
                 .setAllowedOrigins("*");
-        registry.addHandler(chatWebSocketHandler(), "/ms2/chat")
-        .setAllowedOrigins("*");
     }
 }
