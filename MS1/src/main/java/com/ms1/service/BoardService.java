@@ -103,5 +103,72 @@ public class BoardService {
 	public List<BoardCommentDTO> boardSelectComment(int boardNo) {
 		return boardMapper.boardSelectComment(boardNo);
 	}
+	
+	public boolean isCommentLiked(int cno,int boardNo, String id) {
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("cno", cno);
+	    map.put("boardNo", boardNo);
+	    map.put("id", id);
+	    return boardMapper.selectCommentLike(map) > 0; //
+	}
+	
+	public int selectCommentLike(Map<String, Object> map) {
+	    return boardMapper.selectCommentLike(map);
+	}
+	
+	public int deleteCommentLike(int cno,int boardNo, String id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cno", cno);
+		map.put("boardNo", boardNo);
+		map.put("id", id);
+		return boardMapper.deleteCommentLike(map);
+	}
 
+	public int insertCommentLike(int cno,int boardNo, String id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cno", cno);
+		map.put("boardNo", boardNo);
+		map.put("id", id);
+		System.out.println("좋아요:" +map);
+		return boardMapper.insertCommentLike(map);
+	}
+
+	public int selectCommentLikeCount(int cno) {
+		return boardMapper.selectCommentLikeCount(cno);
+	}
+	
+	//-----------------------------------------------------------------------------
+
+	public boolean isCommentHated(int cno,int boardNo, String id) {
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("cno", cno);
+	    map.put("boardNo", boardNo);
+	    map.put("id", id);
+	    return boardMapper.selectCommentHate(map) > 0; //
+	}
+	
+	public int selectCommentHate(Map<String, Object> map) {
+	    return boardMapper.selectCommentHate(map);
+	}
+	
+	public int deleteCommentHate(int cno,int boardNo, String id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cno", cno);
+		map.put("boardNo", boardNo);
+		map.put("id", id);
+		return boardMapper.deleteCommentHate(map);
+	}
+
+	public int insertCommentHate(int cno,int boardNo, String id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cno", cno);
+		map.put("boardNo", boardNo);
+		map.put("id", id);
+		System.out.println("싫어요:" +map);
+		return boardMapper.insertCommentHate(map);
+	}
+
+	public int selectCommentHateCount(int cno) {
+		return boardMapper.selectCommentHateCount(cno);
+	}
 }

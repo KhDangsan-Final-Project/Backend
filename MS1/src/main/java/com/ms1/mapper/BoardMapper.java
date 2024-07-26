@@ -26,15 +26,26 @@ public interface BoardMapper {
 	void insertBoardFile(FileDTO fileDTO);
 
 	int getNextFileNo();
+	
 	int selectBoardTotalCount();
 	int selectBoardTotalCountByCategory(String category);
 	int deleteBoardLike(Map<String, Object> map);
 	int insertBoardLike(Map<String, Object> map);
 	int selectBoardLikeCount(int bno);
 	int selectBoardLike(Map<String, Object> map);
+	
 	int boardCommentNoSelect();
 	int boardCommentInsert(BoardCommentDTO dto);
 	List<BoardCommentDTO> boardSelectComment(int boardNo);
+	int selectCommentLike(Map<String, Object> map);
+	int deleteCommentLike(Map<String, Object> map);
+	int insertCommentLike(Map<String, Object> map);
+	int selectCommentLikeCount(int cno);
+	
+	int selectCommentHate(Map<String, Object> map);
+	int deleteCommentHate(Map<String, Object> map);
+	int insertCommentHate(Map<String, Object> map);
+	int selectCommentHateCount(int cno);
 
 
 }
