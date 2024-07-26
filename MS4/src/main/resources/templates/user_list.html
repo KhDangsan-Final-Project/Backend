@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>사용자 목록</title>
 <link rel="stylesheet" th:href="@{/css/style.css}">
+<link href="/css/menu.css" rel="stylesheet">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
@@ -111,48 +112,56 @@
     </script>
 </head>
 <body>
-<div class='container'>
-	<h1>사용자 목록</h1>
-	<table>
-		<thead>
-			<tr>
-				<td colspan="6"><select class="search_kind">
-						<option value="name">이름</option>
-						<option value="id">아이디</option>
-						<option value="nickname">닉네임</option>
-				</select> <input type="text" class="txt_search" placeholder="검색어 입력" >
-				</td>
-			</tr>
-			<tr class="flex_container">
-				<th class='id'>아이디</th>
-				<th class='name'>이름</th>
-				<th class='nick'>닉네임</th>
-				<th class='email'>Email</th>
-				<th class='rank'>랭크</th>
-				<th class='etc'>비고</th>
-			</tr>
-		</thead>
-		<tbody class="user_list">
-			<tr th:each="user : ${userList}" class="flex_container">
-				<td><input type="text" class="id" th:value="${user.id}"
-					readonly /></td>
-				<td><input type="text" class="name" th:value="${user.name}" /></td>
-				<td><input type="text" class="nickname"
-					th:value="${user.nickname}" /></td>
-				<td><input type="text" class="email" th:value="${user.email}" /></td>
-				<td><select class="rank">
-						<th:block th:each="rank : ${rankList}">
-							<option th:value="${rank.grantNo}"
-								th:selected="${rank.grantNo == user.grantNo}">[[${rank.grantName}]]</option>
-						</th:block>
-				</select></td>
-				<td>
-					<button type="button" class="btn_update">수정</button>
-					<button type="button" class="btn_delete">삭제</button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+	<th:block th:if="${session.user == null}">
+		<script>
+		alert('로그인 하셔야 이용하실 수 있습니다.');
+		location.href = '/ms4/login/view';
+	</script>
+	</th:block>
+	<div class='container'>
+		<th:block th:include="/fragments/header.html"></th:block>
+		<hr>
+		<h1>사용자 목록</h1>
+		<table>
+			<thead>
+				<tr>
+					<td colspan="6"><select class="search_kind">
+							<option value="name">이름</option>
+							<option value="id">아이디</option>
+							<option value="nickname">닉네임</option>
+					</select> <input type="text" class="txt_search" placeholder="검색어 입력">
+					</td>
+				</tr>
+				<tr class="flex_container">
+					<th class='id'>아이디</th>
+					<th class='name'>이름</th>
+					<th class='nick'>닉네임</th>
+					<th class='email'>Email</th>
+					<th class='rank'>랭크</th>
+					<th class='etc'>비고</th>
+				</tr>
+			</thead>
+			<tbody class="user_list">
+				<tr th:each="user : ${userList}" class="flex_container">
+					<td><input type="text" class="id" th:value="${user.id}"
+						readonly /></td>
+					<td><input type="text" class="name" th:value="${user.name}" /></td>
+					<td><input type="text" class="nickname"
+						th:value="${user.nickname}" /></td>
+					<td><input type="text" class="email" th:value="${user.email}" /></td>
+					<td><select class="rank">
+							<th:block th:each="rank : ${rankList}">
+								<option th:value="${rank.grantNo}"
+									th:selected="${rank.grantNo == user.grantNo}">[[${rank.grantName}]]</option>
+							</th:block>
+					</select></td>
+					<td>
+						<button type="button" class="btn_update">수정</button>
+						<button type="button" class="btn_delete">삭제</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>

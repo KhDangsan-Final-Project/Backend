@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms3.mapper.LibraryMapper">
+	<!-- ResultMap -->
+	<resultMap type="com.ms3.dto.LibraryDTO" id="library">
+		<id column="id" property="id" />
+		<result column="pokemon_num" property="pokemonNum" />
+	</resultMap>
+
+	<select id="getPokemon" resultMap="library">
+        SELECT * FROM GETPOKEMON WHERE ID = #{Id}
+    </select>
+    
+    
+</mapper>
