@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -183,6 +184,42 @@ public class BoardController {
 		return response;
 	}
 
+	//게시물 수정
+	
+	//게시물 삭제
+	@DeleteMapping("/board/delete/{boardNo}")
+	public ResponseEntity<String> deleteBoard(@PathVariable int boardNo,
+	        @RequestHeader("Authorization") String authorization) {
+	    String id;
+	    try {
+	        // JWT 토큰 검증
+	        if (authorization == null || !authorization.startsWith("Bearer ")) {
+	            throw new Exception("계정을 확인해주세요!");
+	        }
+
+	        // 토큰에서 사용자 ID 추출
+	        String token = authorization.substring(7);
+	        id = jwtUtil.extractId(token);
+
+	        // 게시물 조회
+	        BoardDTO board = boardService.boardSelect(boardNo);
+
+	        // 작성자 확인
+	        if (board != null && id.equals(board.getId())) {
+	            // 게시물 삭제
+	            boardService.boardDelete(boardNo);
+	            return ResponseEntity.ok("게시물 삭제 성공");
+	        } else {
+	            return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("삭제할 권한이 없습니다.");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 예외 스택 트레이스를 출력하여 디버깅 정보 추가
+	        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("게시물 삭제 실패: " + e.getMessage());
+	    }
+	}
+
+
+	
 	// 게시물 좋아요
 	@PostMapping("/boardLike/{boardNo}")
 	public Map<String, Object> BoardLike(@PathVariable int boardNo,
@@ -361,6 +398,8 @@ public class BoardController {
 
 		return response;
 	}
+	
+	
 
 	// 댓글 싫어요
 	@PostMapping("/commentHate/{cno}/{boardNo}")

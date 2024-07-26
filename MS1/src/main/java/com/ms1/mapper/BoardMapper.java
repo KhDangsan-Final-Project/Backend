@@ -46,5 +46,11 @@ public interface BoardMapper {
 	int selectCommentHateCount(int cno);
 	
 	int increaseViewCount(int boardNo);
+	List<FileDTO> selectFilesByBoardNo(int boardNo);
+	void deleteFilesByBoardNo(int boardNo);
+	int deleteBoard(int boardNo);
+	List<BoardCommentDTO> selectCommentsByBoardNo(int boardNo);
+	int deleteComment(int boardNo);
+	int deleteCommentByBoardNo(int boardNo);
 
 }

@@ -216,10 +216,41 @@
 	<!-- ____________________________________________________________ -->
 	<!-- 게시물 조회수 증가 -->
 	<update id="increaseViewCount">
-		update board 
+		update board
 		set board_count = board_count + 1
 		where board_no = #{boardNo}
 	</update>
-	
-	  
+
+	<!-- 게시물 삭제 -->
+	<delete id="deleteBoard" parameterType="int">
+		DELETE FROM board WHERE
+		board_no = #{boardNo}
+	</delete>
+
+	<select id="selectFilesByBoardNo" parameterType="int"
+		resultType="com.ms1.dto.FileDTO">
+		SELECT * FROM board_file WHERE board_no = #{boardNo}
+	</select>
+
+	<!-- 게시물에 연결된 파일 삭제 -->
+	<delete id="deleteFilesByBoardNo" parameterType="int">
+		DELETE FROM
+		board_file WHERE board_no = #{boardNo}
+	</delete>
+
+	<!-- 게시물에 연결된 댓글 삭제 -->
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM board_comment WHERE board_no = #{boardNo}
+	</delete>
+
+	<select id="selectCommentsByBoardNo" parameterType="int"
+		resultType="com.ms1.dto.BoardCommentDTO">
+		SELECT * FROM board_comment WHERE board_no = #{boardNo}
+	</select>
+
+	<delete id="deleteCommentByBoardNo" parameterType="int">
+		DELETE FROM board_comment
+		WHERE board_no = #{boardNo}
+	</delete>
+
 </mapper>

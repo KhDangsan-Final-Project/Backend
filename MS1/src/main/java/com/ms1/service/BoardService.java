@@ -1,5 +1,6 @@
 package com.ms1.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,5 +177,35 @@ public class BoardService {
 	public int increaseViewCount(int boardNo) {
 		return boardMapper.increaseViewCount(boardNo);
 	}
-	
+
+	@Transactional
+	public boolean boardDelete(int boardNo) {
+	    // 게시물에 연결된 모든 파일 정보 조회
+	    List<FileDTO> files = boardMapper.selectFilesByBoardNo(boardNo);
+	    // 게시물에 연결된 댓글 정보 조회
+	    List<BoardCommentDTO> comments = boardMapper.selectCommentsByBoardNo(boardNo);
+
+	    // 댓글 삭제
+	    boolean commentsDeleted = boardMapper.deleteCommentByBoardNo(boardNo) > 0;
+
+	    // 파일 정보 삭제
+	    boardMapper.deleteFilesByBoardNo(boardNo);
+
+	    // 파일 삭제 (물리적으로)
+	    File root = new File("c:\\fileupload");
+	    boolean filesDeleted = true;
+	    for (FileDTO file : files) {
+	        File f = new File(root, file.getFileName());
+	        if (f.exists()) {
+	            if (!f.delete()) {
+	                filesDeleted = false;
+	            }
+	        }
+	    }
+	    // 게시물 삭제
+	    boolean boardDeleted = boardMapper.deleteBoard(boardNo) > 0;
+
+	    return commentsDeleted && filesDeleted && boardDeleted;
+	}
+
 }
