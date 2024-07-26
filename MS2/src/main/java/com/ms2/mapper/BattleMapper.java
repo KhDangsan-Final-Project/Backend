@@ -1,7 +1,5 @@
 package com.ms2.mapper;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ms2.dto.RoomInfoDTO;
