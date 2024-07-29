@@ -4,6 +4,9 @@ import com.ms2.dto.UserDTO;
 import com.ms2.dto.PokemonDTO;
 import com.ms2.service.UserService;
 import com.ms2.util.JwtUtil;
+
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-public class TokenWebSocketHandler extends TextWebSocketHandler {
+public class PokemonWebSocketHandler extends TextWebSocketHandler {
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -22,13 +25,13 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("TokenWebSocketHandler WebSocket 연결 성공: " + session.getId());
+        System.out.println("WebSocket connection established: " + session.getId());
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        System.out.println("Received message from client tokenwebsocket:  " + payload);
+        System.out.println("Received message: " + payload);
 
         JSONObject response = new JSONObject();
         try {
@@ -48,35 +51,16 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
                     response.put("grantNo", grantNo);
                     response.put("profile", profile != null ? profile : "1");
 
-                    // Fetch user information including matchWin and pokemonList
                     UserDTO user = userService.selectUserPokemonNum(id);
                     if (user != null) {
-                        response.put("matchWin", user.getMatchWin() != null ? user.getMatchWin().toString() : "No matchWin info");
-
-                        // Add pokemon list information
-                        if (user.getPokemonList() != null && !user.getPokemonList().isEmpty()) {
-                            JSONArray pokemonArray = new JSONArray();
-                            for (PokemonDTO pokemon : user.getPokemonList()) {
-                                JSONObject pokemonJson = new JSONObject();
-                                pokemonJson.put("id", pokemon.getId());
-                                pokemonJson.put("englishName", pokemon.getEnglishName());
-                                pokemonJson.put("koreanName", pokemon.getKoreanName());
-                                pokemonArray.put(pokemonJson);
-                            }
-                            response.put("pokemonList", pokemonArray);
-                        } else {
-                            response.put("pokemonList", "No pokemon info");
-                        }
+                        response.put("pokemonList", user.getPokemonList() != null ? convertPokemonListToJson(user.getPokemonList()) : new JSONArray());
                     } else {
-                        response.put("matchWin", "No matchWin info");
-                        response.put("pokemonList", "No pokemon info");
+                        response.put("pokemonList", new JSONArray());
                     }
 
-                    System.out.println(response.toString());
                     session.sendMessage(new TextMessage(response.toString()));
                 } else {
                     response.put("error", "Invalid token");
-                    System.out.println("Invalid token received: " + token);
                     session.sendMessage(new TextMessage(response.toString()));
                 }
             } else {
@@ -84,7 +68,8 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
                 session.sendMessage(new TextMessage(response.toString()));
             }
         } catch (Exception e) {
-            System.err.println("Error processing message: " + e.getMessage());
+            response.put("error", "Error processing message");
+            session.sendMessage(new TextMessage(response.toString()));
             e.printStackTrace();
             session.close(CloseStatus.SERVER_ERROR);
         }
@@ -99,7 +84,7 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        System.out.println("TokenWebSocketHandler WebSocket 연결 종료: " + session.getId() + ", 상태: " + status);
+        System.out.println("WebSocket connection closed: " + session.getId() + ", status: " + status);
     }
 
     private boolean validateToken(String token) {
@@ -109,5 +94,17 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private JSONArray convertPokemonListToJson(List<PokemonDTO> pokemonList) {
+        JSONArray jsonArray = new JSONArray();
+        for (PokemonDTO pokemon : pokemonList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", pokemon.getId());
+            jsonObject.put("englishName", pokemon.getEnglishName());
+            jsonObject.put("koreanName", pokemon.getKoreanName());
+            jsonArray.put(jsonObject);
+        }
+        return jsonArray;
     }
 }
