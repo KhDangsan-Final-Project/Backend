@@ -220,6 +220,15 @@
 		set board_count = board_count + 1
 		where board_no = #{boardNo}
 	</update>
+	
+	<!-- 게시물 수정 -->
+    <update id="boardUpdate" parameterType="com.ms1.dto.BoardDTO">
+        UPDATE board
+        SET BOARD_TITLE = #{boardTitle},
+            BOARD_CONTENT = #{boardContent},
+            BOARD_CATEGORY = #{boardCategory}
+        WHERE BOARD_NO = #{boardNo}
+    </update>
 
 	<!-- 게시물 삭제 -->
 	<delete id="deleteBoard" parameterType="int">

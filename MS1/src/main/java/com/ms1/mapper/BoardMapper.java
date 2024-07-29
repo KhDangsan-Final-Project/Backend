@@ -52,5 +52,5 @@ public interface BoardMapper {
 	List<BoardCommentDTO> selectCommentsByBoardNo(int boardNo);
 	int deleteComment(int boardNo);
 	int deleteCommentByBoardNo(int boardNo);
-
+	int boardUpdate(BoardDTO dto);
 }

@@ -179,33 +179,42 @@ public class BoardService {
 	}
 
 	@Transactional
-	public boolean boardDelete(int boardNo) {
-	    // 게시물에 연결된 모든 파일 정보 조회
-	    List<FileDTO> files = boardMapper.selectFilesByBoardNo(boardNo);
-	    // 게시물에 연결된 댓글 정보 조회
-	    List<BoardCommentDTO> comments = boardMapper.selectCommentsByBoardNo(boardNo);
+    public boolean boardDelete(int boardNo) throws Exception {
+        try {
+            // 댓글 삭제
+            int deletedComments = boardMapper.deleteCommentByBoardNo(boardNo);
+            
+            // 게시물에 연결된 모든 파일 정보 조회
+            List<FileDTO> files = boardMapper.selectFilesByBoardNo(boardNo);
+            
+            // 파일 정보 삭제
+            boardMapper.deleteFilesByBoardNo(boardNo);
+            
+            // 물리적 파일 삭제
+            File root = new File("c:\\fileupload");
+            for (FileDTO file : files) {
+                File f = new File(root, file.getFileName());
+                if (f.exists() && !f.delete()) {
+                    throw new Exception("파일 삭제 실패: " + file.getFileName());
+                }
+            }
+            
+            // 게시물 삭제
+            int deletedBoard = boardMapper.deleteBoard(boardNo);
+            if (deletedBoard == 0) {
+                throw new RuntimeException("게시물 삭제 실패: 게시물이 존재하지 않습니다.");
+            }
 
-	    // 댓글 삭제
-	    boolean commentsDeleted = boardMapper.deleteCommentByBoardNo(boardNo) > 0;
+            return true;
+        } catch (Exception e) {
+            // 예외 발생 시 트랜잭션 롤백
+            e.printStackTrace();
+            throw e;  // 예외를 다시 던져 상위 레이어에서 처리할 수 있도록 함
+        }
+    }
 
-	    // 파일 정보 삭제
-	    boardMapper.deleteFilesByBoardNo(boardNo);
-
-	    // 파일 삭제 (물리적으로)
-	    File root = new File("c:\\fileupload");
-	    boolean filesDeleted = true;
-	    for (FileDTO file : files) {
-	        File f = new File(root, file.getFileName());
-	        if (f.exists()) {
-	            if (!f.delete()) {
-	                filesDeleted = false;
-	            }
-	        }
-	    }
-	    // 게시물 삭제
-	    boolean boardDeleted = boardMapper.deleteBoard(boardNo) > 0;
-
-	    return commentsDeleted && filesDeleted && boardDeleted;
+	public int boardUpdate(BoardDTO dto) {
+		return boardMapper.boardUpdate(dto);
 	}
 
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -184,7 +185,71 @@ public class BoardController {
 		return response;
 	}
 
-	//게시물 수정
+	// 게시물 수정
+	@PostMapping("/board/update/{boardNo}")
+	public ResponseEntity<String> updateBoard(@PathVariable int boardNo,
+			@RequestParam Map<String, String> param,
+	        @RequestHeader("Authorization") String authorization,
+	        @RequestParam(value = "file", required = false) MultipartFile[] file)
+	        throws IllegalStateException, IOException {
+
+	    String id;
+	    try {
+	        // JWT 토큰 검증
+	        if (authorization == null || !authorization.startsWith("Bearer ")) {
+	            throw new Exception("계정을 확인해주세요!");
+	        }
+
+	        // 토큰에서 사용자 ID 추출
+	        String token = authorization.substring(7);
+	        id = jwtUtil.extractId(token);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("로그인을 다시 해주세요!");
+	    }
+
+	    // BoardDTO 객체 생성 및 값 설정
+	    BoardDTO dto = new BoardDTO();
+	    dto.setId(id);
+	    dto.setBoardNo(boardNo);
+	    dto.setBoardTitle(param.get("title"));
+	    dto.setBoardContent(param.get("content"));
+	    dto.setBoardCategory(param.get("category"));
+
+	    try {
+	        // 게시물 수정
+	        boardService.boardUpdate(dto);
+
+	        // 파일 업로드 처리
+	        if (file != null && file.length > 0) {
+	            File root = new File(uploadDir);
+	            if (!root.exists()) {
+	                root.mkdirs(); // 디렉토리가 존재하지 않으면 생성
+	            }
+
+	            for (MultipartFile multipartFile : file) {
+	                if (multipartFile.isEmpty()) {
+	                    continue;
+	                }
+
+	                // 파일 저장
+	                File f = new File(root, multipartFile.getOriginalFilename());
+	                multipartFile.transferTo(f);
+
+	                // 파일 정보 DTO 생성 및 삽입
+	                int fileNo = boardService.getNextFileNo(); // 새로운 파일 번호 생성
+	                FileDTO fileDTO = new FileDTO(f, dto.getBoardNo(), fileNo);
+	                boardService.insertBoardFile(fileDTO);
+	            }
+	        }
+
+	        return ResponseEntity.ok("게시물 수정 성공");
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 예외 스택 트레이스를 출력하여 디버깅 정보 추가
+	        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("게시물 수정 실패: " + e.getMessage());
+	    }
+	}
+
 	
 	//게시물 삭제
 	@DeleteMapping("/board/delete/{boardNo}")
