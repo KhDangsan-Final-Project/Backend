@@ -15,7 +15,6 @@ body {
 
 .container {
 	width: 100%;
-	padding: 20px;
 	overflow: hidden;
 }
 
@@ -32,6 +31,7 @@ input {
 	flex-flow: row nowrap;	
 	justify-content: center;
 	align-items: center;
+	width: 100%;
 }
 
 td {
