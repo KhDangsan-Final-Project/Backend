@@ -242,6 +242,12 @@ public class BoardService {
 	public int deleteCommentHates(int cno) {
 		return boardMapper.deleteCommentHates(cno);
 	}
+
+	public List<FileDTO> getFilesByBoardNo(int boardNo) {
+		return boardMapper.getFilesByBoardNo(boardNo);
+	}
+
+	
 	
 
 

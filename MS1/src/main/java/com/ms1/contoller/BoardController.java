@@ -31,6 +31,7 @@ import com.ms1.service.BoardService;
 import com.ms1.util.JwtUtil;
 import com.ms1.vo.PaggingVO;
 
+import io.jsonwebtoken.lang.Collections;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.Path;
 
@@ -129,6 +130,17 @@ public class BoardController {
 		}
 	}
 
+	// 파일 목록조회
+	@GetMapping("/board/fileList/{boardNo}")
+	@ResponseBody
+	public Map<String, Object> fileList(@PathVariable("boardNo") int boardNo) {
+		List<FileDTO> fileList = boardService.getFilesByBoardNo(boardNo);
+		Map<String, Object> response = new HashMap<>();
+		response.put("file", fileList);
+		System.out.println(fileList);
+		return response;
+	}
+
 	// 게시물 목록조회
 	@GetMapping("/board/list")
 	@ResponseBody
@@ -151,6 +163,44 @@ public class BoardController {
 
 		return response;
 	}
+
+	 /**
+     * 현재 로그인한 사용자 정보를 반환하는 메서드
+     * 
+     * @param authorization 요청 헤더에 포함된 JWT 토큰
+     * @return 현재 로그인한 사용자 ID를 포함한 응답
+     */
+	@GetMapping("/currentUser")
+    public ResponseEntity<Map<String, String>> getCurrentUser(@RequestHeader("Authorization") String authorization) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            // JWT 토큰 검증
+            if (authorization == null || !authorization.startsWith("Bearer ")) {
+                response.put("error", "토큰이 유효하지 않습니다.");
+                return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
+            }
+
+            // 토큰에서 사용자 ID 추출
+            String token = authorization.substring(7);
+            String userId = jwtUtil.extractId(token);
+
+            // 사용자 ID를 응답에 포함
+            response.put("id", userId);
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            // JWT 검증 실패 시
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
+
+        } catch (Exception e) {
+            // 일반적인 예외 처리
+            response.put("error", "서버 오류가 발생했습니다.");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 
 	// 게시물 한건조회
 	@GetMapping("/board/{boardNo}")
@@ -270,11 +320,11 @@ public class BoardController {
 			// 작성자 확인
 			if (board != null && id.equals(board.getId())) {
 				// 게시글에 달린 댓글 좋아요 삭제
-				
+
 				// 게시글에 달린 댓글 싫어요 삭제
-				
+
 				// 게시글에 달린 좋아요 삭제
-				
+
 				// 게시물 삭제
 				boardService.boardDelete(boardNo);
 				return ResponseEntity.ok("게시물 삭제 성공");
@@ -539,41 +589,40 @@ public class BoardController {
 	// 댓글 삭제
 	@DeleteMapping("/boardCommentDelete/{cno}")
 	public ResponseEntity<String> deleteComment(@PathVariable int cno,
-	        @RequestHeader("Authorization") String authorization) {
-	    String id;
-	    try {
-	        // JWT 토큰 검증
-	        if (authorization == null || !authorization.startsWith("Bearer ")) {
-	            throw new Exception("계정을 확인해주세요!");
-	        }
+			@RequestHeader("Authorization") String authorization) {
+		String id;
+		try {
+			// JWT 토큰 검증
+			if (authorization == null || !authorization.startsWith("Bearer ")) {
+				throw new Exception("계정을 확인해주세요!");
+			}
 
-	        // 토큰에서 사용자 ID 추출
-	        String token = authorization.substring(7);
-	        id = jwtUtil.extractId(token);
+			// 토큰에서 사용자 ID 추출
+			String token = authorization.substring(7);
+			id = jwtUtil.extractId(token);
 
-	        // 댓글 조회
-	        BoardCommentDTO comment = boardService.boardCommentSelect(cno);
-	        
-	        // 댓글이 존재하지 않거나 작성자가 아닐 경우
-	        if (comment == null) {
-	            return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("댓글이 존재하지 않습니다.");
-	        }
+			// 댓글 조회
+			BoardCommentDTO comment = boardService.boardCommentSelect(cno);
 
-	        // 작성자 확인
-	        if (id.equals(comment.getId())) {
-	        	boardService.deleteCommentLikes(cno);
-	            boardService.deleteCommentHates(cno);
-	            // 댓글 삭제
-	            boardService.boardCommentDelete(cno);
-	            return ResponseEntity.ok("댓글 삭제 성공");
-	        } else {
-	            return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("삭제할 권한이 없습니다.");
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace(); // 예외 스택 트레이스를 출력하여 디버깅 정보 추가
-	        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("댓글 삭제 실패: " + e.getMessage());
-	    }
+			// 댓글이 존재하지 않거나 작성자가 아닐 경우
+			if (comment == null) {
+				return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("댓글이 존재하지 않습니다.");
+			}
+
+			// 작성자 확인
+			if (id.equals(comment.getId())) {
+				boardService.deleteCommentLikes(cno);
+				boardService.deleteCommentHates(cno);
+				// 댓글 삭제
+				boardService.boardCommentDelete(cno);
+				return ResponseEntity.ok("댓글 삭제 성공");
+			} else {
+				return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body("삭제할 권한이 없습니다.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace(); // 예외 스택 트레이스를 출력하여 디버깅 정보 추가
+			return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("댓글 삭제 실패: " + e.getMessage());
+		}
 	}
-
 
 }

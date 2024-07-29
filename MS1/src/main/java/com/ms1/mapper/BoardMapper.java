@@ -60,4 +60,5 @@ public interface BoardMapper {
 	int deleteBoardLikeByBoardNo(int boardNo);
 	int deleteCommentLikeByBoardNo(int boardNo);
 	int deleteCommentHateByBoardNo(int boardNo);
+	List<FileDTO> getFilesByBoardNo(int boardNo);
 }
