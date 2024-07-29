@@ -279,6 +279,18 @@
 		resultType="com.ms1.dto.BoardCommentDTO">
 		SELECT * FROM board_comment WHERE board_no = #{boardNo}
 	</select>
+	
+	<delete id="deleteBoardLikeByBoardNo" parameterType="int">
+		DELETE FROM board_like WHERE board_no = #{boardNo}
+	</delete>
+	
+	<delete id="deleteCommentLikeByBoardNo" parameterType="int">
+		DELETE FROM board_comment_like WHERE board_no = #{boardNo}
+	</delete>
+	
+	<delete id="deleteCommentHateByBoardNo" parameterType="int">
+		DELETE FROM board_comment_hate WHERE board_no = #{boardNo}
+	</delete>
 
 	<delete id="deleteCommentByBoardNo" parameterType="int">
 		DELETE FROM

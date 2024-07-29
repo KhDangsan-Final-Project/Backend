@@ -57,4 +57,7 @@ public interface BoardMapper {
 	BoardCommentDTO boardCommentSelect(int cno);
 	int deleteCommentLikes(int cno);
 	int deleteCommentHates(int cno);
+	int deleteBoardLikeByBoardNo(int boardNo);
+	int deleteCommentLikeByBoardNo(int boardNo);
+	int deleteCommentHateByBoardNo(int boardNo);
 }

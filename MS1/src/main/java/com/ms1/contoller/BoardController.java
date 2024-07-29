@@ -269,6 +269,12 @@ public class BoardController {
 
 			// 작성자 확인
 			if (board != null && id.equals(board.getId())) {
+				// 게시글에 달린 댓글 좋아요 삭제
+				
+				// 게시글에 달린 댓글 싫어요 삭제
+				
+				// 게시글에 달린 좋아요 삭제
+				
 				// 게시물 삭제
 				boardService.boardDelete(boardNo);
 				return ResponseEntity.ok("게시물 삭제 성공");

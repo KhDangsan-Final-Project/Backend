@@ -181,6 +181,13 @@ public class BoardService {
 	@Transactional
     public boolean boardDelete(int boardNo) throws Exception {
         try {
+        	//댓글 좋아요 싫어요 삭제
+        	int deletedCommentLikes = boardMapper.deleteCommentLikeByBoardNo(boardNo);
+        	int deletedCommentHates = boardMapper.deleteCommentHateByBoardNo(boardNo);
+        	
+        	//게시글 좋아요 삭제
+        	int deletedBoardLikes = boardMapper.deleteBoardLikeByBoardNo(boardNo);
+        	
             // 댓글 삭제
             int deletedComments = boardMapper.deleteCommentByBoardNo(boardNo);
             
@@ -192,13 +199,16 @@ public class BoardService {
             
             // 물리적 파일 삭제
             File root = new File("c:\\fileupload");
-            for (FileDTO file : files) {
-                File f = new File(root, file.getFileName());
-                if (f.exists() && !f.delete()) {
-                    throw new Exception("파일 삭제 실패: " + file.getFileName());
+            if (files != null) {
+                for (FileDTO file : files) {
+                    if (file != null) {
+                        File f = new File(root, file.getFileName());
+                        if (f.exists() && !f.delete()) {
+                            throw new Exception("파일 삭제 실패: " + file.getFileName());
+                        }
+                    }
                 }
             }
-            
             // 게시물 삭제
             int deletedBoard = boardMapper.deleteBoard(boardNo);
             if (deletedBoard == 0) {
