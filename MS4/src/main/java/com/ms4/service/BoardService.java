@@ -70,12 +70,26 @@ public class BoardService {
 		mapper.adminDeleteBoard(bno);
 	}
 
-	public List<BoardDTO> selectReportBoard() {
-		return mapper.selectReportBoard();
+	public List<BoardDTO> selectReportBoard(int pageNo, int pageContentEa) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pageNo", pageNo);
+		map.put("pageContentCount", pageContentEa);
+		return mapper.selectReportBoard(map);
 	}
 
-	public List<BoardCommentDTO> selectReportComment() {
-		return mapper.selectReportComment();
+	public List<BoardCommentDTO> selectReportComment(int commentPageNo, int pageContentEa) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pageNo", commentPageNo);
+		map.put("pageContentCount", pageContentEa);
+		return mapper.selectReportComment(map);
+	}
+
+	public int selectReportBoardTotalCount() {
+		return mapper.selectReportBoardTotalCount();
+	}
+
+	public int selectReportBoardCommentTotalCount() {
+		return mapper.selectReportBoardCommentTotalCount();
 	}
 	
 }

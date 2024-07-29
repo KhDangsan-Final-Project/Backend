@@ -1,0 +1,62 @@
+/* 기본 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* 모든 요소의 박스 모델을 border-box로 설정 */
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.flex_container {
+    display: flex;
+    flex-flow: row nowrap;    
+    justify-content: center;
+    align-items: center;
+}
+
+td, th {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+
+td.category, th.category,
+td.no, th.no {
+    width: 10%; /* 분류와 글번호의 너비를 10%로 설정 */
+}
+
+td.author, th.author,
+td.views, th.views,
+td.date, th.date {
+    width: 20%; /* 나머지 컬럼의 너비를 20%로 설정 */
+}
+
+td.title, th.title {
+	width: 31%;	
+}
+
+button {
+    background-color: white;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0;
+}
+
+tfoot a {
+	padding-right: 10px;
+	color: black;
+	text-decoration: none;
+}

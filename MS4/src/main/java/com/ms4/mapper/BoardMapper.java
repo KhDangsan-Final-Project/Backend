@@ -36,8 +36,12 @@ public interface BoardMapper {
 
 	void adminDeleteBoard(int bno);
 
-	List<BoardDTO> selectReportBoard();
+	List<BoardDTO> selectReportBoard(Map<String, Object> map);
 
-	List<BoardCommentDTO> selectReportComment();
+	List<BoardCommentDTO> selectReportComment(Map<String, Object> map);
+
+	int selectReportBoardTotalCount();
+
+	int selectReportBoardCommentTotalCount();
 
 }

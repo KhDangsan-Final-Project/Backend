@@ -1,0 +1,77 @@
+/* 기본 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* 모든 요소의 박스 모델을 border-box로 설정 */
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+	width: 100%;
+	padding: 20px;
+	overflow: hidden;
+}
+
+.flex_container {
+    display: flex;
+    flex-flow: row nowrap;    
+    justify-content: center;
+    align-items: center;
+}
+
+td, th {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+tfoot a {
+	padding-right: 20px;
+	color: black;
+	text-decoration: none;
+}
+
+
+td.category, th.category,
+td.no, th.no {
+    width: 10%; /* 분류와 글번호의 너비를 10%로 설정 */
+}
+
+td.title, th.title,
+td.content, th.content{
+    width: 25%; 
+}
+
+td.title, th.title {
+	width: 31%;	
+}
+
+td.comment, th.comment {
+	width: 50%;
+}
+
+td.etc, th.etc {
+	width: 9%;
+}
+
+.A_button {
+	display: inline-block; /* 블록 레벨 요소처럼 보이도록 설정 */
+    background-color: white; /* 배경색 설정 */
+    border-radius: 10px; /* 테두리 둥글게 */
+    padding: 5px 10px; /* 여백 설정 */
+    text-decoration: none; /* 기본 밑줄 제거 */
+    color: black; /* 텍스트 색상 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 (선택 사항) */
+    font-size: 14px; /* 글자 크기 설정 (선택 사항) */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    line-height: 1.5; /* 줄 높이 설정 (선택 사항) */
+    cursor: pointer; /* 커서 모양 설정 */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* 호버 효과를 부드럽게 하기 위한 트랜지션 */
+}
+
+.A_button:hover {
+    background-color: #f0f0f0; /* 호버 시 배경색 변경 */
+    border-color: #999; /* 호버 시 테두리 색상 변경 */
+}

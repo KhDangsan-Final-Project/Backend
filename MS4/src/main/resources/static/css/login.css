@@ -1,0 +1,40 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.login-container {
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	text-align: center;
+}
+
+.content {
+	/* 기본 스타일 */
+}
+
+input, button {
+	width: 170px;
+	margin-top: 10px;
+}
+
+/* 모바일 화면 스타일 */
+@media (max-width: 699px) {
+	.login-container {
+		padding: 20px; /* 작은 화면에서 더 나은 여백 */
+	}
+
+	.content {
+		/* 모바일 화면에서 더 큰 폰트 사이즈 */
+		font-size: 1.2em;
+	}
+
+	input, button {
+		width: 220px; /* 더 큰 입력 필드와 버튼 */
+		font-size: 1.1em; /* 더 큰 폰트 크기 */
+		padding: 10px; /* 더 큰 패딩 */
+	}
+}

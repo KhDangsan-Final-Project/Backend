@@ -55,3 +55,17 @@ button {
 	padding: 5px 10px;
 }
 
+input {
+	text-align: center;
+}
+
+.txt_search{
+	width: 200px;
+}
+
+/* thead tr {
+	border-bottom: 1px red solid;
+}
+tbody tr {
+	border-bottom: 0.5px silver solid;
+} */
