@@ -217,4 +217,22 @@ public class BoardService {
 		return boardMapper.boardUpdate(dto);
 	}
 
+	public int boardCommentDelete(int cno) {
+		return boardMapper.boardCommentDelete(cno);		
+	}
+
+	public BoardCommentDTO boardCommentSelect(int cno) {
+		return boardMapper.boardCommentSelect(cno);
+	}
+
+	public int deleteCommentLikes(int cno) {
+		return boardMapper.deleteCommentLikes(cno);
+	}
+
+	public int deleteCommentHates(int cno) {
+		return boardMapper.deleteCommentHates(cno);
+	}
+	
+
+
 }

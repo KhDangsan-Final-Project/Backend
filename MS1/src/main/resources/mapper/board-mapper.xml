@@ -213,22 +213,44 @@
 		board_comment_no = #{cno}
 	</select>
 
+	<!-- 댓글 조회 -->
+	<select id="boardCommentSelect" parameterType="int">
+		SELECT *
+		FROM board_comment
+		WHERE board_comment_no = #{cno}
+	</select>
+
+	<!-- 댓글 삭제 -->
+	<delete id="boardCommentDelete" parameterType="int">
+		DELETE FROM board_comment
+		WHERE board_comment_no = #{cno}
+	</delete>
+
+	<delete id="deleteCommentLikes" parameterType="int">
+		DELETE FROM board_comment_like WHERE board_comment_no = #{cno}
+	</delete>
+
+	<delete id="deleteCommentHates" parameterType="int">
+		DELETE FROM board_comment_hate WHERE board_comment_no = #{cno}
+	</delete>
+
 	<!-- ____________________________________________________________ -->
 	<!-- 게시물 조회수 증가 -->
 	<update id="increaseViewCount">
 		update board
 		set board_count = board_count + 1
-		where board_no = #{boardNo}
+		where
+		board_no = #{boardNo}
 	</update>
-	
+
 	<!-- 게시물 수정 -->
-    <update id="boardUpdate" parameterType="com.ms1.dto.BoardDTO">
-        UPDATE board
-        SET BOARD_TITLE = #{boardTitle},
-            BOARD_CONTENT = #{boardContent},
-            BOARD_CATEGORY = #{boardCategory}
-        WHERE BOARD_NO = #{boardNo}
-    </update>
+	<update id="boardUpdate" parameterType="com.ms1.dto.BoardDTO">
+		UPDATE board
+		SET BOARD_TITLE = #{boardTitle},
+		BOARD_CONTENT = #{boardContent},
+		BOARD_CATEGORY = #{boardCategory}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
 
 	<!-- 게시물 삭제 -->
 	<delete id="deleteBoard" parameterType="int">
@@ -249,7 +271,8 @@
 
 	<!-- 게시물에 연결된 댓글 삭제 -->
 	<delete id="deleteComment" parameterType="int">
-		DELETE FROM board_comment WHERE board_no = #{boardNo}
+		DELETE FROM
+		board_comment WHERE board_no = #{boardNo}
 	</delete>
 
 	<select id="selectCommentsByBoardNo" parameterType="int"
@@ -258,7 +281,8 @@
 	</select>
 
 	<delete id="deleteCommentByBoardNo" parameterType="int">
-		DELETE FROM board_comment
+		DELETE FROM
+		board_comment
 		WHERE board_no = #{boardNo}
 	</delete>
 
