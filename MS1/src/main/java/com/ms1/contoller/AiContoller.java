@@ -44,7 +44,6 @@ public class AiContoller {
 		
 		// 리퀘스트 요청 몇번했는지 확인
 		int request = aiService.requestImg();
-		System.out.println(request);
 
 		// 리퀘스트 요청 횟수에 맞춰서 요청 취소시킬지 성공시킬지 반환
 		if(request > 800) {

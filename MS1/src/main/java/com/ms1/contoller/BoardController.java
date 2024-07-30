@@ -69,7 +69,6 @@ public class BoardController {
 			throws IllegalStateException, IOException {
 
 		String id;
-		System.out.println(authorization);
 		try {
 			// JWT 토큰 검증
 			if (authorization == null || !authorization.startsWith("Bearer ")) {
@@ -79,7 +78,6 @@ public class BoardController {
 			// 토큰에서 사용자 ID 추출
 			String token = authorization.substring(7);
 			id = jwtUtil.extractId(token);
-			System.out.println(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("로그인을 다시 해주세요!");
@@ -95,7 +93,6 @@ public class BoardController {
 		// 새로운 boardNo 생성 및 설정
 		int boardNo = boardService.boardNoSelect();
 		dto.setBoardNo(boardNo);
-		System.out.println(dto);
 
 		try {
 			// 게시판 글 삽입
@@ -176,7 +173,6 @@ public class BoardController {
 	@GetMapping("/board/fileList/{boardNo}")
 	public ResponseEntity<List<FileDTO>> fileList(@PathVariable("boardNo") int boardNo) {
 		List<FileDTO> fileList = boardService.boardSelectFile(boardNo);
-		System.out.println(fileList);
 		return ResponseEntity.ok(fileList);
 	}
 
@@ -195,7 +191,6 @@ public class BoardController {
 			totalCount = boardService.selectBoardTotalCount();
 		}
 		PaggingVO vo = new PaggingVO(totalCount, pageNo, pageContentEa);
-		System.out.println(vo.toString());
 		Map<String, Object> response = new HashMap<>();
 		response.put("boards", boardList);
 		response.put("pagging", vo);
@@ -262,8 +257,6 @@ public class BoardController {
 			// 토큰에서 사용자 ID 추출
 			String token = authorization.substring(7);
 			id = jwtUtil.extractId(token);
-			System.out.println(id);
-			System.out.println(token);
 
 			// 사용자별로 해당 게시물을 이미 조회했는지 확인 (가상의 로직, 테이블 추가 불가로 실제 구현은 어려움)
 			// 이 부분을 서버에 맞게 작성하거나 로직을 변형해야 합니다.
@@ -406,20 +399,15 @@ public class BoardController {
 			// 토큰에서 사용자 ID 추출
 			String token = authorization.substring(7);
 			id = jwtUtil.extractId(token);
-			System.out.println(id);
 
 			boolean isLiked = boardService.isLiked(boardNo, id);
 
 			if (isLiked) {
 				boardService.deleteBoardLike(boardNo, id);
 				response.put("msg", "해당 게시글에 좋아요를 취소하였습니다.");
-				System.out.println("취소" + boardNo);
-				System.out.println("취소" + id);
 			} else {
 				boardService.insertBoardLike(boardNo, id);
 				response.put("msg", "해당 게시글에 좋아요를 하였습니다.");
-				System.out.println(boardNo);
-				System.out.println(id);
 			}
 			response.put("code", 1);
 		} catch (Exception e) {
@@ -429,7 +417,6 @@ public class BoardController {
 		}
 		int count = boardService.selectBoardLikeCount(boardNo);
 		response.put("count", count);
-		System.out.println(count);
 
 		return response;
 	}
@@ -495,7 +482,6 @@ public class BoardController {
 	@GetMapping("/comments/{boardNo}")
 	public ResponseEntity<List<BoardCommentDTO>> getComments(@PathVariable("boardNo") int boardNo) {
 		List<BoardCommentDTO> comments = boardService.boardSelectComment(boardNo);
-		System.out.println(comments);
 		return ResponseEntity.ok(comments);
 	}
 
@@ -514,21 +500,15 @@ public class BoardController {
 			// 토큰에서 사용자 ID 추출
 			String token = authorization.substring(7);
 			id = jwtUtil.extractId(token);
-			System.out.println(id);
 
 			boolean isCommentLiked = boardService.isCommentLiked(cno, boardNo, id);
-			System.out.println(isCommentLiked);
 
 			if (isCommentLiked) {
 				boardService.deleteCommentLike(cno, boardNo, id);
 				response.put("msg", "해당 게시글에 좋아요를 취소하였습니다.");
-				System.out.println("취소" + cno);
-				System.out.println("취소" + id);
 			} else {
 				boardService.insertCommentLike(cno, boardNo, id);
 				response.put("msg", "해당 게시글에 좋아요를 하였습니다.");
-				System.out.println("좋아요" + cno);
-				System.out.println("좋아요" + id);
 			}
 			response.put("code", 1);
 		} catch (Exception e) {
@@ -538,7 +518,6 @@ public class BoardController {
 		}
 		int count = boardService.selectCommentLikeCount(cno);
 		response.put("count", count);
-		System.out.println(count);
 
 		return response;
 	}
@@ -585,20 +564,15 @@ public class BoardController {
 			// 토큰에서 사용자 ID 추출
 			String token = authorization.substring(7);
 			id = jwtUtil.extractId(token);
-			System.out.println(id);
 
 			boolean isCommentHated = boardService.isCommentHated(cno, boardNo, id);
 
 			if (isCommentHated) {
 				boardService.deleteCommentHate(cno, boardNo, id);
 				response.put("msg", "해당 댓글에 싫어요를 취소하였습니다.");
-				System.out.println("취소" + cno);
-				System.out.println("취소" + id);
 			} else {
 				boardService.insertCommentHate(cno, boardNo, id);
 				response.put("msg", "해당 댓글에 싫어요를 하였습니다.");
-				System.out.println("싫어요" + cno);
-				System.out.println("싫어요" + id);
 			}
 			response.put("code", 1);
 		} catch (Exception e) {
@@ -608,7 +582,6 @@ public class BoardController {
 		}
 		int count = boardService.selectCommentHateCount(cno);
 		response.put("count", count);
-		System.out.println(count);
 
 		return response;
 	}

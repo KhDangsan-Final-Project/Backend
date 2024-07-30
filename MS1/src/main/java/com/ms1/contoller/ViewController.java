@@ -29,7 +29,6 @@ public class ViewController {
     public ResponseEntity<Integer> updateViewCount(@RequestBody Map<String, Object> requestBody) {
         // 클라이언트의 IP 주소를 요청 객체에서 추출합니다.
         String ipAddress = (String) requestBody.get("ipAddress");
-        System.out.println("Extracted IP address: " + ipAddress);
 
         // 추출된 IP 주소를 사용하여 조회수를 업데이트합니다.
         int updatedCount = viewService.updateViewCount(ipAddress);

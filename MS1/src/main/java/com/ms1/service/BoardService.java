@@ -147,7 +147,6 @@ public class BoardService {
 		map.put("cno", cno);
 		map.put("boardNo", boardNo);
 		map.put("id", id);
-		System.out.println("좋아요:" + map);
 		return boardMapper.insertCommentLike(map);
 	}
 
@@ -182,7 +181,6 @@ public class BoardService {
 		map.put("cno", cno);
 		map.put("boardNo", boardNo);
 		map.put("id", id);
-		System.out.println("싫어요:" + map);
 		return boardMapper.insertCommentHate(map);
 	}
 

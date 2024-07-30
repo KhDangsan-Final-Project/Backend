@@ -16,7 +16,6 @@ public class ViewService {
 
 	public int updateViewCount(String ipAddress) {
 		LocalDate today = LocalDate.now();
-		System.out.println(today);
         if (viewMapper.existsByIpAddressAndDate(ipAddress, today) == 0) {
             viewMapper.insertView(ipAddress);
         }
