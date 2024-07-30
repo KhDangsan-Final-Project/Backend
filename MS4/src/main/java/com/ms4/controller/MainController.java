@@ -75,7 +75,6 @@ public class MainController {
     @DeleteMapping("/user/admin/delete")
     public ResponseEntity<Map<String, Object>> deleteMember(@RequestBody Map<String, String> request) {
         String id = request.get("id");
-        System.out.println("내용 : " + id);
         int count = service.deleteUser(id);
         Map<String, Object> map = new HashMap<>();
         map.put("count", count);
@@ -165,8 +164,6 @@ public class MainController {
 		//해당 게시글의 댓글 조회 
 		List<BoardCommentDTO> commentList = boardService.selectBoardCommentList(bno);
 		
-		System.out.println("게시글 : " + dto );
-		System.out.println("댓글 : " + commentList );
 		//request 영역에 저장
 		view.addObject("board", dto);
 		view.addObject("commentList", commentList);
@@ -237,7 +234,6 @@ public class MainController {
 	public ModelAndView boardUpdateView(ModelAndView view,
 			@PathVariable int bno) {
 		BoardDTO dto = boardService.selectBoard(bno);
-		System.out.println("수정할 dto : " + dto);
 		view.addObject("board", dto);
 		view.setViewName("board_update_view");
 		return view;
@@ -245,8 +241,6 @@ public class MainController {
 	
 	@PostMapping("/board/update")
 	public ModelAndView updateBoard(BoardDTO dto, ModelAndView view ) throws IOException {
-		System.out.println("----------------------------------------------------------");
-		System.out.println("확인 필요 :  " +dto);
 		int count = boardService.updateBoard(dto);
 		view.setViewName("redirect:/ms4/board/"+dto.getBoardNo());
 		return view;
@@ -254,7 +248,6 @@ public class MainController {
 	
 	@PostMapping("/comment/add")
 	public String commentAdd(BoardCommentDTO dto,HttpSession session) {
-		System.out.println(dto);
 		UserDTO user = (UserDTO) session.getAttribute("user");
 		dto.setId(user.getId());
 		
@@ -266,7 +259,6 @@ public class MainController {
 	@GetMapping("/boardComment/delete")
 	public String deleteBoardComment(int cno, int bno) {
 		int result = boardService.deleteBoardComment(cno);
-		System.out.println(result);
 		
 		return "redirect:/ms4/board/"+bno;
 	}
@@ -274,7 +266,6 @@ public class MainController {
 	@GetMapping("/boardComment/aDelete")
 	public String adminDeleteBoardComment(@RequestParam("cno") int cno, @RequestParam("bno") int bno) {
 	    int result = boardService.adminDeleteBoardComment(cno);
-	    System.out.println(result);
 	    
 	    return "redirect:/ms4/board/" + bno;
 	}
@@ -291,10 +282,6 @@ public class MainController {
 		PagingVO vo1 = new PagingVO(rbtotalCount, pageNo, pageContentEa);
 		int rctotalCount = boardService.selectReportBoardCommentTotalCount();
 		PagingVO vo2 = new PagingVO(rctotalCount, commentPageNo, pageContentEa);
-		System.out.println("확인필요 : " +  rbtotalCount + " , " + vo1);
-		
-		System.out.println("확인 : " + reportBoard );
-//		System.out.println("확인 : " + reportComment );
 		
 		view.addObject("boardList",reportBoard);
 		view.addObject("pagging1", vo1);
@@ -308,7 +295,6 @@ public class MainController {
 	@GetMapping("/boardComment/aDelete/j")
 	public String adminDeleteBoardCommentJ(@RequestParam("cno") int cno, @RequestParam("bno") int bno) {
 	    int result = boardService.adminDeleteBoardComment(cno);
-	    System.out.println(result);
 	    
 	    return "redirect:/ms4/admin/report";
 	}

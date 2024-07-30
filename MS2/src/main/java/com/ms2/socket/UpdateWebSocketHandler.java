@@ -20,13 +20,11 @@ public class UpdateWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("UpdateWebSocketHandler WebSocket 연결 성공: " + session.getId());
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        System.out.println("Received message from client by UpdateWebSocketHandler: " + payload);
 
         try {
             JSONObject json = new JSONObject(payload);
@@ -50,9 +48,7 @@ public class UpdateWebSocketHandler extends TextWebSocketHandler {
                         
                         // DB에 있는 matchWin 데이터 업데이트
                         int updateResult = userService.updateUserVictoryCount(id);
-                        System.out.println("updateResult" + updateResult);
                         if (updateResult > 0) {
-                            System.out.println("MatchWin updated successfully.");
                             
                             // 업데이트된 matchWin 데이터 가져와서 DTO 에 저장
                             UserDTO user = userService.selectUserVictoryCount(id);
@@ -73,17 +69,9 @@ public class UpdateWebSocketHandler extends TextWebSocketHandler {
                         }
                     }
 
-                    System.out.println("Valid token received by updateWebSocketHandler:");
-                    System.out.println("ID: " + id);
-                    System.out.println("Nickname: " + nickname);
-                    System.out.println("Grant No: " + grantNo);
-                    System.out.println("Profile: " + profile);
-                    System.out.println("Match Win: " + response.getString("matchWin"));
-
                     session.sendMessage(new TextMessage(response.toString()));
                 } else {
                     response.put("error", "Invalid token");
-                    System.out.println("Invalid token received: " + token);
                     session.sendMessage(new TextMessage(response.toString()));
                 }
             } else {
@@ -91,7 +79,6 @@ public class UpdateWebSocketHandler extends TextWebSocketHandler {
                 session.sendMessage(new TextMessage(response.toString()));
             }
         } catch (Exception e) {
-            System.err.println("Error processing message: " + e.getMessage());
             e.printStackTrace();
             session.close(CloseStatus.SERVER_ERROR);
         }
@@ -99,14 +86,12 @@ public class UpdateWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        System.err.println("WebSocket transport error: " + exception.getMessage());
         exception.printStackTrace();
         session.close(CloseStatus.SERVER_ERROR);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        System.out.println("UpdateWebSocketHandler WebSocket 연결 종료: " + session.getId() + ", 상태: " + status);
     }
 
     private boolean validateToken(String token) {

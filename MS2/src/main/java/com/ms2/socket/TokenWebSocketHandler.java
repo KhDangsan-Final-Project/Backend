@@ -22,13 +22,11 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("TokenWebSocketHandler WebSocket 연결 성공: " + session.getId());
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        System.out.println("Received message from client: " + payload);
 
         JSONObject response = new JSONObject();
         try {
@@ -72,11 +70,9 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
                         response.put("pokemonList", "No pokemon info");
                     }
 
-                    System.out.println(response.toString());
                     session.sendMessage(new TextMessage(response.toString()));
                 } else {
                     response.put("error", "Invalid token");
-                    System.out.println("Invalid token received: " + token);
                     session.sendMessage(new TextMessage(response.toString()));
                 }
             } else {
@@ -84,7 +80,6 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
                 session.sendMessage(new TextMessage(response.toString()));
             }
         } catch (Exception e) {
-            System.err.println("Error processing message: " + e.getMessage());
             e.printStackTrace();
             session.close(CloseStatus.SERVER_ERROR);
         }
@@ -92,14 +87,12 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        System.err.println("WebSocket transport error: " + exception.getMessage());
         exception.printStackTrace();
         session.close(CloseStatus.SERVER_ERROR);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        System.out.println("TokenWebSocketHandler WebSocket 연결 종료: " + session.getId() + ", 상태: " + status);
     }
 
     private boolean validateToken(String token) {
