@@ -226,9 +226,19 @@ public class BoardController {
 			id = jwtUtil.extractId(token);
 			System.out.println(id);
 			System.out.println(token);
+			
+			  // 사용자별로 해당 게시물을 이미 조회했는지 확인 (가상의 로직, 테이블 추가 불가로 실제 구현은 어려움)
+	        // 이 부분을 서버에 맞게 작성하거나 로직을 변형해야 합니다.
+	        boolean alreadyViewed = boardService.someMethodToCheckIfAlreadyViewed(id, boardNo);
 
-			boardService.increaseViewCount(boardNo);
-
+	        if (!alreadyViewed) {
+	            // 조회수 증가 및 조회 기록 추가 (가정)
+	            boardService.increaseViewCount(boardNo);
+	            boardService.someMethodToMarkAsViewed(id, boardNo);
+	            response.put("message", "조회수 증가 성공");
+	        } else {
+	            response.put("message", "이미 조회한 게시물입니다.");
+	        }
 		} catch (Exception e) {
 			response.put("error", e.getMessage());
 		}

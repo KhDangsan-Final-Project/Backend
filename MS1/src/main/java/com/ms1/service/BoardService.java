@@ -2,8 +2,10 @@ package com.ms1.service;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import com.ms1.mapper.BoardMapper;
 @Service
 public class BoardService {
 	private BoardMapper boardMapper;
+	private Map<Integer, Set<String>> viewedPostsByUser = new HashMap<>();
 
 	public BoardService(BoardMapper boardMapper) {
 		this.boardMapper = boardMapper;
@@ -247,6 +250,17 @@ public class BoardService {
 		return boardMapper.getFilesByBoardNo(boardNo);
 	}
 
+	public boolean someMethodToCheckIfAlreadyViewed(String userId, int boardNo) {
+        Set<String> usersWhoViewed = viewedPostsByUser.get(boardNo);
+        if (usersWhoViewed != null && usersWhoViewed.contains(userId)) {
+            return true; // 사용자가 이미 이 게시물을 보았습니다.
+        }
+        return false; // 사용자가 이 게시물을 아직 보지 않았습니다.
+    }
+
+	public void someMethodToMarkAsViewed(String userId, int boardNo) {
+        viewedPostsByUser.computeIfAbsent(boardNo, k -> new HashSet<>()).add(userId);
+    }
 	
 	
 
