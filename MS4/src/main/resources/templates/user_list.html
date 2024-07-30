@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>사용자 목록</title>
-<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" th:href="@{/css/user.css}">
 <link href="/css/menu.css" rel="stylesheet">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -87,6 +87,7 @@
                     dataType: 'json',
                     success: function(r) {
                         let tag = '';
+                        if (r.list.length > 0){
                         r.list.forEach((item) => {
                             tag += '<tr>';
                             tag += `<td><input type="text" class="id" value="${item.id}" readonly></td>`;
@@ -101,6 +102,9 @@
                             tag += `<td><button class="btn_update">수정</button><button class="btn_delete">삭제</button></td>`;
                             tag += '</tr>';
                         });
+                        }else{
+                        	tag += '<tr><td colspan="6">검색 결과가 없습니다.</td></tr>';
+                        }
                         $('.user_list').html(tag);
                     },
                     error: function(err) {

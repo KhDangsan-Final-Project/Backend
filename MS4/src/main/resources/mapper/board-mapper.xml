@@ -26,6 +26,13 @@
 		<result column="report_count" property="report" />
 	</resultMap>
 
+	<!-- 신고 DTO -->
+	<resultMap type="com.ms4.dto.ReportDTO" id="report">
+		<id column="id" property="id" />
+		<result column="board_no" property="boardNo" />
+		<result column="board_comment_no" property="boardCommentNo" />
+	</resultMap>
+
 	<select id="selectBoardNewList" resultMap="board">
 		SELECT * FROM
 		(SELECT
@@ -111,9 +118,12 @@
 		CEIL(ROW_NUMBER() OVER(ORDER BY B.BOARD_NO DESC) /
 		#{pageContentCount}) AS PAGE_NO,
 		B.*
-		FROM BOARD B
-		WHERE B.REPORT_COUNT >
-		0
+		FROM (SELECT b.*
+		FROM board b
+		JOIN
+		report r
+		ON b.board_no = r.board_no
+		WHERE r.board_comment_no IS NULL) b
 		)
 		WHERE PAGE_NO = #{pageNo}
 	</select>
@@ -122,23 +132,26 @@
 		SELECT *
 		FROM (
 		SELECT
-		CEIL(ROW_NUMBER() OVER(ORDER BY b.BOARD_NO DESC) / #{pageContentCount}) AS PAGE_NO,
+		CEIL(ROW_NUMBER() OVER(ORDER BY b.BOARD_NO DESC) /
+		#{pageContentCount}) AS PAGE_NO,
 		B.*
 		FROM (SELECT bc.*
-		FROM BOARD_COMMENT bc
+		FROM BOARD_COMMENT
+		bc
 		JOIN report r
 		ON bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO) b
 		)
-		WHERE PAGE_NO = #{pageNo}
+		WHERE
+		PAGE_NO = #{pageNo}
 	</select>
 
 	<select id="selectReportBoardTotalCount" resultType="int">
 		SELECT
-		COUNT(*) FROM (SELECT b.*
+		count(*) FROM (SELECT b.*
 		FROM board b
 		JOIN report r
-		ON b.board_no =
-		r.board_no)
+		ON b.board_no = r.board_no
+		WHERE r.board_comment_no IS NULL)
 	</select>
 
 	<select id="selectReportBoardCommentTotalCount" resultType="int">
@@ -146,6 +159,7 @@
 		COUNT(*) FROM (SELECT bc.*
 		FROM BOARD_COMMENT bc
 		JOIN report r
-		ON bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO)
+		ON
+		bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO)
 	</select>
 </mapper>
