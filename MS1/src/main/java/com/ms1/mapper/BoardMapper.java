@@ -52,5 +52,13 @@ public interface BoardMapper {
 	List<BoardCommentDTO> selectCommentsByBoardNo(int boardNo);
 	int deleteComment(int boardNo);
 	int deleteCommentByBoardNo(int boardNo);
-
+	int boardUpdate(BoardDTO dto);
+	int boardCommentDelete(int cno);
+	BoardCommentDTO boardCommentSelect(int cno);
+	int deleteCommentLikes(int cno);
+	int deleteCommentHates(int cno);
+	int deleteBoardLikeByBoardNo(int boardNo);
+	int deleteCommentLikeByBoardNo(int boardNo);
+	int deleteCommentHateByBoardNo(int boardNo);
+	List<FileDTO> getFilesByBoardNo(int boardNo);
 }

@@ -7,6 +7,7 @@
 
 h1 {
 	text-align:center;
+	margin: 40px 0;
 }
 
 body {
@@ -26,8 +27,11 @@ input {
 	outline: none;
 }
 
+table {
+	width: 100%;
+}
+
 .flex_container {
-	display:flex;
 	flex-flow: row nowrap;	
 	justify-content: center;
 	align-items: center;
@@ -36,7 +40,6 @@ input {
 
 td {
 	width: calc(100%/6);
-	text-align: center;
 }
 
 th {

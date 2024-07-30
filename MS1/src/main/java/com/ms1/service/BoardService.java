@@ -1,25 +1,40 @@
 package com.ms1.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.google.api.client.util.Value;
 import com.ms1.dto.BoardCommentDTO;
 import com.ms1.dto.BoardDTO;
 import com.ms1.dto.FileDTO;
 import com.ms1.mapper.BoardMapper;
 
+import java.nio.file.Path;
+
 @Service
 public class BoardService {
 	private BoardMapper boardMapper;
+	private Map<Integer, Set<String>> viewedPostsByUser = new HashMap<>();
 
 	public BoardService(BoardMapper boardMapper) {
 		this.boardMapper = boardMapper;
 	}
+	
+	@Value("${file.upload-dir}")
+	private String uploadDir;
 
 	public List<BoardDTO> selectBoardList(int pageNo, int pageContentEa) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -179,33 +194,108 @@ public class BoardService {
 	}
 
 	@Transactional
-	public boolean boardDelete(int boardNo) {
-	    // 게시물에 연결된 모든 파일 정보 조회
-	    List<FileDTO> files = boardMapper.selectFilesByBoardNo(boardNo);
-	    // 게시물에 연결된 댓글 정보 조회
-	    List<BoardCommentDTO> comments = boardMapper.selectCommentsByBoardNo(boardNo);
+    public boolean boardDelete(int boardNo) throws Exception {
+        try {
+        	//댓글 좋아요 싫어요 삭제
+        	int deletedCommentLikes = boardMapper.deleteCommentLikeByBoardNo(boardNo);
+        	int deletedCommentHates = boardMapper.deleteCommentHateByBoardNo(boardNo);
+        	
+        	//게시글 좋아요 삭제
+        	int deletedBoardLikes = boardMapper.deleteBoardLikeByBoardNo(boardNo);
+        	
+            // 댓글 삭제
+            int deletedComments = boardMapper.deleteCommentByBoardNo(boardNo);
+            
+            // 게시물에 연결된 모든 파일 정보 조회
+            List<FileDTO> files = boardMapper.selectFilesByBoardNo(boardNo);
+            
+            // 파일 정보 삭제
+            boardMapper.deleteFilesByBoardNo(boardNo);
+            
+            // 물리적 파일 삭제
+            File root = new File("c:\\fileupload");
+            if (files != null) {
+                for (FileDTO file : files) {
+                    if (file != null) {
+                        File f = new File(root, file.getFileName());
+                        if (f.exists() && !f.delete()) {
+                            throw new Exception("파일 삭제 실패: " + file.getFileName());
+                        }
+                    }
+                }
+            }
+            // 게시물 삭제
+            int deletedBoard = boardMapper.deleteBoard(boardNo);
+            if (deletedBoard == 0) {
+                throw new RuntimeException("게시물 삭제 실패: 게시물이 존재하지 않습니다.");
+            }
 
-	    // 댓글 삭제
-	    boolean commentsDeleted = boardMapper.deleteCommentByBoardNo(boardNo) > 0;
+            return true;
+        } catch (Exception e) {
+            // 예외 발생 시 트랜잭션 롤백
+            e.printStackTrace();
+            throw e;  // 예외를 다시 던져 상위 레이어에서 처리할 수 있도록 함
+        }
+    }
 
-	    // 파일 정보 삭제
-	    boardMapper.deleteFilesByBoardNo(boardNo);
-
-	    // 파일 삭제 (물리적으로)
-	    File root = new File("c:\\fileupload");
-	    boolean filesDeleted = true;
-	    for (FileDTO file : files) {
-	        File f = new File(root, file.getFileName());
-	        if (f.exists()) {
-	            if (!f.delete()) {
-	                filesDeleted = false;
-	            }
-	        }
-	    }
-	    // 게시물 삭제
-	    boolean boardDeleted = boardMapper.deleteBoard(boardNo) > 0;
-
-	    return commentsDeleted && filesDeleted && boardDeleted;
+	public int boardUpdate(BoardDTO dto) {
+		return boardMapper.boardUpdate(dto);
 	}
+
+	public int boardCommentDelete(int cno) {
+		return boardMapper.boardCommentDelete(cno);		
+	}
+
+	public BoardCommentDTO boardCommentSelect(int cno) {
+		return boardMapper.boardCommentSelect(cno);
+	}
+
+	public int deleteCommentLikes(int cno) {
+		return boardMapper.deleteCommentLikes(cno);
+	}
+
+	public int deleteCommentHates(int cno) {
+		return boardMapper.deleteCommentHates(cno);
+	}
+
+	public List<FileDTO> getFilesByBoardNo(int boardNo) {
+		return boardMapper.getFilesByBoardNo(boardNo);
+	}
+
+	public boolean someMethodToCheckIfAlreadyViewed(String userId, int boardNo) {
+        Set<String> usersWhoViewed = viewedPostsByUser.get(boardNo);
+        if (usersWhoViewed != null && usersWhoViewed.contains(userId)) {
+            return true; // 사용자가 이미 이 게시물을 보았습니다.
+        }
+        return false; // 사용자가 이 게시물을 아직 보지 않았습니다.
+    }
+
+	public void someMethodToMarkAsViewed(String userId, int boardNo) {
+        viewedPostsByUser.computeIfAbsent(boardNo, k -> new HashSet<>()).add(userId);
+    }
+
+	 public String saveFile(MultipartFile file) throws IOException {
+	        if (file.isEmpty()) {
+	            throw new IllegalArgumentException("File is empty");
+	        }
+
+	        // 파일 이름 생성 (UUID를 사용하여 고유 이름 생성)
+	        String fileName = UUID.randomUUID().toString() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+	        Path filePath = Paths.get(uploadDir).resolve(fileName);
+
+	        // 파일을 로컬에 저장
+	        Files.copy(file.getInputStream(), filePath);
+
+	        // 파일 URL 생성
+	        return "http://teeput.synology.me:30112/ms1/board/" + fileName;
+	    }
+
+	 // 파일 다운로드를 위한 메서드 (옵션)
+	    public byte[] loadFileAsBytes(String fileName) throws IOException {
+	        Path filePath = Paths.get(uploadDir).resolve(fileName);
+	        return Files.readAllBytes(filePath);
+	    }
+	
+
 
 }

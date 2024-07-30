@@ -26,6 +26,13 @@
 		<result column="report_count" property="report" />
 	</resultMap>
 
+	<!-- 신고 DTO -->
+	<resultMap type="com.ms4.dto.ReportDTO" id="report">
+		<id column="id" property="id" />
+		<result column="board_no" property="boardNo" />
+		<result column="board_comment_no" property="boardCommentNo" />
+	</resultMap>
+
 	<select id="selectBoardNewList" resultMap="board">
 		SELECT * FROM
 		(SELECT
@@ -89,24 +96,70 @@
 	</update>
 
 	<update id="adminDeleteBoardComment" parameterType="int">
-		UPDATE board_comment
+		UPDATE
+		board_comment
 		SET board_comment_content = '관리자의 의해 삭제되었습니다'
-		WHERE board_comment_no = #{cno}
+		WHERE
+		board_comment_no = #{cno}
 	</update>
 
 	<update id="adminDeleteBoard" parameterType="int">
 		UPDATE board
-		SET board_title = '관리자에 의해 삭제되었습니다',
+		SET
+		board_title = '관리자에 의해 삭제되었습니다',
 		board_content = '관리자에 의해 삭제되었습니다'
 		WHERE board_no = #{bno}
 	</update>
 
 	<select id="selectReportBoard" resultMap="board">
-		SELECT * FROM board WHERE report_count > 0
+		SELECT *
+		FROM (
+		SELECT
+		CEIL(ROW_NUMBER() OVER(ORDER BY B.BOARD_NO DESC) /
+		#{pageContentCount}) AS PAGE_NO,
+		B.*
+		FROM (SELECT b.*
+		FROM board b
+		JOIN
+		report r
+		ON b.board_no = r.board_no
+		WHERE r.board_comment_no IS NULL) b
+		)
+		WHERE PAGE_NO = #{pageNo}
 	</select>
 
 	<select id="selectReportComment" resultMap="comment">
-		SELECT * FROM board_comment WHERE report_count > 0
+		SELECT *
+		FROM (
+		SELECT
+		CEIL(ROW_NUMBER() OVER(ORDER BY b.BOARD_NO DESC) /
+		#{pageContentCount}) AS PAGE_NO,
+		B.*
+		FROM (SELECT bc.*
+		FROM BOARD_COMMENT
+		bc
+		JOIN report r
+		ON bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO) b
+		)
+		WHERE
+		PAGE_NO = #{pageNo}
 	</select>
 
+	<select id="selectReportBoardTotalCount" resultType="int">
+		SELECT
+		count(*) FROM (SELECT b.*
+		FROM board b
+		JOIN report r
+		ON b.board_no = r.board_no
+		WHERE r.board_comment_no IS NULL)
+	</select>
+
+	<select id="selectReportBoardCommentTotalCount" resultType="int">
+		SELECT
+		COUNT(*) FROM (SELECT bc.*
+		FROM BOARD_COMMENT bc
+		JOIN report r
+		ON
+		bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO)
+	</select>
 </mapper>

@@ -1,6 +1,10 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
 nav {
-    background-color: #4CAF50;
-    padding: 10px;
+    background-color: #868e96;
     margin-bottom: 20px;
 }
 
@@ -14,16 +18,19 @@ nav ul {
 
 nav ul li {
     margin: 0;
+    width: 25%;
 }
 
 nav ul li a {
     color: white;
     text-decoration: none;
-    padding: 10px 20px;
+    padding: 20px 0px;
     display: block;
     border-radius: 4px;
+    width: 100%;
+    text-align: center;
 }
 
 nav ul li a:hover {
-    background-color: #45a049;
+    background-color: #adb5bd;
 }
