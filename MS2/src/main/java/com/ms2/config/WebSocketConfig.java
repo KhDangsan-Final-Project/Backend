@@ -6,8 +6,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import com.ms2.socket.MyWebSocketHandler;
-import com.ms2.socket.RoomWebSocketHandler;
 import com.ms2.socket.TokenWebSocketHandler;
 import com.ms2.socket.UpdateWebSocketHandler;
 
@@ -15,21 +13,12 @@ import com.ms2.socket.UpdateWebSocketHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    @Bean
-    public MyWebSocketHandler myWebSocketHandler() {
-        return new MyWebSocketHandler();
-    }
+  
 
     @Bean
     public TokenWebSocketHandler tokenWebSocketHandler() {
         return new TokenWebSocketHandler();
     }
-    
-    @Bean
-    public RoomWebSocketHandler roomWebSocketHandler() {
-        return new RoomWebSocketHandler();
-    }
-    
     @Bean
     public UpdateWebSocketHandler updateWebSocketHandler() {
         return new UpdateWebSocketHandler();
@@ -37,12 +26,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(myWebSocketHandler(), "/ms2/ws")
-                .setAllowedOrigins("*");
+    	//사용자 데이터 조회 경로
         registry.addHandler(tokenWebSocketHandler(), "/ms2/token")
                 .setAllowedOrigins("*");
-        registry.addHandler(roomWebSocketHandler(), "/ms2/roomid")
-                .setAllowedOrigins("*");
+        //matchWin 업데이트 경로
         registry.addHandler(updateWebSocketHandler(), "/ms2/update")
                 .setAllowedOrigins("*");
     }
