@@ -44,18 +44,17 @@ public class UpdateWebSocketHandler extends TextWebSocketHandler {
                     response.put("grantNo", grantNo);
                     response.put("profile", profile != null ? profile : "No profile");
 
-                    // Check if matchWin is provided
+                    // matchWin을 클라이언트에서 가져왔는지 확인
                     if (json.has("matchWin")) {
                         Integer matchWin = json.getInt("matchWin");
                         
-//                        System.out.println("matchWin" + matchWin);
-                        // Update the matchWin value
+                        // DB에 있는 matchWin 데이터 업데이트
                         int updateResult = userService.updateUserVictoryCount(id);
                         System.out.println("updateResult" + updateResult);
                         if (updateResult > 0) {
                             System.out.println("MatchWin updated successfully.");
                             
-                            // Fetch updated matchWin information
+                            // 업데이트된 matchWin 데이터 가져와서 DTO 에 저장
                             UserDTO user = userService.selectUserVictoryCount(id);
                             if (user != null) {
                                 response.put("matchWin", user.getMatchWin() != null ? user.getMatchWin().toString() : "No matchWin info");
@@ -66,7 +65,6 @@ public class UpdateWebSocketHandler extends TextWebSocketHandler {
                             response.put("error", "Failed to update matchWin");
                         }
                     } else {
-                        // Fetch and include matchWin information if matchWin is not provided
                         UserDTO user = userService.selectUserVictoryCount(id);
                         if (user != null) {
                             response.put("matchWin", user.getMatchWin() != null ? user.getMatchWin().toString() : "No matchWin info");
