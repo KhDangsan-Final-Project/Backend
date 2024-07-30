@@ -116,7 +116,6 @@ public class MyPageController {
         friendDTO.setUserId(userId);
         int result = friendService.deleteFriend(friendDTO);
         map.put("status", result > 0 ? "success" : "fail");
-        System.out.println(result);
         return map;
     }
 
@@ -125,7 +124,6 @@ public class MyPageController {
         String userId = jwtUtil.extractId(token);
         Map<String, Object> map = new HashMap<String, Object>();
         List<MailDTO> result = mailService.selectMail(userId);
-        System.out.println(result);
         map.put("result", result);
         return map;
     }

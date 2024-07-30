@@ -1,0 +1,45 @@
+table {
+		width: 100%;
+		text-align: center;
+		display: flex;
+		flex-flow: column nowrap;
+	}
+	
+	tr {
+		margin: 10px 0px;
+		display: flex;
+		flex-flow: row nowrap;
+	}
+	
+	td, th {
+		width: calc(100%/6);
+		padding: 10px 0;
+	}
+	
+	tfoot tr td{
+		margin: 0 auto;
+	}
+	
+	a {
+		text-decoration: none;
+		color: black;
+		padding: 0 10px;
+	}
+
+	h1 {
+		text-align: center;
+		margin: 40px 0;
+	}
+	
+	#write_div{
+		width: 90%;
+		display: flex;
+		justify-content: flex-end;
+	}
+	
+	#write {
+		background-color: white;
+		padding: 10px 20px;
+		border-radius: 10px;
+		cursor: pointer;
+	}

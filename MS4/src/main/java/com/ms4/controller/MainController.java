@@ -75,7 +75,6 @@ public class MainController {
     @DeleteMapping("/user/admin/delete")
     public ResponseEntity<Map<String, Object>> deleteMember(@RequestBody Map<String, String> request) {
         String id = request.get("id");
-        System.out.println("내용 : " + id);
         int count = service.deleteUser(id);
         Map<String, Object> map = new HashMap<>();
         map.put("count", count);
@@ -127,7 +126,7 @@ public class MainController {
 			return null;
 		}else {
 			session.setAttribute("user", dto);
-			view.setViewName("redirect:/ms4/manage/view");
+			view.setViewName("redirect:/ms4/main");
 		}
 		
 		return view;
@@ -145,7 +144,6 @@ public class MainController {
 		//해당 페이지 게시글 목록 읽어옴
 		List<BoardDTO> boardList = 
 				boardService.selectBoardNewList(pageNo,pageContentEa);
-		System.out.println("게시물 목록 : "+boardList);
 		//페이징 정보도 읽어옴
 		//	전체 페이지 개수 읽어옴
 		int totalCount = boardService.selectBoardTotalCount();
@@ -166,8 +164,6 @@ public class MainController {
 		//해당 게시글의 댓글 조회 
 		List<BoardCommentDTO> commentList = boardService.selectBoardCommentList(bno);
 		
-		System.out.println("게시글 : " + dto );
-		System.out.println("댓글 : " + commentList );
 		//request 영역에 저장
 		view.addObject("board", dto);
 		view.addObject("commentList", commentList);
@@ -238,7 +234,6 @@ public class MainController {
 	public ModelAndView boardUpdateView(ModelAndView view,
 			@PathVariable int bno) {
 		BoardDTO dto = boardService.selectBoard(bno);
-		System.out.println("수정할 dto : " + dto);
 		view.addObject("board", dto);
 		view.setViewName("board_update_view");
 		return view;
@@ -246,8 +241,6 @@ public class MainController {
 	
 	@PostMapping("/board/update")
 	public ModelAndView updateBoard(BoardDTO dto, ModelAndView view ) throws IOException {
-		System.out.println("----------------------------------------------------------");
-		System.out.println("확인 필요 :  " +dto);
 		int count = boardService.updateBoard(dto);
 		view.setViewName("redirect:/ms4/board/"+dto.getBoardNo());
 		return view;
@@ -255,7 +248,6 @@ public class MainController {
 	
 	@PostMapping("/comment/add")
 	public String commentAdd(BoardCommentDTO dto,HttpSession session) {
-		System.out.println(dto);
 		UserDTO user = (UserDTO) session.getAttribute("user");
 		dto.setId(user.getId());
 		
@@ -267,7 +259,6 @@ public class MainController {
 	@GetMapping("/boardComment/delete")
 	public String deleteBoardComment(int cno, int bno) {
 		int result = boardService.deleteBoardComment(cno);
-		System.out.println(result);
 		
 		return "redirect:/ms4/board/"+bno;
 	}
@@ -275,23 +266,54 @@ public class MainController {
 	@GetMapping("/boardComment/aDelete")
 	public String adminDeleteBoardComment(@RequestParam("cno") int cno, @RequestParam("bno") int bno) {
 	    int result = boardService.adminDeleteBoardComment(cno);
-	    System.out.println(result);
 	    
 	    return "redirect:/ms4/board/" + bno;
 	}
 	
 	@GetMapping("/admin/report")
-	public ModelAndView report (ModelAndView view) {
-		List<BoardDTO> reportBoard = boardService.selectReportBoard();
-		List<BoardCommentDTO> reportComment = boardService.selectReportComment();
-		System.out.println("확인 : " + reportBoard );
-		System.out.println("확인 : " + reportComment );
+	public ModelAndView report (ModelAndView view ,
+			@RequestParam(defaultValue = "1") int pageNo,
+			@RequestParam(defaultValue = "10") int pageContentEa,
+			@RequestParam(defaultValue = "1") int commentPageNo ){
+		List<BoardDTO> reportBoard = boardService.selectReportBoard(pageNo,pageContentEa);
+		List<BoardCommentDTO> reportComment = boardService.selectReportComment(commentPageNo,pageContentEa);
+		
+		int rbtotalCount = boardService.selectReportBoardTotalCount();
+		PagingVO vo1 = new PagingVO(rbtotalCount, pageNo, pageContentEa);
+		int rctotalCount = boardService.selectReportBoardCommentTotalCount();
+		PagingVO vo2 = new PagingVO(rctotalCount, commentPageNo, pageContentEa);
 		
 		view.addObject("boardList",reportBoard);
+		view.addObject("pagging1", vo1);
 		view.addObject("commentList",reportComment);
+		view.addObject("pagging2", vo2);
 		
 		view.setViewName("report_list");
 		return view;
+	}
+	
+	@GetMapping("/boardComment/aDelete/j")
+	public String adminDeleteBoardCommentJ(@RequestParam("cno") int cno, @RequestParam("bno") int bno) {
+	    int result = boardService.adminDeleteBoardComment(cno);
+	    
+	    return "redirect:/ms4/admin/report";
+	}
+	
+	@GetMapping("/board/aDelete/j/{bno}")
+	public String adminDeleteBoardJ(@PathVariable int bno, HttpSession session, HttpServletResponse response) throws IOException {
+	    UserDTO user = (UserDTO) session.getAttribute("user");
+
+	    if (user != null && user.getGrantNo() == 0) {
+	        boardService.adminDeleteBoard(bno);
+	    } else {
+	        response.setContentType("text/html;charset=utf-8");
+	        response.getWriter().println("<script>"
+	                + "alert('삭제할 권한이 없습니다.');"
+	                + "history.back();"
+	                + "</script>");
+	        return null;
+	    }
+	    return "redirect:/ms4/admin/report";
 	}
 	
 }

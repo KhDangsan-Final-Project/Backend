@@ -1,5 +1,7 @@
 package com.ms2.dto;
 
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
 
 @Alias("user")
@@ -9,12 +11,12 @@ public class UserDTO {
     private Integer grantNo;
     private String profile;
     private Integer matchWin;
+    private List<PokemonDTO> pokemonList;
     
     
     
     
-	public UserDTO() {
-	}
+	public UserDTO() { }
 
 
 
@@ -89,15 +91,32 @@ public class UserDTO {
 
 
 
+	public List<PokemonDTO> getPokemonList() {
+		return pokemonList;
+	}
+
+
+
+
+	public void setPokemonList(List<PokemonDTO> pokemonList) {
+		this.pokemonList = pokemonList;
+	}
+
+
+
+
 	@Override
 	public String toString() {
 		return "UserDTO [id=" + id + ", nickname=" + nickname + ", grantNo=" + grantNo + ", profile=" + profile
-				+ ", matchWin=" + matchWin + "]";
+				+ ", matchWin=" + matchWin + ", pokemonList=" + pokemonList + "]";
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
    
 }

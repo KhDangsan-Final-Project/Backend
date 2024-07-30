@@ -1,52 +1,36 @@
-@charset "UTF-8";
-nav{
-	width: 1200px;
-	margin:30px auto;
-	border: 1px solid black;
-	padding:10px;
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
-}
-nav > ul {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items:center;
-	list-style-type: none;
-}
-nav a:link, nav a:visited {
-	display: inline-block;
-	padding:10px 0px;
-	width: 200px;
-	box-sizing: border-box;
-	text-align: center;
-	text-decoration: none;
-	color:black;
-	font-size: 1.3em;
+* {
+	margin: 0px;
+	padding: 0px;
 }
 
-nav a:hover{
-	font-weight: bold;
+nav {
+    background-color: #868e96;
+    margin-bottom: 20px;
 }
-.profile{
-	display:flex;
-	width:300px !important;
-	flex-flow: row nowrap;
-	align-items: center;
-	gap:10px;
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
 }
-.user{
-	width: 48px !important;
-	padding:0px !important;
-	font-size:0px !important;
+
+nav ul li {
+    margin: 0;
+    width: 25%;
 }
-.user img{
-	width: 48px;
-    height: 48px;
-    border-radius: 24px;
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 20px 0px;
+    display: block;
+    border-radius: 4px;
+    width: 100%;
+    text-align: center;
 }
-.profile span{
-	width: 252px;
-	display: inline-block;
-	font-size: 1em;
+
+nav ul li a:hover {
+    background-color: #adb5bd;
 }

@@ -69,7 +69,6 @@ public class MainController {
 		dto.setName(param.get("name"));
 		dto.setNickname(param.get("nickname"));
 	    dto.setProfile(param.get("profile") != null ? param.get("profile") : "");
-		System.out.println(dto);
 		Map<String, Object> map = new HashMap<>();
 		try {
 			service.insertUser(dto);
@@ -120,7 +119,6 @@ public class MainController {
     public Map<String, Object> resetPassword(@RequestBody Map<String, String> request) {
         String token = request.get("token");
         String newPassword = request.get("newPassword");
-        System.out.println("받은토큰 : " + token);
         Map<String, Object> map = new HashMap<>();
         try {
             tokenService.resetPassword(token, newPassword);
