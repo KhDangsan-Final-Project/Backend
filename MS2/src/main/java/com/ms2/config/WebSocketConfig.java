@@ -26,8 +26,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+    	//사용자 데이터 조회 경로
         registry.addHandler(tokenWebSocketHandler(), "/ms2/token")
                 .setAllowedOrigins("*");
+        //matchWin 업데이트 경로
         registry.addHandler(updateWebSocketHandler(), "/ms2/update")
                 .setAllowedOrigins("*");
     }

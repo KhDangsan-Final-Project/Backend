@@ -48,12 +48,12 @@ public class TokenWebSocketHandler extends TextWebSocketHandler {
                     response.put("grantNo", grantNo);
                     response.put("profile", profile != null ? profile : "1");
 
-                    // Fetch user information including matchWin and pokemonList
+                    //사용자의 모든 데이터 조회
                     UserDTO user = userService.selectUserPokemonNum(id);
                     if (user != null) {
                         response.put("matchWin", user.getMatchWin() != null ? user.getMatchWin().toString() : "No matchWin info");
 
-                        // Add pokemon list information
+                        //포켓몬 리스트 추가
                         if (user.getPokemonList() != null && !user.getPokemonList().isEmpty()) {
                             JSONArray pokemonArray = new JSONArray();
                             for (PokemonDTO pokemon : user.getPokemonList()) {
