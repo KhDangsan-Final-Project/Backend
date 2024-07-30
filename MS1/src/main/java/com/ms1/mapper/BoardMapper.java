@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.ms1.dto.BoardCommentDTO;
 import com.ms1.dto.BoardDTO;
 import com.ms1.dto.FileDTO;
+import com.ms1.dto.ReportDTO;
 
 @Mapper
 public interface BoardMapper {
@@ -60,5 +61,12 @@ public interface BoardMapper {
 	int deleteBoardLikeByBoardNo(int boardNo);
 	int deleteCommentLikeByBoardNo(int boardNo);
 	int deleteCommentHateByBoardNo(int boardNo);
-	List<FileDTO> getFilesByBoardNo(int boardNo);
+	List<FileDTO> boardSelectFile(int boardNo);
+	FileDTO selectFileByNo(int fileNo);
+	int deleteFile(int fno);
+	
+    void boardReport(ReportDTO dto);
+    void boardCommentReport(ReportDTO dto);
+    ReportDTO findReportByUserAndBoard(ReportDTO dto);
+    ReportDTO findRportByBoardComment(ReportDTO dto);
 }
