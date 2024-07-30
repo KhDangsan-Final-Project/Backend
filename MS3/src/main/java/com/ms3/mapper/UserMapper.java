@@ -1,6 +1,6 @@
 package com.ms3.mapper;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +16,7 @@ public interface UserMapper {
     int userUpdate(UserDTO dto);
     UserDTO selectInfoUser(String id);
     List<UserDTO> searchFriend(@Param("query") String query, @Param("userId") String userId);
+	int isUserExists(String userId);
 
     int idcheck(String id);
 
@@ -28,6 +29,7 @@ public interface UserMapper {
     UserDTO selectUserByToken(String token);
     // 비밀번호 업데이트
     void updateUserPassword(@Param("userId") String userId, @Param("password") String newPassword);
+	
 
 
 }

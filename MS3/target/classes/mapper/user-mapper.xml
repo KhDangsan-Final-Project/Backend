@@ -16,8 +16,8 @@
 
 	<!-- 회원가입 -->
 	<insert id="insertUser" parameterType="user">
-		insert into users(id, grant_no, password, email, name, nickname, profile)
-		values(#{id}, #{grantNo}, STANDARD_HASH(#{password}, 'SHA512'),
+		insert into users(id, password, email, name, nickname, profile)
+		values(#{id}, STANDARD_HASH(#{password}, 'SHA512'),
 		#{email}, #{name}, #{nickname}, #{profile})
 	</insert>
 
@@ -76,6 +76,12 @@
     
     <select id="idcheck">
     	SELECT COUNT(*) FROM USERS WHERE ID = #{id}
+    </select>
+    
+    <select id="isUserExists" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE id = #{id}
     </select>
 
 </mapper>

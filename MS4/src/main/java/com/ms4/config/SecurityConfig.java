@@ -11,11 +11,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-            .authorizeHttpRequests((authorizeRequests) -> 
+            .authorizeRequests(authorizeRequests ->
                 authorizeRequests
-                    .anyRequest().permitAll()
+                    .requestMatchers("/actuator/**").authenticated()  // Actuator 엔드포인트 보호
+                    .anyRequest().permitAll()  // 다른 모든 요청은 인증 없이 접근 허용
             )
-            .formLogin().disable();
+            .httpBasic();  // HTTP Basic 인증 사용
         return http.build();
     }
 }
