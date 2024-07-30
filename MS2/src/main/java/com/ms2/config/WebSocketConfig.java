@@ -6,8 +6,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import com.ms2.socket.ChatWebSocketHandler;
-import com.ms2.socket.PokemonWebSocketHandler;
 import com.ms2.socket.TokenWebSocketHandler;
 import com.ms2.socket.UpdateWebSocketHandler;
 
@@ -25,14 +23,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public UpdateWebSocketHandler updateWebSocketHandler() {
         return new UpdateWebSocketHandler();
     }
-    @Bean
-    public ChatWebSocketHandler chatWebSocketHandler() {
-    	return new ChatWebSocketHandler();
-    }
-    @Bean
-    public PokemonWebSocketHandler pokemonWebSocketHandler() {
-    	return new PokemonWebSocketHandler();
-    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -40,9 +30,5 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .setAllowedOrigins("*");
         registry.addHandler(updateWebSocketHandler(), "/ms2/update")
                 .setAllowedOrigins("*");
-        registry.addHandler(chatWebSocketHandler(), "/ms2/chat")
-        .setAllowedOrigins("*");
-        registry.addHandler(pokemonWebSocketHandler(), "/ms2/pokemon")
-        .setAllowedOrigins("*");
     }
 }
