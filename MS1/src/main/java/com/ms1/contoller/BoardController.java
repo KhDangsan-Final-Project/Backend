@@ -102,7 +102,7 @@ public class BoardController {
 
 			// 파일 업로드 처리
 			if (file != null && file.length > 0) {
-				File root = new File("c:\\fileupload");
+				File root = new File("c:\\fileupload"); //    /workspace/image
 				if (!root.exists()) {
 					root.mkdirs(); // 디렉토리가 존재하지 않으면 생성
 				}
@@ -129,6 +129,45 @@ public class BoardController {
 			return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("게시판 작성 실패: " + e.getMessage());
 		}
 	}
+	
+	 @PostMapping("/board/upload")
+	    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+	        try {
+	            String fileUrl = boardService.saveFile(file);
+	            return ResponseEntity.ok(new UploadResponse(fileUrl));
+	        } catch (IllegalArgumentException e) {
+	            return ResponseEntity.badRequest().body("File is empty");
+	        } catch (IOException e) {
+	            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("File upload failed: " + e.getMessage());
+	        }
+	    }
+
+	    @RequestMapping("/upload-dir/{fileName}")
+	    public ResponseEntity<?> downloadFile(@PathVariable String fileName) {
+	        try {
+	            byte[] fileContent = boardService.loadFileAsBytes(fileName);
+	            return ResponseEntity.ok(fileContent);
+	        } catch (IOException e) {
+	            return ResponseEntity.notFound().build();
+	        }
+	    }
+
+	    // 업로드 응답 객체
+	    static class UploadResponse {
+	        private String url;
+
+	        public UploadResponse(String url) {
+	            this.url = url;
+	        }
+
+	        public String getUrl() {
+	            return url;
+	        }
+
+	        public void setUrl(String url) {
+	            this.url = url;
+	        }
+	    }
 
 	// 파일 목록조회
 	@GetMapping("/board/fileList/{boardNo}")

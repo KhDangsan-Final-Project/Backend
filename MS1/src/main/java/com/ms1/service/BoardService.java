@@ -1,19 +1,28 @@
 package com.ms1.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.google.api.client.util.Value;
 import com.ms1.dto.BoardCommentDTO;
 import com.ms1.dto.BoardDTO;
 import com.ms1.dto.FileDTO;
 import com.ms1.mapper.BoardMapper;
+
+import java.nio.file.Path;
 
 @Service
 public class BoardService {
@@ -23,6 +32,9 @@ public class BoardService {
 	public BoardService(BoardMapper boardMapper) {
 		this.boardMapper = boardMapper;
 	}
+	
+	@Value("${file.upload-dir}")
+	private String uploadDir;
 
 	public List<BoardDTO> selectBoardList(int pageNo, int pageContentEa) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -261,7 +273,28 @@ public class BoardService {
 	public void someMethodToMarkAsViewed(String userId, int boardNo) {
         viewedPostsByUser.computeIfAbsent(boardNo, k -> new HashSet<>()).add(userId);
     }
-	
+
+	 public String saveFile(MultipartFile file) throws IOException {
+	        if (file.isEmpty()) {
+	            throw new IllegalArgumentException("File is empty");
+	        }
+
+	        // 파일 이름 생성 (UUID를 사용하여 고유 이름 생성)
+	        String fileName = UUID.randomUUID().toString() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+	        Path filePath = Paths.get(uploadDir).resolve(fileName);
+
+	        // 파일을 로컬에 저장
+	        Files.copy(file.getInputStream(), filePath);
+
+	        // 파일 URL 생성
+	        return "http://teeput.synology.me:30112/ms1/board/" + fileName;
+	    }
+
+	 // 파일 다운로드를 위한 메서드 (옵션)
+	    public byte[] loadFileAsBytes(String fileName) throws IOException {
+	        Path filePath = Paths.get(uploadDir).resolve(fileName);
+	        return Files.readAllBytes(filePath);
+	    }
 	
 
 
