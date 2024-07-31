@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PokeLibraryManagement</title>
+<link rel="stylesheet" th:href="@{/css/board.css}">
+<link href="/css/menu.css" rel="stylesheet">
+<link href="/css/board_list.css" rel="stylesheet">
+</head>
+<body>
+	<th:block th:if="${session.user == null}">
+		<script>
+			alert('로그인 하셔야 이용하실 수 있습니다.');
+			location.href = '/ms4/login/view';
+		</script>
+	</th:block>
+	<div class="container">
+		<th:block th:include="/fragments/header.html"></th:block>
+		<div class="button-container">
+		<h1>게시판 관리</h1>
+		<div id="write_div">
+			<button id="write">글쓰기</button>
+		</div>
+		</div>
+                <script th:inline="javascript">
+			 		document.querySelector("#write").onclick = () =>{
+			 			location.href='/ms4/board/write/view';
+			 		}
+			 	</script>
+		<table>
+			<thead>
+				<tr class="head">
+					<th class="category">분류</th>
+                    <th class="no">글번호</th>
+                    <th class="title">제목</th>
+                    <th class="author">작성자</th>
+                    <th class="views">조회수</th>
+                    <th class="date">작성일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="board : ${list}">
+					<td class="category">[[${board.boardCategory}]]</td>
+                    <td class="no">[[${board.boardNo}]]</td>
+                    <td class="title"><a th:href="@{/ms4/board/{bno}(bno=${board.boardNo})}">[[${board.boardTitle}]]</a></td>
+                    <td class="author">[[${board.id}]]</td>
+                    <td class="views">[[${board.boardCount}]]</td>
+                    <td class="date">[[${board.boardWrite}]]</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="7">
+						<!-- 페이지 번호, ◀  ▶  --> <a
+						th:href="@{/ms4/main(pageNo=${pagging.startPageOfPageGroup - 1},pageContentEa=${pagging.pageOfContentCount})}"
+						th:if="${pagging.priviousPageGroup}">◀</a> <a
+						th:href="@{/ms4/main(pageNo=${i},pageContentEa=${pagging.pageOfContentCount})}"
+						th:each="i : ${#numbers.sequence(pagging.startPageOfPageGroup,pagging.endPageOfPageGroup)}">[[${i}]]</a>
+
+						<a
+						th:href="@{/ms4/main(pageNo=${pagging.endPageOfPageGroup + 1},pageContentEa=${pagging.pageOfContentCount})}"
+						th:if="${pagging.nextPageGroup}">▶</a>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</body>
+</html>

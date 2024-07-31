@@ -1,4 +1,5 @@
 package com.ms3.controller;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +34,10 @@ public class MyPageController {
     private final MailService mailService;
     private final LibraryService libraryService;  
 
+    
+    
 	public MyPageController(FriendService friendService, UserService service, JwtUtil jwtUtil, MailService mailService,
 			LibraryService libraryService) {
-		super();
 		this.friendService = friendService;
 		this.service = service;
 		this.jwtUtil = jwtUtil;
@@ -117,7 +119,6 @@ public class MyPageController {
         friendDTO.setUserId(userId);
         int result = friendService.deleteFriend(friendDTO);
         map.put("status", result > 0 ? "success" : "fail");
-        System.out.println(result);
         return map;
     }
 
@@ -126,7 +127,6 @@ public class MyPageController {
         String userId = jwtUtil.extractId(token);
         Map<String, Object> map = new HashMap<String, Object>();
         List<MailDTO> result = mailService.selectMail(userId);
-        System.out.println(result);
         map.put("result", result);
         return map;
     }

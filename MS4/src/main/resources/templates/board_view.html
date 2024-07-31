@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PokeLibraryManagement</title>
+<link href="/css/menu.css" rel="stylesheet">
+<style type="text/css">
+	table {
+		width: 100%;
+	}
+	
+	td {
+		text-align: center;
+		padding: 20px 0;
+	}
+	
+	button {
+		background-color: white;
+		border-radius: 10px;
+		padding: 10px 20px;
+	}
+	
+	form {
+		display: flex;
+		flex-flow: column nowrap;
+	}
+	
+	textarea {
+		height: 100px;
+	}
+	
+	a {
+		color: black;
+		text-decoration: none;
+		margin: 0 20px;
+	}
+	
+</style>
+</head>
+<body>
+	<th:block th:include="/fragments/header.html"></th:block>
+	<th:block th:if="${session.user == null}">
+		<script>
+		alert('로그인 하셔야 이용하실 수 있습니다.');
+		location.href = '/ms4/login/view';
+	</script>
+	</th:block>
+
+<div id="container">
+  <h2>글조회 페이지</h2>
+	<table>
+		<tr>
+			<th>글번호</th>
+			<td>[[${board.boardNo}]]</td>
+		</tr>
+		<tr>
+			<th>제목 : </th>
+			<td>[[${board.boardTitle }]]</td>
+		</tr>
+		<tr>
+			<th>작성자 : </th>
+			<td>[[${board.id }]]</td>
+		</tr>
+		<tr>
+			<th>조회수 : </th>
+			<td>[[${board.boardCount }]]</td>
+		</tr>
+		<tr>
+			<td colspan="2"> 
+				[(${board.boardContent })]
+			</td>
+		</tr>
+		 <tr>
+			 <td colspan="2">
+			 	<button id="btn_update">수정</button>
+			 	<button id="btn_delete">삭제</button>
+			 	<button id="btn_Adelete">관리자 삭제</button>
+			 	<script th:inline="javascript">
+			 		document.querySelector("#btn_update").onclick = () =>{
+			 			location.href='/ms4/board/update/[[${board.boardNo}]]';
+			 		}
+			 		document.querySelector("#btn_delete").onclick = () =>{
+			 			location.href='/ms4/board/delete/[[${board.boardNo}]]';
+			 		}
+			 		document.querySelector("#btn_Adelete").onclick = () =>{
+			 			location.href='/ms4/board/aDelete/[[${board.boardNo}]]';
+			 		}
+			 		
+			 	</script>
+			 </td>
+			 <tr>
+		 	<td colspan="2">
+		 		<!-- 댓글 입력 폼 -->
+		 		<div class="comment_form">
+					<form action="/ms4/comment/add" method="post">
+						<input type="hidden" name="bno" th:value="${board.boardNo }">
+						<textarea name="comment" placeholder="댓글을 입력하세요"></textarea>
+						<button>댓글작성</button>
+					</form>
+				</div>
+		 	</td>
+		 </tr>
+		 
+	</table>
+	<hr>
+	<!-- 
+		댓글 내용을 출력, 댓글 번호(hidden), 작성일, 좋아요, 싫어요, 작성자, 댓글 내용 
+		댓글 삭제 버튼 -> 작성자와 로그인한 사람이 일치할때
+		
+		작성자, 작성일, 좋아요, 싫어요
+		댓글 내용
+		삭제버튼
+	 -->
+	 	<div class="comment" th:each="comment : ${commentList}">
+	 		<p>
+	 			<input type="hidden" name="cno" th:value="${comment.cno }"/>
+	 			<span>[[${comment.id }]]</span>
+	 			<span>작성일 : [[${comment.cdate }]]</span>
+	 		</p>
+	 		<p>[[${comment.comment }]]</p>
+	 		<a th:href="@{/ms4/boardComment/delete(cno=${comment.cno },bno=${comment.bno})}" th:if="${session.user != null && session.user.grantNo == 0 }">댓글 삭제</a>
+	 		<a th:href="@{/ms4/boardComment/aDelete(cno=${comment.cno },bno=${comment.bno})}" th:if="${session.user != null && session.user.grantNo == 0 }">관리자 댓글 삭제</a>
+	 	</div>
+	</div>
+</body>
+</html>

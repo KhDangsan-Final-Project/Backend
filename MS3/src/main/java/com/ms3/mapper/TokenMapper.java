@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.ms3.dto.TokenDTO;
-import com.ms3.dto.UserDTO;
 
 @Mapper
 public interface TokenMapper {

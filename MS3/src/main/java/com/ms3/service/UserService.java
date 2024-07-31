@@ -1,11 +1,8 @@
 package com.ms3.service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 
@@ -55,5 +52,6 @@ public class UserService {
 	public int deleteUser(String id) {
 		return mapper.deleteUser(id);
 	}
+
 
 }

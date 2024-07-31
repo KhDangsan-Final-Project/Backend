@@ -33,7 +33,7 @@
 	<!-- 로그인 -->
 	<select id="selectUser" resultMap="user" parameterType="map">
 		select *
-    from users where id = #{id, jdbcType=VARCHAR} and password = STANDARD_HASH(#{password, jdbcType=VARCHAR}, 'SHA512')
+    from users where id = #{id} and password = STANDARD_HASH(#{password, jdbcType=VARCHAR}, 'SHA512')
 	</select>
 
 	<!-- 전체 유저 조회 -->

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PokeLibraryManagement</title>
+</head>
+<link href="/css/menu.css" rel="stylesheet">
+<link href="/css/report_list.css" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/report.css}">
+<body>
+<th:block th:if="${session.user == null}">
+		<script>
+		alert('로그인 하셔야 이용하실 수 있습니다.');
+		location.href = '/ms4/login/view';
+	</script>
+	</th:block>
+	<div class="container">
+<th:block th:include="/fragments/header.html"></th:block>
+<h1>게시글 신고 리스트</h1>
+    <table>
+        <thead>
+            <tr>
+                <th class="category">구분</th>
+                <th class="no">글번호</th>
+                <th class="title">제목</th>
+                <th class="content">내용</th>
+                <th class="etc">비고</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="board : ${boardList}">
+                <td class="category">게시글</td>
+                <td class="no">[[${board.boardNo}]]</td>
+                <td class="title"><a th:href="@{/ms4/board/{bno}(bno=${board.boardNo})}">[[${board.boardTitle}]]</a></td>
+                <td class="content">[[${board.boardContent}]]</td>
+                <td class="etc"><a th:href="@{/ms4/board/aDelete/j/{bno}(bno=${board.boardNo})}" th:if="${session.user != null && session.user.grantNo == 0 }" class="A_button">관리자 삭제</a></td>
+            </tr>
+        </tbody>
+        <tfoot>
+        	<tr>
+					<td colspan="7">
+						<a
+						th:href="@{/ms4/admin/report(pageNo=${pagging1.startPageOfPageGroup - 1},pageContentEa=${pagging1.pageOfContentCount})}"
+						th:if="${pagging1.priviousPageGroup}">◀</a>
+						<a
+						th:href="@{/ms4/admin/report(pageNo=${i},pageContentEa=${pagging1.pageOfContentCount})}"
+						th:each="i : ${#numbers.sequence(pagging1.startPageOfPageGroup,pagging1.endPageOfPageGroup)}">[[${i}]]</a>
+						<a
+						th:href="@{/ms4/admin/report(pageNo=${pagging1.endPageOfPageGroup + 1},pageContentEa=${pagging1.pageOfContentCount})}"
+						th:if="${pagging1.nextPageGroup}">▶</a>
+					</td>
+			</tr>
+        </tfoot>
+    </table>
+    <hr>
+    <h1>댓글 신고 리스트</h1>
+  <table>
+    	<thead>
+    		<th class="category">구분</th>
+    		<th class="no">글번호</th>
+    		<th class="comment">댓글</th>
+    		<th class="etc"> 비고</th>
+    	</thead>
+    	<tbody>
+            <tr th:each="comment : ${commentList}">
+                <td class="category">댓글</td>
+                <td class="no">[[${comment.bno}]]</td>
+                <td class="comment">[[${comment.comment}]]</td>
+                <td class="etc"><a th:href="@{/ms4/boardComment/aDelete/j(cno=${comment.cno},bno=${comment.bno})}" th:if="${session.user != null && session.user.grantNo == 0 }" class="A_button">관리자 삭제</a></td>
+            </tr>
+    	</tbody>
+    	<tfoot>
+    	<div class="foot_container">
+        	<tr>
+					<td colspan="7">
+						<a
+						th:href="@{/ms4/admin/report(pageNo=${pagging2.startPageOfPageGroup - 1},pageContentEa=${pagging2.pageOfContentCount})}"
+						th:if="${pagging2.priviousPageGroup}">◀</a>
+						<a
+						th:href="@{/ms4/admin/report(pageNo=${i},pageContentEa=${pagging2.pageOfContentCount})}"
+						th:each="i : ${#numbers.sequence(pagging2.startPageOfPageGroup,pagging2.endPageOfPageGroup)}">[[${i}]]</a>
+						<a
+						th:href="@{/ms4/admin/report(pageNo=${pagging2.endPageOfPageGroup + 1},pageContentEa=${pagging2.pageOfContentCount})}"
+						th:if="${pagging2.nextPageGroup}">▶</a>
+					</td>
+			</tr>
+    	</div>
+        </tfoot>
+    </table>
+</div>
+</body>
+</html>

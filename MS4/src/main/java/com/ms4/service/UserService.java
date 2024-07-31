@@ -50,7 +50,6 @@ public class UserService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", id);
 		map.put("password", password);
-		System.out.println(map);
 		return mapper.selectUser(map);
 	}
 

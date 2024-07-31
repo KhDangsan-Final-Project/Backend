@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PokeLibraryManagement</title>
+<style type="text/css">
+section {
+	width: 1200px;
+	margin: 0 auto;
+}
+
+section form {
+	display: flex;
+	flex-direction: column;
+}
+
+form>* {
+	margin-top: 10px;
+}
+
+.form_bar>button {
+	width: 49%;
+	box-sizing: border-box;
+	font-size: 20px;
+	height: 50px;
+}
+
+section h2 {
+	text-align: center;
+}
+
+section form>input {
+	height: 30px;
+	font-size: 20px;
+}
+
+section form>textarea {
+	height: 300px;
+	font-size: 20px;
+	resize: none;
+}
+
+.ck-editor__editable_inline {
+	min-height: 500px;
+}
+</style>
+<script src="/ckeditor/ckeditor.js"></script>
+<script src="/js/UploadAdapter.js"></script>
+<script>
+function uploadAdapterPlugin(editor){
+	editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+		return new UploadAdapter(loader);
+	}
+}
+window.onload = () => {
+	let myEditor = null;
+    ClassicEditor
+        .create( document.querySelector( 'textarea' ),
+        {
+        	extraPlugins:[uploadAdapterPlugin]
+        })
+        .then(editor => {
+        	myEditor = editor;
+        })
+        .catch( error => {
+            console.error( error );
+        } );
+    
+ }
+	
+</script>
+<link href="/css/menu.css" rel="stylesheet">
+
+</head>
+<body>
+	<th:block th:if="${session.user == null}">
+		<script>
+		alert('로그인 하셔야 이용하실 수 있습니다.');
+		location.href = '/ms4/login/view';
+	</script>
+	</th:block>
+	<th:block th:include="/fragments/header.html"></th:block>
+	<section>
+		<h2>수정하기</h2>
+		<form action="/ms4/board/update" method="post">
+			<input type="hidden" name="boardNo" th:value="${board.boardNo}">
+			<select name="boardCategory" th:field="${board.boardCategory}">
+				<option value="자유게시판">자유게시판</option>
+				<option value="공지사항">공지사항</option>
+				<option value="이벤트">이벤트</option>
+			</select> 
+			<input type="text" name="boardTitle" placeholder="제목을 입력하세요" th:value="${board.boardTitle}">
+			<textarea name="boardContent" placeholder="내용을 입력하세요">[(${board.boardContent})]</textarea>
+			<br>
+			<div class="form_bar">
+				<button type="submit" class="btn_submit">수정하기</button>
+				<button type="button" class="btn_back" onclick="history.back()">뒤로가기</button>
+			</div>
+		</form>
+	</section>
+</body>
+</html>

@@ -2,9 +2,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>PokeLibraryManagement</title>
 </head>
+<link href="/css/menu.css" rel="stylesheet">
 <body>
-	<h1> 로그인 완료 </h1>
+	<th:block th:include="/fragments/header.html"></th:block>
+	<th:block th:if="${session.user == null}">
+		<script>
+		alert('로그인 하셔야 이용하실 수 있습니다.');
+		location.href = '/ms4/login/view';
+	</script>
+	</th:block>
+  	<hr>
 </body>
 </html>

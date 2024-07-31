@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ms4.mapper.BoardMapper">
+
+	<!-- 게시판 DTO -->
+	<resultMap type="com.ms4.dto.BoardDTO" id="board">
+		<id column="board_no" property="boardNo" />
+		<result column="id" property="id" />
+		<result column="board_title" property="boardTitle" />
+		<result column="board_content" property="boardContent" />
+		<result column="board_write" property="boardWrite" />
+		<result column="board_count" property="boardCount" />
+		<result column="board_category" property="boardCategory" />
+		<result column="report_count" property="report" />
+	</resultMap>
+
+	<!-- 게시물 Coment DTO -->
+	<resultMap type="com.ms4.dto.BoardCommentDTO" id="comment">
+		<id column="board_comment_no" property="cno" />
+		<result column="board_no" property="bno" />
+		<result column="id" property="id" />
+		<result column="board_comment_content" property="comment" />
+		<result column="board_comment_write" property="cdate" />
+		<result column="report_count" property="report" />
+	</resultMap>
+
+	<!-- 신고 DTO -->
+	<resultMap type="com.ms4.dto.ReportDTO" id="report">
+		<id column="id" property="id" />
+		<result column="board_no" property="boardNo" />
+		<result column="board_comment_no" property="boardCommentNo" />
+	</resultMap>
+
+	<select id="selectBoardNewList" resultMap="board">
+		SELECT * FROM
+		(SELECT
+		CEIL(ROW_NUMBER() OVER(ORDER BY
+		B.BOARD_NO DESC) / #{pageContentCount})
+		AS PAGE_NO,
+		B.* FROM BOARD B)
+		WHERE PAGE_NO = #{pageNo}
+	</select>
+
+	<select id="selectBoardTotalCount" resultType="int">
+		SELECT COUNT(*)
+		FROM BOARD
+	</select>
+
+	<select id="selectBoard" parameterType="int" resultMap="board">
+		select *
+		from board where board_no = #{bno}
+	</select>
+
+	<select id="selectBoardCommentList" parameterType="int"
+		resultMap="comment">
+		SELECT * FROM BOARD_COMMENT
+		WHERE BOARD_NO = #{bno}
+		ORDER BY
+		BOARD_COMMENT_NO DESC
+	</select>
+
+	<delete id="deleteBoard">
+		delete from board where board_no =
+		#{bno}
+	</delete>
+
+	<select id="getBoardNo" resultType="int">
+		select board_seq.nextval from
+		dual
+	</select>
+
+	<insert id="insertBoard" parameterType="com.ms4.dto.BoardDTO">
+		insert into
+		board(board_no, board_title, board_content, board_category, id)
+		values(#{boardNo},#{boardTitle},#{boardContent},#{boardCategory},#{id})
+	</insert>
+
+	<insert id="insertBoardComment" parameterType="comment">
+		INSERT INTO
+		BOARD_COMMENT(board_comment_no, board_no, id, board_comment_content)
+		VALUES(BOARD_COMMENT_SEQ.NEXTVAL,#{bno},#{id},#{comment})
+	</insert>
+
+	<delete id="deleteBoardComment" parameterType="int">
+		DELETE FROM
+		BOARD_COMMENT WHERE BOARD_COMMENT_NO = #{cno}
+	</delete>
+
+	<update id="updateBoard" parameterType="com.ms4.dto.BoardDTO">
+		update board set
+		board_title = #{boardTitle}, board_content = #{boardContent}
+		where
+		board_no = #{boardNo}
+	</update>
+
+	<update id="adminDeleteBoardComment" parameterType="int">
+		UPDATE
+		board_comment
+		SET board_comment_content = '관리자의 의해 삭제되었습니다'
+		WHERE
+		board_comment_no = #{cno}
+	</update>
+
+	<update id="adminDeleteBoard" parameterType="int">
+		UPDATE board
+		SET
+		board_title = '관리자에 의해 삭제되었습니다',
+		board_content = '관리자에 의해 삭제되었습니다'
+		WHERE board_no = #{bno}
+	</update>
+
+	<select id="selectReportBoard" resultMap="board">
+		SELECT *
+		FROM (
+		SELECT
+		CEIL(ROW_NUMBER() OVER(ORDER BY B.BOARD_NO DESC) /
+		#{pageContentCount}) AS PAGE_NO,
+		B.*
+		FROM (SELECT b.*
+		FROM board b
+		JOIN
+		report r
+		ON b.board_no = r.board_no
+		WHERE r.board_comment_no IS NULL) b
+		)
+		WHERE PAGE_NO = #{pageNo}
+	</select>
+
+	<select id="selectReportComment" resultMap="comment">
+		SELECT *
+		FROM (
+		SELECT
+		CEIL(ROW_NUMBER() OVER(ORDER BY b.BOARD_NO DESC) /
+		#{pageContentCount}) AS PAGE_NO,
+		B.*
+		FROM (SELECT bc.*
+		FROM BOARD_COMMENT
+		bc
+		JOIN report r
+		ON bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO) b
+		)
+		WHERE
+		PAGE_NO = #{pageNo}
+	</select>
+
+	<select id="selectReportBoardTotalCount" resultType="int">
+		SELECT
+		count(*) FROM (SELECT b.*
+		FROM board b
+		JOIN report r
+		ON b.board_no = r.board_no
+		WHERE r.board_comment_no IS NULL)
+	</select>
+
+	<select id="selectReportBoardCommentTotalCount" resultType="int">
+		SELECT
+		COUNT(*) FROM (SELECT bc.*
+		FROM BOARD_COMMENT bc
+		JOIN report r
+		ON
+		bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO)
+	</select>
+</mapper>
