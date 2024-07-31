@@ -81,6 +81,7 @@ public class BoardController {
 			// 토큰에서 사용자 ID 추출
 			String token = authorization.substring(7);
 			id = jwtUtil.extractId(token);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("로그인을 다시 해주세요!");
@@ -208,8 +209,8 @@ public class BoardController {
 	 * @return 현재 로그인한 사용자 ID를 포함한 응답
 	 */
 	@GetMapping("/currentUser")
-	public ResponseEntity<Map<String, String>> getCurrentUser(@RequestHeader("Authorization") String authorization) {
-	    Map<String, String> response = new HashMap<>();
+	public ResponseEntity<Map<String, Object>> getCurrentUser(@RequestHeader("Authorization") String authorization) {
+	    Map<String, Object> response = new HashMap<>();
 	    try {
 	        // JWT 토큰 검증
 	        if (authorization == null || !authorization.startsWith("Bearer ")) {
@@ -226,9 +227,12 @@ public class BoardController {
 	        
 	        String userId = jwtUtil.extractId(token);
 	        String profile = jwtUtil.extractProfile(token);
+	        int grantNo = jwtUtil.extractGrantNo(token);
+	        
 	        // 사용자 ID를 응답에 포함
 	        response.put("id", userId);
 	        response.put("profile", profile);
+	        response.put("grantNo", grantNo);
 	        return ResponseEntity.ok(response);
 
 	    } catch (IllegalArgumentException e) {
