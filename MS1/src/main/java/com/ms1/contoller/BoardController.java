@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ms3.dto.UserDTO;
+import com.ms3.service.UserService;
 import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +44,7 @@ import jakarta.ws.rs.Path;
 public class BoardController {
 
 	private BoardService boardService;
+	private UserService userService;
 	private JwtUtil jwtUtil;
 
 	public BoardController(BoardService boardService, JwtUtil jwtUtil) {
@@ -206,41 +209,52 @@ public class BoardController {
 	 */
 	@GetMapping("/currentUser")
 	public ResponseEntity<Map<String, String>> getCurrentUser(@RequestHeader("Authorization") String authorization) {
-		Map<String, String> response = new HashMap<>();
-		try {
-			// JWT 토큰 검증
-			if (authorization == null || !authorization.startsWith("Bearer ")) {
-				response.put("error", "토큰이 유효하지 않습니다.");
-				return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
-			}
+	    Map<String, String> response = new HashMap<>();
+	    try {
+	        // JWT 토큰 검증
+	        if (authorization == null || !authorization.startsWith("Bearer ")) {
+	            response.put("error", "토큰이 유효하지 않습니다.");
+	            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
+	        }
 
-			// 토큰에서 사용자 ID 추출
-			String token = authorization.substring(7);
-			String userId = jwtUtil.extractId(token);
+	        // 토큰에서 사용자 ID 추출
+	        String token = authorization.substring(7);
+	        if (token.split("\\.").length != 3) {
+	            response.put("error", "토큰 형식이 유효하지 않습니다.");
+	            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
+	        }
+	        
+	        String userId = jwtUtil.extractId(token);
+	        String profile = jwtUtil.extractProfile(token);
+	        // 사용자 ID를 응답에 포함
+	        response.put("id", userId);
+	        response.put("profile", profile);
+	        return ResponseEntity.ok(response);
 
-			// 사용자 ID를 응답에 포함
-			response.put("id", userId);
-			return ResponseEntity.ok(response);
+	    } catch (IllegalArgumentException e) {
+	        // JWT 검증 실패 시
+	        response.put("error", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
 
-		} catch (IllegalArgumentException e) {
-			// JWT 검증 실패 시
-			response.put("error", e.getMessage());
-			return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
-
-		} catch (Exception e) {
-			// 일반적인 예외 처리
-			response.put("error", "서버 오류가 발생했습니다.");
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(response);
-		}
+	    } catch (Exception e) {
+	        // 일반적인 예외 처리
+	        response.put("error", "서버 오류가 발생했습니다.");
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(response);
+	    }
 	}
+
 
 	// 게시물 한건조회
 	@GetMapping("/board/{boardNo}")
 	public BoardDTO BoardSelect(@PathVariable int boardNo) {
 		BoardDTO dto = boardService.boardSelect(boardNo);
+		System.out.println(dto);
 		return dto;
 	}
+	
+	
+
 
 	// 게시물 조회수
 	@PostMapping("/boardViewCount/{boardNo}")
@@ -652,74 +666,6 @@ public class BoardController {
 		}
 	}
 	
-	//게시글 신고 
-    @PostMapping("/boardReport/{boardNo}")
-    public ResponseEntity<String> boardReport(@PathVariable int boardNo,
-            @RequestHeader("Authorization") String authorization) {
-        try {
-            // JWT 토큰 검증
-            if (authorization == null || !authorization.startsWith("Bearer ")) {
-                throw new Exception("계정을 확인해주세요!");
-            }
-            String token = authorization.substring(7);
-            String id = jwtUtil.extractId(token);
-            // 신고 DTO 설정
-            ReportDTO dto = new ReportDTO();
-            dto.setId(id);
-            dto.setBoardNo(boardNo);
-
-            // 중복 신고 여부 확인
-            boolean alreadyReported = boardService.bReport(dto.getId(), dto.getBoardNo(),dto.getBoardCommentNo());
-            if (alreadyReported) {
-                return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("이미 신고한 게시물입니다.");
-            }
-
-            // 신고 처리
-            boardService.boardReport(dto);
-            return ResponseEntity.ok("게시글 신고 성공");
-
-        } catch (JwtException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("토큰 오류: " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("신고 실패: " + e.getMessage());
-        }
-    }
-    
-    //댓글 신고
-    @PostMapping("/boardCommentReport/{cno}/{boardNo}")
-    public ResponseEntity<String> boardCommentReport (@PathVariable int boardNo,
-            @PathVariable int cno, @RequestHeader("Authorization") String authorization){
-        try {
-            // JWT 토큰 검증
-            if (authorization == null || !authorization.startsWith("Bearer ")) {
-                throw new Exception("계정을 확인해주세요!");
-            }
-            String token = authorization.substring(7);
-            String id = jwtUtil.extractId(token);
-            // 신고 DTO 설정
-            ReportDTO dto = new ReportDTO();
-            dto.setId(id);
-            dto.setBoardNo(boardNo);
-
-            // 중복 신고 여부 확인
-            boolean alreadyReported = boardService.cReport(dto.getBoardCommentNo());
-            if (alreadyReported) {
-                return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("이미 신고한 게시물입니다.");
-            }
-
-            // 신고 처리
-            boardService.boardCommentReport(dto);
-            return ResponseEntity.ok("게시글 신고 성공");
-
-        } catch (JwtException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("토큰 오류: " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("신고 실패: " + e.getMessage());
-        }
-    }
+	
 
 }

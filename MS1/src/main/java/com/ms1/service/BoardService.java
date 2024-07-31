@@ -306,32 +306,5 @@ public class BoardService {
 	    return boardMapper.deleteFile(fno);
 	}
 
-    public void boardReport(ReportDTO dto) {
-        boardMapper.boardReport(dto);
-    }
-
-    public void boardCommentReport(ReportDTO dto) {
-        boardMapper.boardCommentReport(dto);
-    }
-    
-    public boolean bReport(String id, int boardNo, int boardCommentNo) {
-        ReportDTO dto = new ReportDTO();
-        dto.setId(id);
-        dto.setBoardNo(boardNo);
-        dto.setBoardCommentNo(boardCommentNo);
-        
-        ReportDTO existingReport = boardMapper.findReportByUserAndBoard(dto);
-        
-        return existingReport != null;
-    }
-
-    public boolean cReport(int boardCommentNo) {
-        ReportDTO dto = new ReportDTO();
-        dto.setBoardCommentNo(boardCommentNo);
-        
-        ReportDTO existingReport = boardMapper.findRportByBoardComment(dto);
-        
-        return existingReport != null;
-    }
-
+   
 }

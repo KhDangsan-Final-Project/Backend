@@ -64,9 +64,4 @@ public interface BoardMapper {
 	List<FileDTO> boardSelectFile(int boardNo);
 	FileDTO selectFileByNo(int fileNo);
 	int deleteFile(int fno);
-	
-    void boardReport(ReportDTO dto);
-    void boardCommentReport(ReportDTO dto);
-    ReportDTO findReportByUserAndBoard(ReportDTO dto);
-    ReportDTO findRportByBoardComment(ReportDTO dto);
 }
