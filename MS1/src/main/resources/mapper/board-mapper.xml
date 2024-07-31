@@ -349,6 +349,33 @@
 		WHERE board_no = #{boardNo}
 	</delete>
 
+<!-- 신고 기록 조회(게시물) -->
+    <select id="findReportByUserAndBoard" parameterType="com.ms1.dto.ReportDTO"
+        resultMap="report">
+        SELECT * FROM report
+        WHERE id = #{id} AND board_no =
+        #{boardNo} AND board_comment_no is null
+    </select>
+    
+    <!-- 신고 기록 조회(댓글) -->
+    <select id="findRportByBoardComment" parameterType="com.ms1.dto.ReportDTO"
+        resultMap="report">
+        SELECT * FROM report
+        WHERE board_comment_no =
+        #{boardCommentNo}
+        and id = #{id} 
+     </select>
 
+    <!-- 게시물 신고 등록 -->
+    <insert id="boardReport" parameterType="com.ms1.dto.ReportDTO">
+        INSERT INTO report (id, board_no)
+        VALUES (#{id}, #{boardNo})
+    </insert>
+
+    <!-- 댓글 신고 등록 -->
+    <insert id="boardCommentReport" parameterType="com.ms1.dto.ReportDTO">
+        INSERT INTO report (id, board_no,board_comment_no)
+        VALUES (#{id}, #{boardNo}, #{boardCommentNo})
+    </insert>
 
 </mapper>
