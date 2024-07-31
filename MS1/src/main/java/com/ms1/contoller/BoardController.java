@@ -78,6 +78,7 @@ public class BoardController {
 			// 토큰에서 사용자 ID 추출
 			String token = authorization.substring(7);
 			id = jwtUtil.extractId(token);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("로그인을 다시 해주세요!");
@@ -205,42 +206,56 @@ public class BoardController {
 	 * @return 현재 로그인한 사용자 ID를 포함한 응답
 	 */
 	@GetMapping("/currentUser")
-	public ResponseEntity<Map<String, String>> getCurrentUser(@RequestHeader("Authorization") String authorization) {
-		Map<String, String> response = new HashMap<>();
-		try {
-			// JWT 토큰 검증
-			if (authorization == null || !authorization.startsWith("Bearer ")) {
-				response.put("error", "토큰이 유효하지 않습니다.");
-				return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
-			}
+	public ResponseEntity<Map<String, Object>> getCurrentUser(@RequestHeader("Authorization") String authorization) {
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        // JWT 토큰 검증
+	        if (authorization == null || !authorization.startsWith("Bearer ")) {
+	            response.put("error", "토큰이 유효하지 않습니다.");
+	            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
+	        }
 
-			// 토큰에서 사용자 ID 추출
-			String token = authorization.substring(7);
-			String userId = jwtUtil.extractId(token);
+	        // 토큰에서 사용자 ID 추출
+	        String token = authorization.substring(7);
+	        if (token.split("\\.").length != 3) {
+	            response.put("error", "토큰 형식이 유효하지 않습니다.");
+	            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
+	        }
+	        
+	        String userId = jwtUtil.extractId(token);
+	        String profile = jwtUtil.extractProfile(token);
+	        int grantNo = jwtUtil.extractGrantNo(token);
+	        
+	        // 사용자 ID를 응답에 포함
+	        response.put("id", userId);
+	        response.put("profile", profile);
+	        response.put("grantNo", grantNo);
+	        return ResponseEntity.ok(response);
 
-			// 사용자 ID를 응답에 포함
-			response.put("id", userId);
-			return ResponseEntity.ok(response);
+	    } catch (IllegalArgumentException e) {
+	        // JWT 검증 실패 시
+	        response.put("error", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
 
-		} catch (IllegalArgumentException e) {
-			// JWT 검증 실패 시
-			response.put("error", e.getMessage());
-			return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
-
-		} catch (Exception e) {
-			// 일반적인 예외 처리
-			response.put("error", "서버 오류가 발생했습니다.");
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(response);
-		}
+	    } catch (Exception e) {
+	        // 일반적인 예외 처리
+	        response.put("error", "서버 오류가 발생했습니다.");
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(response);
+	    }
 	}
+
 
 	// 게시물 한건조회
 	@GetMapping("/board/{boardNo}")
 	public BoardDTO BoardSelect(@PathVariable int boardNo) {
 		BoardDTO dto = boardService.boardSelect(boardNo);
+		System.out.println(dto);
 		return dto;
 	}
+	
+	
+
 
 	// 게시물 조회수
 	@PostMapping("/boardViewCount/{boardNo}")

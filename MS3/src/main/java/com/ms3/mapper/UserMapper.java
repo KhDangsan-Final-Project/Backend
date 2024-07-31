@@ -1,6 +1,5 @@
 package com.ms3.mapper;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +16,8 @@ public interface UserMapper {
     UserDTO selectInfoUser(String id);
     List<UserDTO> searchFriend(@Param("query") String query, @Param("userId") String userId);
 	int isUserExists(String userId);
-
+	int deleteUser(String id);
     int idcheck(String id);
-
 
     // 이메일로 사용자 조회
     UserDTO selectUserByEmail(String email);

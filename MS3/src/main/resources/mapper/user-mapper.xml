@@ -83,5 +83,9 @@
         FROM USERS
         WHERE id = #{id}
     </select>
+    
+    <delete id="deleteUser" parameterType="com.ms3.dto.UserDTO">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
 
 </mapper>

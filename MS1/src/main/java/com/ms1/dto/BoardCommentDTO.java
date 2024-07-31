@@ -9,14 +9,16 @@ public class BoardCommentDTO {
 	private String id;
 	private String comment;
 	private String cdate;
+	private String profileUrl;
 	
 	public BoardCommentDTO() {
 	}
 
-	public BoardCommentDTO(int bno, String id, String comment) {
+	public BoardCommentDTO(int bno, String id, String comment, String profileUrl) {
 		this.bno = bno;
 		this.id = id;
 		this.comment = comment;
+		this.profileUrl = profileUrl;
 	}
 
 	public int getBno() {
@@ -58,11 +60,19 @@ public class BoardCommentDTO {
 	public void setCdate(String cdate) {
 		this.cdate = cdate;
 	}
+	
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+	
+	public void setProfileUrl(String profileUrl) {
+		this.profileUrl = profileUrl;
+	}
 
 	@Override
 	public String toString() {
 		return "BoardCommentDTO [bno=" + bno + ", cno=" + cno + ", id=" + id + ", comment=" + comment + ", cdate="
-				+ cdate + "]";
+				+ cdate + " + profileUrl=" + profileUrl + "]";
 	}
 
 	
