@@ -16,7 +16,7 @@
 	</insert>
 	
 	<insert id="insertFriend" parameterType="com.ms3.dto.FriendDTO">
-        INSERT INTO Friend(user_id, friend_id) VALUES (#{friendId}, #{userId})
+        insert into friend(user_id, friend_id) values (#{friendId}, #{userId})
     </insert>
 	    
 	<!-- 친구 목록 조회 -->
@@ -33,42 +33,21 @@
 
 	<!-- 친구 요청 수락 -->
     <update id="acceptFriendRequest" parameterType="com.ms3.dto.FriendDTO">
-        UPDATE friend SET status = #{status}
-        WHERE (user_id = #{userId} AND friend_id = #{friendId})
-        OR (user_id = #{friendId} AND friend_id = #{userId})
+        update friend SET status = #{status}
+        where (user_id = #{userId} and friend_id = #{friendId})
+        or (user_id = #{friendId} and friend_id = #{userId})
     </update>
 
 	<delete id="rejectFriendRequest" parameterType="com.ms3.dto.FriendDTO">
-		DELETE FROM friend
-		WHERE user_id = #{userId} AND
-		friend_id = #{friendId} AND status = 'pending'
+		delete from friend
+		where user_id = #{userId} and
+		friend_id = #{friendId} and status = 'pending'
 	</delete>
 
 	<delete id="deleteFriend" parameterType="com.ms3.dto.FriendDTO">
-       DELETE FROM friend
-       WHERE (user_id = #{userId} AND friend_id = #{friendId})
-       OR (user_id = #{friendId} AND friend_id = #{userId})
+       delete from friend
+       where (user_id = #{userId} and friend_id = #{friendId})
+       or (user_id = #{friendId} and friend_id = #{userId})
     </delete>
-    
-    
-    <!-- 중복된아이디 친구추가 못하게 예외처리 -->
-	<!-- <select id="checkFriendRequestExist" parameterType="com.ms3.dto.FriendDTO" resultType="int">
-		SELECT COUNT(*) FROM
-		friend
-		WHERE (user_id = #{userId} AND friend_id = #{friendId} AND
-		status = 'pending')
-		OR (user_id = #{friendId} AND friend_id = #{userId}
-		AND status = 'pending')
-	</select>
-
-	<select id="checkFriendExist" parameterType="com.ms3.dto.FriendDTO" resultType="int">
-		SELECT COUNT(*) FROM
-		friend
-		WHERE (user_id = #{userId} AND friend_id = #{friendId} AND
-		status = 'accepted')
-		OR (user_id = #{friendId} AND friend_id =
-		#{userId} AND status = 'accepted')
-	</select> -->
-
 
 </mapper>

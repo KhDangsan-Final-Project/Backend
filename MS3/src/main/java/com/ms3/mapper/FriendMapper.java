@@ -22,9 +22,4 @@ public interface FriendMapper {
 
 	int insertFriend(FriendDTO friendDTO);
 
-
-
-//	int checkFriendRequestExist(FriendDTO friendDTO);
-//
-//	int checkFriendExist(FriendDTO friendDTO);
 }

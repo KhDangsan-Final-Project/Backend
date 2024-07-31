@@ -1,15 +1,14 @@
 package com.ms3.controller;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.LocalDateTime;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +17,9 @@ import com.ms3.dto.FriendDTO;
 import com.ms3.dto.LibraryDTO;
 import com.ms3.dto.MailDTO;
 import com.ms3.dto.UserDTO;
-import com.ms3.service.MailService;
 import com.ms3.service.FriendService;
 import com.ms3.service.LibraryService;
+import com.ms3.service.MailService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
 
@@ -33,10 +32,10 @@ public class MyPageController {
     private final JwtUtil jwtUtil;
     private final MailService mailService;
     private final LibraryService libraryService;  
-    
-    
+
 	public MyPageController(FriendService friendService, UserService service, JwtUtil jwtUtil, MailService mailService,
 			LibraryService libraryService) {
+		super();
 		this.friendService = friendService;
 		this.service = service;
 		this.jwtUtil = jwtUtil;
@@ -58,6 +57,8 @@ public class MyPageController {
         return map;
     }
 
+   
+    
     @PostMapping("/friend/add")
     public Map<String, Object> addFriendRequest(@RequestBody FriendDTO friendDTO, @RequestParam String token) {
         Map<String, Object> map = new HashMap<>();
