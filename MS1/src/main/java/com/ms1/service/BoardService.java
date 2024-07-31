@@ -305,8 +305,8 @@ public class BoardService {
 	    // 데이터베이스에서 파일 정보 삭제
 	    return boardMapper.deleteFile(fno);
 	}
-
-    public void boardReport(ReportDTO dto) {
+	
+	public void boardReport(ReportDTO dto) {
         boardMapper.boardReport(dto);
     }
 
@@ -314,19 +314,19 @@ public class BoardService {
         boardMapper.boardCommentReport(dto);
     }
     
-    public boolean bReport(String id, int boardNo, int boardCommentNo) {
+    public boolean bReport(String id, int boardNo) {
         ReportDTO dto = new ReportDTO();
         dto.setId(id);
         dto.setBoardNo(boardNo);
-        dto.setBoardCommentNo(boardCommentNo);
         
         ReportDTO existingReport = boardMapper.findReportByUserAndBoard(dto);
         
         return existingReport != null;
     }
 
-    public boolean cReport(int boardCommentNo) {
+    public boolean cReport(String id, int boardCommentNo) {
         ReportDTO dto = new ReportDTO();
+        dto.setId(id);
         dto.setBoardCommentNo(boardCommentNo);
         
         ReportDTO existingReport = boardMapper.findRportByBoardComment(dto);
@@ -334,4 +334,5 @@ public class BoardService {
         return existingReport != null;
     }
 
+   
 }
