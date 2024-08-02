@@ -3,9 +3,6 @@ package com.ms3.service;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import com.ms3.mapper.UserMapper;
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -21,7 +18,7 @@ public class EmailService {
 
     public void sendPasswordResetEmail(String to, String token) {
         String subject = "비밀번호 재설정 요청";
-        String resetUrl = "http://localhost:3000/password-reset?token=" + token;
+        String resetUrl = "https://pokelibrary.site/password-reset?token=" + token;
         String message = "<p>비밀번호 재설정을 요청하셨습니다.</p>"
                        + "<p>아래 링크를 클릭하여 비밀번호를 재설정하세요:</p>"
                        + "<p><a href=\"" + resetUrl + "\">비밀번호 재설정 링크</a></p>"

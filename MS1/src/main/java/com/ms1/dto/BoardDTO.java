@@ -11,7 +11,7 @@ public class BoardDTO {
 	private	String boardWrite;
 	private int boardCount;
 	private String boardCategory;
-	
+	private String profileUrl;
 	
 	
 	public BoardDTO() {
@@ -20,7 +20,7 @@ public class BoardDTO {
 
 
 	public BoardDTO(int boardNo, String id, String boardTitle, String boardContent, String boardWrite, int boardCount,
-			String boardCategory) {
+			String boardCategory, String profileUrl) {
 		this.boardNo = boardNo;
 		this.id = id;
 		this.boardTitle = boardTitle;
@@ -28,6 +28,7 @@ public class BoardDTO {
 		this.boardWrite = boardWrite;
 		this.boardCount = boardCount;
 		this.boardCategory = boardCategory;
+		this.profileUrl = profileUrl;
 	}
 
 
@@ -113,6 +114,16 @@ public class BoardDTO {
 	public void setBoardCategory(String boardCategory) {
 		this.boardCategory = boardCategory;
 	}
+	
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
+
+
+	public void setProfileUrl(String profileUrl) {
+		this.profileUrl = profileUrl;
+	}
 
 
 
@@ -120,7 +131,7 @@ public class BoardDTO {
 	public String toString() {
 		return "BoardDTO [boardNo=" + boardNo + ", id=" + id + ", boardTitle=" + boardTitle + ", boardContent="
 				+ boardContent + ", boardWrite=" + boardWrite + ", boardCount=" + boardCount + ", boardCategory="
-				+ boardCategory + "]";
+				+ boardCategory + ", profileUrl + ";
 	}
 
 	
