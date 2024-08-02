@@ -36,8 +36,8 @@
 	<update id="userUpdate" parameterType="user">
 		UPDATE users SET
 		email = #{email},
-		password = STANDARD_HASH(#{password}, 'SHA512'),
-		nickname = #{nickname}
+		password = STANDARD_HASH(#{password}, 'SHA512'),     
+		nickname = #{nickname},
 		profile = #{profile}
 		WHERE id = #{id}
 	</update>
