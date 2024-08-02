@@ -88,5 +88,10 @@
     <delete id="deleteUser" parameterType="com.ms3.dto.UserDTO">
         DELETE FROM users WHERE id = #{id}
     </delete>
+    
+    <!-- 비밀번호 업데이트 -->
+    <update id="updateUserPassword" parameterType="map">
+        UPDATE users SET password = STANDARD_HASH(#{password}, 'SHA512') WHERE id = #{userId}
+    </update>
 
 </mapper>
