@@ -37,7 +37,8 @@
 		UPDATE users SET
 		email = #{email},
 		password = STANDARD_HASH(#{password}, 'SHA512'),
-		nickname = #{nickname}
+		nickname = #{nickname},
+		profile = #{profile}
 		WHERE id = #{id}
 	</update>
 
