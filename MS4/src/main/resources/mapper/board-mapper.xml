@@ -118,12 +118,14 @@
 		CEIL(ROW_NUMBER() OVER(ORDER BY B.BOARD_NO DESC) /
 		#{pageContentCount}) AS PAGE_NO,
 		B.*
-		FROM (SELECT b.*
-		FROM board b
-		JOIN
-		report r
-		ON b.board_no = r.board_no
-		WHERE r.board_comment_no IS NULL) b
+		FROM (SELECT DISTINCT b.BOARD_NO,
+		b.BOARD_TITLE, b.BOARD_CONTENT
+		FROM BOARD b
+		WHERE EXISTS (
+		SELECT 1
+		FROM REPORT r
+		WHERE b.BOARD_NO = r.BOARD_NO
+		)) b
 		)
 		WHERE PAGE_NO = #{pageNo}
 	</select>
@@ -135,11 +137,14 @@
 		CEIL(ROW_NUMBER() OVER(ORDER BY b.BOARD_NO DESC) /
 		#{pageContentCount}) AS PAGE_NO,
 		B.*
-		FROM (SELECT bc.*
-		FROM BOARD_COMMENT
-		bc
-		JOIN report r
-		ON bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO) b
+		FROM (SELECT DISTINCT bc.BOARD_NO,
+		bc.BOARD_COMMENT_NO , bc.BOARD_COMMENT_CONTENT
+		FROM BOARD_COMMENT bc
+		WHERE EXISTS (
+		SELECT 1
+		FROM REPORT r
+		WHERE bc.BOARD_COMMENT_NO = r.board_comment_no
+		)) b
 		)
 		WHERE
 		PAGE_NO = #{pageNo}
@@ -147,19 +152,24 @@
 
 	<select id="selectReportBoardTotalCount" resultType="int">
 		SELECT
-		count(*) FROM (SELECT b.*
-		FROM board b
-		JOIN report r
-		ON b.board_no = r.board_no
-		WHERE r.board_comment_no IS NULL)
+		count(*) FROM (SELECT DISTINCT b.BOARD_NO, b.BOARD_TITLE,
+		b.BOARD_CONTENT
+		FROM BOARD b
+		WHERE EXISTS (
+		SELECT 1
+		FROM REPORT r
+		WHERE b.BOARD_NO = r.BOARD_NO))
 	</select>
 
 	<select id="selectReportBoardCommentTotalCount" resultType="int">
 		SELECT
-		COUNT(*) FROM (SELECT bc.*
+		COUNT(*) FROM (SELECT DISTINCT bc.BOARD_NO, bc.BOARD_COMMENT_NO
+		, bc.BOARD_COMMENT_CONTENT
 		FROM BOARD_COMMENT bc
-		JOIN report r
-		ON
-		bc.BOARD_COMMENT_NO = r.BOARD_COMMENT_NO)
+		WHERE EXISTS (
+		SELECT 1
+		FROM REPORT r
+		WHERE bc.BOARD_COMMENT_NO = r.board_comment_no
+		))
 	</select>
 </mapper>
