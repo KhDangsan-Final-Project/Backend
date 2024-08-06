@@ -23,7 +23,6 @@
                 <th class="category">구분</th>
                 <th class="no">글번호</th>
                 <th class="title">제목</th>
-                <th class="content">내용</th>
                 <th class="etc">비고</th>
             </tr>
         </thead>
@@ -32,7 +31,6 @@
                 <td class="category">게시글</td>
                 <td class="no">[[${board.boardNo}]]</td>
                 <td class="title"><a th:href="@{/ms4/board/{bno}(bno=${board.boardNo})}">[[${board.boardTitle}]]</a></td>
-                <td class="content">[[${board.boardContent}]]</td>
                 <td class="etc"><a th:href="@{/ms4/board/aDelete/j/{bno}(bno=${board.boardNo})}" th:if="${session.user != null && session.user.grantNo == 0 }" class="A_button">관리자 삭제</a></td>
             </tr>
         </tbody>
