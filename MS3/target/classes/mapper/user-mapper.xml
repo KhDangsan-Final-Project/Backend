@@ -13,7 +13,7 @@
 		<result column="email" property="email" />
 		<result column="profile" property="profile" />
 	</resultMap>
-
+	
 	<!-- 회원가입 -->
 	<insert id="insertUser" parameterType="user">
 		insert into users(id, password, email, name, nickname, profile)
@@ -93,5 +93,37 @@
     <update id="updateUserPassword" parameterType="map">
         UPDATE users SET password = STANDARD_HASH(#{password}, 'SHA512') WHERE id = #{userId}
     </update>
-
+    
+    <select id="boardProfile" resultType="String">
+    	select profile from users where id = #{id}
+    </select>
+    
+    <select id="getPokemonListById" resultType="String">
+    	select pokemon_no from getpokemon where id = #{id}
+    </select>
+    
+    <select id="changeEnglishName" resultType="String">
+    	select english_name from pokemon where id = #{id}
+    </select>
+    
+    <update id="updateGrantNo2">
+    	update users set grant_no = 2 where id = #{id}
+    </update>
+    
+    <update id="updateGrantNo3">
+    	update users set grant_no = 3 where id = #{id}
+    </update>
+    
+    <update id="updateGrantNo4">
+    	update users set grant_no = 4 where id = #{id}
+    </update>
+    
+    <update id="updateGrantNo5">
+    	update users set grant_no = 5 where id = #{id}
+    </update>
+    
+    <update id="updateGrantNo6">
+    	update users set grant_no = 6 where id = #{id}
+    </update>
+    
 </mapper>

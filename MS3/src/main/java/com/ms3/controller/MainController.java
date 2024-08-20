@@ -1,6 +1,8 @@
 package com.ms3.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -10,17 +12,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ms3.dto.MatchWinDTO;
+import com.ms3.dto.PokemonDTO;
 import com.ms3.dto.UserDTO;
 import com.ms3.service.EmailService;
 import com.ms3.service.TokenService;
 import com.ms3.service.UserService;
 import com.ms3.util.JwtUtil;
+
 
 
 @RestController
@@ -163,18 +169,93 @@ public class MainController {
     }
     
     @GetMapping("/rankcheck")
-    public ResponseEntity<Integer> RankCheck(@RequestHeader("Authorization") String authorization) throws Exception {
+    public ResponseEntity<Integer> rankCheck(@RequestHeader("Authorization") String authorization) throws Exception {
     	if (authorization == null || !authorization.startsWith("Bearer ")) {
             throw new Exception("계정을 확인해주세요!");
         }
 
-        // 토큰에서 사용자 ID 추출
         String token = authorization.substring(7);
         int grantNo = jwtUtil.extractGrantNo(token);
         
     	return ResponseEntity.ok(grantNo);
     }
+    
+    @GetMapping("/profilecheck")
+    public ResponseEntity<String> profileCheck(@RequestHeader("Authorization") String authorization) throws Exception {
+    	if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new Exception("계정을 확인해주세요!");
+        }
 
+        String token = authorization.substring(7);
+        String profile = jwtUtil.extractProfile(token);
+        
+    	return ResponseEntity.ok(profile);
+    }
+    
+    @GetMapping("/board/profile")
+    public ResponseEntity<String> boardProfile(@RequestParam String id) {
+        String boardProfile = service.boardProfile(id);
+        return ResponseEntity.ok(boardProfile);
+    }
+    
+    @GetMapping("/game/getPokemon")
+    public ResponseEntity<List<String>> selectGetPokemon(@RequestHeader("Authorization") String authorization) throws Exception {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new Exception("계정을 확인해주세요!");
+        }
+
+        String token = authorization.substring(7);
+        String id = jwtUtil.extractId(token);
+
+        // 포켓몬 ID 리스트를 가져옴
+        List<String> pokemonIdList = service.getPokemonListById(id);
+        
+        // 영어 이름으로 변환된 리스트
+        List<String> pokemonList = new ArrayList<>();
+        
+        // 각 포켓몬 ID를 영어 이름으로 변환하여 리스트에 추가
+        for(String pokemonId : pokemonIdList) {
+            String englishName = service.changeEnglishName(pokemonId);
+            pokemonList.add(englishName);
+        }
+        
+        // 최종 리스트 반환
+        return ResponseEntity.ok(pokemonList);
+    }
+    
+    @PutMapping("/updaterank")
+    public String updateRank(@RequestHeader("Authorization") String authorization,
+    		@RequestBody MatchWinDTO request) throws Exception {
+    	int matchWin = request.getMatchWin();
+    	System.out.println(matchWin);
+    	
+    	if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new Exception("계정을 확인해주세요!");
+        }
+
+        String token = authorization.substring(7);
+        String id = jwtUtil.extractId(token);
+        
+    	switch(matchWin) {
+    		case 11:
+    			service.updateGrantNo2(id);
+    			break;
+    		case 21:
+    			service.updateGrantNo3(id);
+    			break;
+    		case 31:
+    			service.updateGrantNo4(id);
+    			break;
+    		case 41:
+    			service.updateGrantNo5(id);
+    			break;
+    		case 51:
+    			service.updateGrantNo6(id);
+    			break;
+    	}
+    	return null;
+    }
+    
 
 }
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.ms3.dto.PokemonDTO;
 import com.ms3.dto.UserDTO;
 import com.ms3.mapper.UserMapper;
 
@@ -52,6 +53,39 @@ public class UserService {
 	public int deleteUser(String id) {
 		return mapper.deleteUser(id);
 	}
+
+	public String boardProfile(String id) {
+		return mapper.boardProfile(id);
+	}
+
+	public List<String> getPokemonListById(String id) {
+		return mapper.getPokemonListById(id);
+	}
+
+	public String changeEnglishName(String pokemonId) {
+		return mapper.changeEnglishName(pokemonId);
+	}
+
+	public int updateGrantNo2(String id) {
+		return mapper.updateGrantNo2(id);
+	}
+	
+	public int updateGrantNo3(String id) {
+		return mapper.updateGrantNo3(id);
+	}
+	
+	public int updateGrantNo4(String id) {
+		return mapper.updateGrantNo4(id);
+	}
+	
+	public int updateGrantNo5(String id) {
+		return mapper.updateGrantNo5(id);
+	}
+	
+	public int updateGrantNo6(String id) {
+		return mapper.updateGrantNo6(id);
+	}
+
 
 
 }

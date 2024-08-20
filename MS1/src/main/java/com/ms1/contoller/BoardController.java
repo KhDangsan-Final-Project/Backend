@@ -2,6 +2,7 @@ package com.ms1.contoller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,12 +164,12 @@ public class BoardController {
 		}
 	}
 
-	// 해당 게시물 파일 목록조회
-	@GetMapping("/board/fileList/{boardNo}")
-	public ResponseEntity<List<FileDTO>> fileList(@PathVariable("boardNo") int boardNo) {
-		List<FileDTO> fileList = boardService.boardSelectFile(boardNo);
-		return ResponseEntity.ok(fileList);
-	}
+//	// 해당 게시물 파일 목록조회
+//	@GetMapping("/board/fileList/{boardNo}")
+//	public ResponseEntity<List<FileDTO>> fileList(@PathVariable("boardNo") int boardNo) {
+//		List<FileDTO> fileList = boardService.boardSelectFile(boardNo);
+//		return ResponseEntity.ok(fileList);
+//	}
 
 	// 게시물 목록조회
 	@GetMapping("/board/list")
@@ -347,16 +348,16 @@ public class BoardController {
 		}
 	}
 
-	@DeleteMapping("/deleteFile/{fno}")
-	public ResponseEntity<String> deleteFile(@PathVariable int fno) {
-	    try {
-	        boardService.deleteFile(fno);
-	        return ResponseEntity.ok().body("File deleted successfully");
-	    } catch (IOException e) {
-	        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-	                .body("Failed to delete file: " + e.getMessage());
-	    }
-	}
+//	@DeleteMapping("/deleteFile/{fno}")
+//	public ResponseEntity<String> deleteFile(@PathVariable int fno) {
+//	    try {
+//	        boardService.deleteFile(fno);
+//	        return ResponseEntity.ok().body("File deleted successfully");
+//	    } catch (IOException e) {
+//	        return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+//	                .body("Failed to delete file: " + e.getMessage());
+//	    }
+//	}
 
 	// 게시물 삭제
 	@DeleteMapping("/board/delete/{boardNo}")
@@ -725,6 +726,33 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("신고 처리 중 오류 발생: " + e.getMessage());
         }
     }
-	
+    
+    // 회원 탈퇴
+ 	@DeleteMapping("/user/delete")
+ 	public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String authorization) {
+ 		
+ 		try {
+ 			// JWT 토큰 검증
+ 			if (authorization == null || !authorization.startsWith("Bearer ")) {
+ 				throw new Exception("계정을 확인해주세요!");
+ 			}
 
+ 			// 토큰에서 사용자 ID 추출
+ 			String token = authorization.substring(7);
+ 			String id = jwtUtil.extractId(token);
+
+ 			// 게시물 조회
+ 			List<Integer> boardNo = boardService.boardUserSelect(id);
+
+ 			// 게시물 삭제
+			boardService.boardUserDelete(boardNo);
+			return ResponseEntity.ok("게시물 삭제 성공");
+			
+			
+ 		} catch (Exception e) {
+ 			e.printStackTrace(); // 예외 스택 트레이스를 출력하여 디버깅 정보 추가
+ 			return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("게시물 삭제 실패: " + e.getMessage());
+ 		}
+ 	}
+    
 }

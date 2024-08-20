@@ -1,5 +1,6 @@
 package com.ms3.dto;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 import org.apache.ibatis.type.Alias;
@@ -12,70 +13,61 @@ public class MailDTO {
     private String receiver;
     private String subject;
     private String content;
-    private LocalDateTime timestamp;
+    private Date writeDate;
     
-	public MailDTO(int mailNo, String sender, String receiver, String subject, String content,
-			LocalDateTime timestamp) {
+    
+	public MailDTO() {
+	}
+	
+	public MailDTO(int mailNo, String sender, String receiver, String subject, String content, Date writeDate) {
 		this.mailNo = mailNo;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.subject = subject;
 		this.content = content;
-		this.timestamp = timestamp;
+		this.writeDate = writeDate;
 	}
-
+	
 	public int getMailNo() {
 		return mailNo;
 	}
-
 	public void setMailNo(int mailNo) {
 		this.mailNo = mailNo;
 	}
-
 	public String getSender() {
 		return sender;
 	}
-
 	public void setSender(String sender) {
 		this.sender = sender;
 	}
-
 	public String getReceiver() {
 		return receiver;
 	}
-
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
 	}
-
 	public String getSubject() {
 		return subject;
 	}
-
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-
 	public String getContent() {
 		return content;
 	}
-
 	public void setContent(String content) {
 		this.content = content;
 	}
-
-	public LocalDateTime getTimestamp() {
-		return timestamp;
+	public Date getWriteDate() {
+		return writeDate;
 	}
-
-	public void setTimestamp(LocalDateTime timestamp) {
-		this.timestamp = timestamp;
+	public void setWriteDate(Date writeDate) {
+		this.writeDate = writeDate;
 	}
-
 	@Override
 	public String toString() {
 		return "MailDTO [mailNo=" + mailNo + ", sender=" + sender + ", receiver=" + receiver + ", subject=" + subject
-				+ ", content=" + content + ", timestamp=" + timestamp + "]";
+				+ ", content=" + content + ", writeDate=" + writeDate + "]";
 	}
     
 	

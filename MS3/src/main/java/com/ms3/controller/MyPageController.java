@@ -122,9 +122,14 @@ public class MyPageController {
     @GetMapping("/mail")
     public Map<String, Object> selectMail(@RequestParam String token) {
         String userId = jwtUtil.extractId(token);
+        
         Map<String, Object> map = new HashMap<String, Object>();
+        
         List<MailDTO> result = mailService.selectMail(userId);
+        
+        System.out.println(result);
         map.put("result", result);
+        
         return map;
     }
 
@@ -132,7 +137,6 @@ public class MyPageController {
     public Map<String, Object> sendMail(@RequestBody MailDTO mailDTO, @RequestParam String token) {
         String userId = jwtUtil.extractId(token);
         mailDTO.setSender(userId);
-        mailDTO.setTimestamp(LocalDateTime.now());
         Map<String, Object> map = new HashMap<>();
         try {
             if (!service.isUserExists(mailDTO.getReceiver())) {

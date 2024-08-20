@@ -20,7 +20,7 @@ public class UserService {
         return battleMapper.selectUserVictoryCount(id);
     }
 
-	public int updateUserVictoryCount(String id) {
+	public Integer updateUserVictoryCount(String id) {
 		return battleMapper.updateUserVictoryCount(id);
 	}
 

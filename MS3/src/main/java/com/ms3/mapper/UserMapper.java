@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.ms3.dto.PokemonDTO;
 import com.ms3.dto.UserDTO;
 
 @Mapper
@@ -27,6 +28,18 @@ public interface UserMapper {
     UserDTO selectUserByToken(String token);
     // 비밀번호 업데이트
     void updateUserPassword(@Param("userId") String userId, @Param("password") String newPassword);
+	// 게시글 사용자 프로필 조회
+    String boardProfile(String id);
+    
+	List<String> getPokemonListById(String id);
+	
+	String changeEnglishName(String pokemonId);
+	
+	int updateGrantNo2(String id);
+	int updateGrantNo3(String id);
+	int updateGrantNo4(String id);
+	int updateGrantNo5(String id);
+	int updateGrantNo6(String id);
 	
 
 

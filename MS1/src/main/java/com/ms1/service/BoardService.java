@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -202,28 +203,13 @@ public class BoardService {
 
 			// 게시글 좋아요 삭제
 			int deletedBoardLikes = boardMapper.deleteBoardLikeByBoardNo(boardNo);
+			
+			// 게시글 신고 삭제
+			int deleteBoardReport = boardMapper.deleteBoardReport(boardNo);
 
 			// 댓글 삭제
 			int deletedComments = boardMapper.deleteCommentByBoardNo(boardNo);
 
-			// 게시물에 연결된 모든 파일 정보 조회
-			List<FileDTO> files = boardMapper.selectFilesByBoardNo(boardNo);
-
-			// 파일 정보 삭제
-			boardMapper.deleteFilesByBoardNo(boardNo);
-
-			// 물리적 파일 삭제
-			File root = new File("c:\\fileupload");
-			if (files != null) {
-				for (FileDTO file : files) {
-					if (file != null) {
-						File f = new File(root, file.getFileName());
-						if (f.exists() && !f.delete()) {
-							throw new Exception("파일 삭제 실패: " + file.getFileName());
-						}
-					}
-				}
-			}
 			// 게시물 삭제
 			int deletedBoard = boardMapper.deleteBoard(boardNo);
 			if (deletedBoard == 0) {
@@ -258,9 +244,9 @@ public class BoardService {
 		return boardMapper.deleteCommentHates(cno);
 	}
 
-	public List<FileDTO> boardSelectFile(int boardNo) {
-		return boardMapper.boardSelectFile(boardNo);
-	}
+//	public List<FileDTO> boardSelectFile(int boardNo) {
+//		return boardMapper.boardSelectFile(boardNo);
+//	}
 
 	public boolean someMethodToCheckIfAlreadyViewed(String userId, int boardNo) {
 		Set<String> usersWhoViewed = viewedPostsByUser.get(boardNo);
@@ -300,11 +286,11 @@ public class BoardService {
 		return Files.readAllBytes(filePath);
 	}
 
-	@Transactional
-	public int deleteFile(int fno) throws IOException {
-	    // 데이터베이스에서 파일 정보 삭제
-	    return boardMapper.deleteFile(fno);
-	}
+//	@Transactional
+//	public int deleteFile(int fno) throws IOException {
+//	    // 데이터베이스에서 파일 정보 삭제
+//	    return boardMapper.deleteFile(fno);
+//	}
 	
 	public void boardReport(ReportDTO dto) {
         boardMapper.boardReport(dto);
@@ -333,6 +319,40 @@ public class BoardService {
         
         return existingReport != null;
     }
+
+	public List<Integer> boardUserSelect(String id) {
+		return boardMapper.boardUserSelect(id);
+	}
+	
+	@Transactional
+	public boolean boardUserDelete(List<Integer> boardNo) throws Exception {
+		try {
+			// 댓글 좋아요 싫어요 삭제
+			int deletedCommentLikes = boardMapper.deleteUserCommentLikeByBoardNo(boardNo);
+			int deletedCommentHates = boardMapper.deleteUserCommentHateByBoardNo(boardNo);
+
+			// 게시글 좋아요 삭제
+			int deletedBoardLikes = boardMapper.deleteUserBoardLikeByBoardNo(boardNo);
+			
+			// 게시글 신고 삭제
+			int deleteBoardReport = boardMapper.deleteUserBoardReport(boardNo);
+
+			// 댓글 삭제
+			int deletedComments = boardMapper.deleteUserCommentByBoardNo(boardNo);
+
+			// 게시물 삭제
+			int deletedBoard = boardMapper.deleteUserBoard(boardNo);
+			if (deletedBoard == 0) {
+				throw new RuntimeException("게시물 삭제 실패: 게시물이 존재하지 않습니다.");
+			}
+
+			return true;
+		} catch (Exception e) {
+			// 예외 발생 시 트랜잭션 롤백
+			e.printStackTrace();
+			throw e; // 예외를 다시 던져 상위 레이어에서 처리할 수 있도록 함
+		}
+	}
 
    
 }

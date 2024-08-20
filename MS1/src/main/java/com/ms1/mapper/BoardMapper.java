@@ -1,5 +1,6 @@
 package com.ms1.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +48,6 @@ public interface BoardMapper {
 	int selectCommentHateCount(int cno);
 	
 	int increaseViewCount(int boardNo);
-	List<FileDTO> selectFilesByBoardNo(int boardNo);
-	void deleteFilesByBoardNo(int boardNo);
 	int deleteBoard(int boardNo);
 	List<BoardCommentDTO> selectCommentsByBoardNo(int boardNo);
 	int deleteComment(int boardNo);
@@ -61,12 +60,23 @@ public interface BoardMapper {
 	int deleteBoardLikeByBoardNo(int boardNo);
 	int deleteCommentLikeByBoardNo(int boardNo);
 	int deleteCommentHateByBoardNo(int boardNo);
-	List<FileDTO> boardSelectFile(int boardNo);
-	FileDTO selectFileByNo(int fileNo);
-	int deleteFile(int fno);
+//	List<FileDTO> boardSelectFile(int boardNo);
+//	FileDTO selectFileByNo(int fileNo);
+//	int deleteFile(int fno);
 	
 	void boardReport(ReportDTO dto);
     void boardCommentReport(ReportDTO dto);
     ReportDTO findReportByUserAndBoard(ReportDTO dto);
     ReportDTO findRportByBoardComment(ReportDTO dto);
+    
+    
+	int deleteBoardReport(int boardNo);
+	List<Integer> boardUserSelect(String id);
+	
+	int deleteUserCommentLikeByBoardNo(List<Integer> boardNo);
+	int deleteUserCommentHateByBoardNo(List<Integer> boardNo);
+	int deleteUserBoardLikeByBoardNo(List<Integer> boardNo);
+	int deleteUserBoardReport(List<Integer> boardNo);
+	int deleteUserCommentByBoardNo(List<Integer> boardNo);
+	int deleteUserBoard(List<Integer> boardNo);
 }

@@ -14,5 +14,23 @@
 	<select id="pokemonSelect" resultMap="pokemon">
 	    SELECT * FROM pokemon WHERE korean_name LIKE '%' || #{koreanName} || '%'
 	</select>
+	
+	<select id="selectUser" resultType="Integer">
+		SELECT MATCH_WIN FROM MATCH where id = #{id}
+	</select>
+	
+	<insert id="insertUser">
+		insert into match(id) values (#{id})
+	</insert>
+	
+	<delete id="deleteUser">
+		delete from match where id = #{id}
+	</delete>
 
+    <!-- 사용자 승리 수 업데이트 쿼리 -->
+    <update id="updateUserVictoryCount" parameterType="String">
+        UPDATE MATCH
+        SET MATCH_WIN = MATCH_WIN + 1
+        WHERE ID = #{id}
+    </update>
 </mapper>

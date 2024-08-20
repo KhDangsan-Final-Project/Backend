@@ -18,42 +18,5 @@
         </collection>
     </resultMap>
 
-    <!-- 사용자 승리 수 조회 쿼리 -->
-    <select id="selectUserVictoryCount" parameterType="String" resultMap="userResultMap">
-        SELECT u.ID, u.NICKNAME, u.GRANT_NO, u.PROFILE, m.MATCH_WIN
-        FROM USERS u
-        INNER JOIN MATCH m ON u.ID = m.ID
-        WHERE u.ID = #{id}
-    </select>
-
-    <!-- 사용자 승리 수 업데이트 쿼리 -->
-    <update id="updateUserVictoryCount" parameterType="String">
-        UPDATE MATCH
-        SET MATCH_WIN = MATCH_WIN + 1
-        WHERE ID = #{id}
-    </update>
-
-    <!-- 사용자 포켓몬 도감 조회 쿼리 -->
-    <select id="selectUserPokemonNum" parameterType="String" resultMap="userResultMap">
-        SELECT 
-            u.ID, 
-            u.NICKNAME, 
-            u.GRANT_NO, 
-            u.PROFILE, 
-            m.MATCH_WIN,
-            p.ID AS POKEMON_ID, 
-            p.ENGLISH_NAME,
-            p.KOREAN_NAME
-        FROM 
-            USERS u
-        INNER JOIN 
-            MATCH m ON u.ID = m.ID
-        LEFT JOIN 
-            GETPOKEMON g ON u.ID = g.ID 
-        LEFT JOIN 
-            POKEMON p ON g.POKEMON_NUM = p.ID 
-        WHERE 
-            u.ID = #{id}
-    </select>
 
 </mapper>
